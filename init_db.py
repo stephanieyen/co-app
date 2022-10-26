@@ -1,6 +1,6 @@
-import os
-import sys
-import psycopg2
+import sqlalchemy
+import sqlalchemy.orm
+import models
 
 '''
 Tutorial for Env Variables - 
@@ -9,144 +9,142 @@ https://phoenixnap.com/kb/set-environment-variable-mac
 Tutorial for PostgreSQL + Flask - 
 https://www.digitalocean.com/community/tutorials/how-to-use-a-postgresql-database-in-a-flask-application
 
-Run this first in terminal
+Run this first in terminal (NOT ANYMORE)
 export DB_URL={Database URL from ElephantSQL}
 '''
 
-def create_table_roster(cursor):
-    cursor.execute("DROP TABLE IF EXISTS roster")
-    cursor.execute("CREATE TABLE roster "
-                    + "(user_email TEXT PRIMARY KEY, user_name TEXT, " 
-                    + "user_allergies TEXT, user_admin BOOLEAN, "
-                    + "user_days TEXT, coop_name TEXT)")
+# How to use env var for this???
+db_url = 'postgresql://qqoyksvp:4DE2MIUDdxlcY8L66A5aMLj5ze4zaNbF@peanut.db.elephantsql.com/qqoyksvp'
 
-def create_table_shopping(cursor):
-    # True for item_type = food, false = equipment
-    cursor.execute("DROP TABLE IF EXISTS shoppinglist")
-    cursor.execute("CREATE TABLE shoppinglist "
-                    + "(item_id SERIAL PRIMARY KEY, item_type BOOLEAN, " 
-                    + "item_name TEXT, item_quantity TEXT, "
-                    + "item_accepted BOOLEAN, item_reason TEXT, "
-                    + "requesting_user TEXT, coop_name TEXT)")
-def create_table_shifts(cursor):
-    # Shift time is month + date + nearest hour + day
-    cursor.execute("DROP TABLE IF EXISTS shifts")
-    cursor.execute("CREATE TABLE shifts "
-                    + "(shift_id SERIAL PRIMARY KEY, shift_name TEXT, " 
-                    + "shift_type TEXT, shift_item TEXT, "
-                    + "shift_time TEXT, shift_creator TEXT, "
-                    + "shift_members TEXT[], coop_name TEXT)")
-def add_test_roster(cursor):
-    cursor.execute("INSERT INTO roster (user_email, user_name, "
-                    + "user_allergies, user_admin, user_days, "
-                    + "coop_name) "
-                    + "VALUES ('amkumar@princeton.edu','Arnav Kumar',"
-                    + "'N/A', false, 'M W F', '2D')")
-    cursor.execute("INSERT INTO roster (user_email, user_name, "
-                    + "user_allergies, user_admin, user_days, "
-                    + "coop_name) "
-                    + "VALUES ('sy7@princeton.edu','Stephanie Yen',"
-                    + "'N/A', true, 'T W F', '2D')")
-    cursor.execute("INSERT INTO roster (user_email, user_name, "
-                    + "user_allergies, user_admin, user_days, "
-                    + "coop_name) "
-                    + "VALUES ('petrino@princeton.edu','Erin Petrino',"
-                    + "'Vegan', false, 'T Th Sat Sun', 'Scully')")
-    cursor.execute("INSERT INTO roster (user_email, user_name, "
-                    + "user_allergies, user_admin, user_days, "
-                    + "coop_name) "
-                    + "VALUES ('sarahep@princeton.edu','Sarah Pedersen',"
-                    + "'Peanut Allergy', false, 'M W F Sun', 'Real Food')")
-    cursor.execute("INSERT INTO roster (user_email, user_name, "
-                    + "user_allergies, user_admin, user_days, "
-                    + "coop_name) "
-                    + "VALUES ('thaldiya@princeton.edu','Tanvi Haldiya',"
-                    + "'Soy Allergy', false, 'M T Th F', 'IFC')")
-    cursor.execute("INSERT INTO roster (user_email, user_name, "
-                    + "user_allergies, user_admin, user_days, "
-                    + "coop_name) "
-                    + "VALUES ('dpw@cs.princeton.edu','David Walker',"
-                    + "'N/A', true, 'T W F', 'Brown')")
+# Add test users
+def add_test_roster(session):
+    user = models.Roster(user_email='amkumar@princeton.edu',
+                        user_name='Arnav Kumar',
+                        user_allergies='N/A',
+                        user_admin=False,
+                        user_days='M W F',
+                        coop_name='2D')
+    session.add(user)
+    user = models.Roster(user_email='sy7@princeton.edu',
+                        user_name='Stephanie Yen',
+                        user_allergies='N/A',
+                        user_admin=True,
+                        user_days='T W F',
+                        coop_name='2D')
+    session.add(user)
+    user = models.Roster(user_email='petrino@princeton.edu',
+                        user_name='Erin Petrino',
+                        user_allergies='Vegan',
+                        user_admin=False,
+                        user_days='T Th Sat Sun',
+                        coop_name='Scully')
+    session.add(user)
+    user = models.Roster(user_email='sarahep@princeton.edu',
+                        user_name='Sarah Pedersen',
+                        user_allergies='Peanut Allergy',
+                        user_admin=False,
+                        user_days='M W F Sun',
+                        coop_name='Real Food')
+    session.add(user)
+    user = models.Roster(user_email='thaldiya@princeton.edu',
+                        user_name='Tanvi Haldiya',
+                        user_allergies='Soy Allergy',
+                        user_admin=False,
+                        user_days='M T Th F',
+                        coop_name='IFC')
+    session.add(user)
+    user = models.Roster(user_email='dpw@cs.princeton.edu',
+                        user_name='David Walker',
+                        user_allergies='N/A',
+                        user_admin=True,
+                        user_days='T W F',
+                        coop_name='Brown')
+    session.add(user)
+# Add test shopping list
+def add_test_shopping(session):
+    item = models.ShoppingList(item_type=True,
+                            item_name="Avocadoes",
+                            item_quantity='N/A',
+                            item_accepted=True,
+                            item_reason='For breakfast',
+                            requesting_user='amkumar@princeton.edu',
+                            coop_name='2D')
+    session.add(item)
+    item = models.ShoppingList(item_type=True,
+                            item_name="Sriracha",
+                            item_quantity='1',
+                            item_accepted=True,
+                            item_reason='One large bottle',
+                            requesting_user='sy7@princeton.edu',
+                            coop_name='2D')
+    session.add(item)
+    item = models.ShoppingList(item_type=True,
+                            item_name="Coffee syrups",
+                            item_quantity='3',
+                            item_accepted=True,
+                            item_reason='Lavender, pumpkin spice',
+                            requesting_user='petrino@princeton.edu',
+                            coop_name='Scully')
+    session.add(item)
+    item = models.ShoppingList(item_type=False,
+                            item_name="Nonstick Frying Pan",
+                            item_quantity='1',
+                            item_accepted=True,
+                            item_reason='Old one broke, other pan too sticky',
+                            requesting_user='sarahep@princeton.edu',
+                            coop_name='Real Food')
+    session.add(item)
+    item = models.ShoppingList(item_type=False,
+                            item_name="Bread Roller",
+                            item_quantity='1',
+                            item_accepted=False,
+                            item_reason='Want to make pizza one day',
+                            requesting_user='thaldiya@princeton.edu',
+                            coop_name='IFC')
+    session.add(item)
+    item = models.ShoppingList(item_type=False,
+                            item_name="Computer",
+                            item_quantity='10',
+                            item_accepted=False,
+                            item_reason='Turn Brown into computer hub',
+                            requesting_user='dpw@cs.princeton.edu',
+                            coop_name='Brown')
+    session.add(item)
+# Add test shifts
+def add_test_shifts(session):
+    shift = models.Shifts(shift_name='Going to Wegmans',
+                        shift_type='Shopping',
+                        shift_item='N/A',
+                        shift_time='10 20 9 Thursday',
+                        shift_creator='amkumar@princeton.edu',
+                        shift_members=['amkumar@princeton.edu', 'sy7@princeton.edu'],
+                        coop_name='2D')
+    session.add(shift)
+    shift = models.Shifts(shift_name='Brunch',
+                        shift_type='Cooking',
+                        shift_item='French Toast With Berries',
+                        shift_time='10 23 11 Sunday',
+                        shift_creator='thaldiya@princeton.edu',
+                        shift_members=['thaldiya@princeton.edu'],
+                        coop_name='IFC')
+    session.add(shift)
 
-def add_test_shopping(cursor):
-    cursor.execute("INSERT INTO shoppinglist (item_type, item_name, "
-                    + "item_quantity, item_accepted, item_reason, "
-                    + "requesting_user, coop_name) "
-                    + "VALUES (true,'Avocadoes',"
-                    + "'N/A', true, 'For breakfast', "
-                    + "'amkumar@princeton.edu', '2D')")
-    cursor.execute("INSERT INTO shoppinglist (item_type, item_name, "
-                    + "item_quantity, item_accepted, item_reason, "
-                    + "requesting_user, coop_name) "
-                    + "VALUES (true,'Sriracha',"
-                    + "'1', true, 'One large bottle', "
-                    + "'sy7@princeton.edu', '2D')")
-    cursor.execute("INSERT INTO shoppinglist (item_type, item_name, "
-                    + "item_quantity, item_accepted, item_reason, "
-                    + "requesting_user, coop_name) "
-                    + "VALUES (true, 'Coffee syrups',"
-                    + "'3', true, 'Lavender, pumpkin spice', "
-                    + "'petrino@princeton.edu', 'Scully')")
-    cursor.execute("INSERT INTO shoppinglist (item_type, item_name, "
-                    + "item_quantity, item_accepted, item_reason, "
-                    + "requesting_user, coop_name) "
-                    + "VALUES (false, 'Nonstick Frying Pan',"
-                    + "'1', true, 'Old one broke, other pan too sticky', "
-                    + "'sarahep@princeton.edu', 'Real Food')")
-    cursor.execute("INSERT INTO shoppinglist (item_type, item_name, "
-                    + "item_quantity, item_accepted, item_reason, "
-                    + "requesting_user, coop_name) "
-                    + "VALUES (false, 'Bread Roller',"
-                    + "'1', false, 'Want to make pizza one day', "
-                    + "'thaldiya@princeton.edu', 'IFC')")
-    cursor.execute("INSERT INTO shoppinglist (item_type, item_name, "
-                    + "item_quantity, item_accepted, item_reason, "
-                    + "requesting_user, coop_name) "
-                    + "VALUES (false, 'Computer',"
-                    + "'10', false, 'Turn Brown into computer hub', "
-                    + "'dpw@cs.princeton.edu', 'Brown')")   
-def add_test_shifts(cursor):
-    cursor.execute("INSERT INTO shifts (shift_name, shift_type, "
-                    + "shift_item, shift_time, shift_creator, "
-                    + "shift_members, coop_name) "
-                    + "VALUES ('Going to Wegmans','Shopping',"
-                    + "'N/A', '10 20 9 Thursday', " 
-                    + "'amkumar@princeton.edu', "
-                    + "'{amkumar@princeton.edu, sy7@princeton.edu}', '2D')")
-    cursor.execute("INSERT INTO shifts (shift_name, shift_type, "
-                    + "shift_item, shift_time, shift_creator, "
-                    + "shift_members, coop_name) "
-                    + "VALUES ('Brunch','Cooking',"
-                    + "'French Toast With Berries', '10 23 11 Sunday', " 
-                    + "'thaldiya@princeton.edu', "
-                    + "'{thaldiya@princeton.edu}', 'IFC')")
-
-# Method to reset database with test users
 def main():
-    # Setup connection and cursor
-    try:
-        # Get 
-        db_url = os.getenv('DB_URL')
-        # Connect to database
-        with psycopg2.connect(db_url) as connection:
+    # Create engine and drop and recreate all tables
+    engine = sqlalchemy.create_engine(db_url)
+    models.Base.metadata.drop_all(engine)
+    models.Base.metadata.create_all(engine)
 
-            with connection.cursor() as cursor:
-                # Create tables
-                #------------------------------------------------------
-                create_table_roster(cursor)
-                create_table_shopping(cursor)
-                create_table_shifts(cursor)
-                #------------------------------------------------------
-                # Add test data to tables
-                #------------------------------------------------------
-                add_test_roster(cursor)
-                add_test_shopping(cursor)
-                add_test_shifts(cursor)
-                #------------------------------------------------------
-    except Exception as ex:
-        print(ex, file=sys.stderr)
-        sys.exit(1)
-
+    with sqlalchemy.orm.Session(engine) as session:
+        # Add fake test daa
+        add_test_roster(session)
+        add_test_shopping(session)
+        add_test_shifts(session)
+        session.commit()
+   
+    engine.dispose()
 
 if __name__ == '__main__':
     main()
+
+

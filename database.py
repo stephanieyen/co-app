@@ -1,186 +1,139 @@
-import os
-import sys
 from typing import List
-import psycopg2
+import sqlalchemy
+import sqlalchemy.orm
+import models
 
-from shift import Shift
-from shoppingitem import ShoppingItem
-from user import User
+# How to use env var for this???
+db_url = 'postgresql://qqoyksvp:4DE2MIUDdxlcY8L66A5aMLj5ze4zaNbF@peanut.db.elephantsql.com/qqoyksvp'
 
-'''
-Run this first in terminal
-export DB_URL={Database URL from ElephantSQL}
-'''
 #----------------------------------------------------------------------
 # Co-op info queries
 #----------------------------------------------------------------------
 # Get the entire roster for a given coop
-def get_roster_for_coop(coop: str) -> List[User]:
-    try:
-        # Get 
-        db_url = os.getenv('DB_URL')
-        # Connect to database
-        with psycopg2.connect(db_url) as connection:
-            with connection.cursor() as cursor:
-                # Get coop_name of user by user email
-                cursor.execute('''
-                    SELECT * FROM roster WHERE coop_name=%s
-                ''', (coop,)) 
-                # Execute statement
-                row = cursor.fetchone()
-                users = []
-                while row is not None:
-                    user = User(row[0], row[1], row[2], row[3],
-                            row[4], row[5])
-                    users.append(user)
-                    row = cursor.fetchone()
-        return users
-    except Exception as ex:
-        print(ex, file=sys.stderr)
-        sys.exit(1)
+def get_roster_for_coop(session, coop) -> List[models.Roster]:
+    coop_roster = session.query(models.Roster).filter(
+        models.Roster.coop_name==coop).all()
+    return coop_roster
+        
 
 # Get the current shopping list for a co-op
-def get_shopping_for_coop(coop: str) -> List[ShoppingItem]:
-    try:
-        # Get 
-        db_url = os.getenv('DB_URL')
-        # Connect to database
-        with psycopg2.connect(db_url) as connection:
-            with connection.cursor() as cursor:
-                # Get coop_name of user by user email
-                cursor.execute('''
-                    SELECT * FROM shoppinglist WHERE coop_name=%s
-                ''', (coop,)) 
-                # Execute statement
-                row = cursor.fetchone()
-                items = []
-                while row is not None:
-                    item = ShoppingItem(row[0], row[1], row[2], row[3],
-                            row[4], row[5], row[6], row[7])
-                    items.append(item)
-                    row = cursor.fetchone()
-        return items
-    except Exception as ex:
-        print(ex, file=sys.stderr)
-        sys.exit(1)
+def get_shopping_for_coop(session, coop) -> List[models.ShoppingList]:
+    coop_shopping = session.query(models.ShoppingList).filter(
+        models.ShoppingList.coop_name==coop).all()
+    return coop_shopping
+    
 
 # Get the current shifts for a co-op
-def get_shifts_for_coop(coop:str) -> List[Shift]:
-    try:
-        # Get 
-        db_url = os.getenv('DB_URL')
-        # Connect to database
-        with psycopg2.connect(db_url) as connection:
-            with connection.cursor() as cursor:
-                # Get coop_name of user by user email
-                cursor.execute('''
-                    SELECT * FROM shifts WHERE coop_name=%s 
-                    ORDER BY shift_time
-                ''', (coop, )) 
-                # Execute statement
-                row = cursor.fetchone()
-                shifts = []
-                while row is not None:
-                    shift = Shift(row[0], row[1], row[2], row[3], row[4],
-                            row[5], row[6], row[7])
-                    shifts.append(shift)
-                    row = cursor.fetchone()
-        return shifts
-    except Exception as ex:
-        print(ex, file=sys.stderr)
-        sys.exit(1)
+def get_shifts_for_coop(session, coop) -> List[models.Shifts]:
+    coop_shifts = session.query(models.Shifts).filter(
+        models.Shifts.coop_name==coop).all()
+    return coop_shifts
 #----------------------------------------------------------------------
 # User queries
 #----------------------------------------------------------------------
-def add_user(user:User):
-    try:
-        # Get 
-        db_url = os.getenv('DB_URL')
-        # Connect to database
-        with psycopg2.connect(db_url) as connection:
-            with connection.cursor() as cursor:
-                # Get coop_name of user by user email
-                cursor.execute('''
-                    INSERT INTO roster (user_email, user_name, 
-                    user_allergies, user_admin, user_days, coop_name)
-                    VALUES (%s, %s, %s, %s, %s, %s)
-                ''', (user.get_email(), user.get_name(), 
-                    user.get_allergies(), user.get_admin(), 
-                    user.get_days(), user.get_coop())) 
-    except Exception as ex:
-        print(ex, file=sys.stderr)
-        sys.exit(1)
+# Add user to database
+def add_user(session, user:models.Roster):
+    session.add(user)
+    session.commit()
 # Get user from email
-def get_user(email:str) -> User:
-    try:
-        # Get 
-        db_url = os.getenv('DB_URL')
-        # Connect to database
-        with psycopg2.connect(db_url) as connection:
-            with connection.cursor() as cursor:
-                # Get coop_name of user by user email
-                cursor.execute('''
-                    SELECT * FROM roster WHERE user_email=%s
-                ''', (email, )) 
-                # Execute statement
-                row = cursor.fetchone()
-                user = User(row[0], row[1], row[2], row[3],
-                            row[4], row[5])
-                return user
-    except Exception as ex:
-        print(ex, file=sys.stderr)
-        sys.exit(1)
-# Update a user's information (if updating profile, setting admin)
-def update_user(user: User):
-    try:
-        # Get 
-        db_url = os.getenv('DB_URL')
-        # Connect to database
-        with psycopg2.connect(db_url) as connection:
-            with connection.cursor() as cursor:
-                # Get coop_name of user by user email
-                cursor.execute('''
-                    UPDATE roster 
-                    SET user_name=%s,
-                        user_allergies=%s,
-                        user_admin=%s,
-                        user_days=%s,
-                        coop_name=%s
-                    WHERE user_email=%s 
-                ''', (user.get_name(), user.get_allergies(), 
-                    user.get_admin(), user.get_days(), user.get_coop(),
-                    user.get_email())) 
-    except Exception as ex:
-        print(ex, file=sys.stderr)
-        sys.exit(1)
+def get_user(session, email) -> models.Roster:
+    # Make sure to only get one user
+    user = session.query(models.Roster).filter(
+        models.Roster.user_email == email).first()
+    return user
+# Update a user's information in field to newVal
+def update_user(session, email, field, newVal):
+    session.query(models.Roster).filter(
+        models.Roster.user_email == email).update(
+            {field: newVal}
+        )
+    session.commit()
+#----------------------------------------------------------------------
+# Shopping List queries
+#----------------------------------------------------------------------
+# Add item to list
+def add_item(session, item: models.ShoppingList):
+    session.add(item)
+    session.commit()
+# Get shopping list item from id
+def get_item(session, id) -> models.ShoppingList:
+    item = session.query(models.ShoppingList).filter(
+        models.ShoppingList.item_id == id).first()
+    return item
+# Update a item's information
+def update_item(session, id, field, newVal):
+    session.query(models.ShoppingList).filter(
+        models.ShoppingList.item_id == id).update(
+            {field: newVal}
+        )
+    session.commit()
+#----------------------------------------------------------------------
+# Shift queries
+#----------------------------------------------------------------------
+# Add shift to calendar
+def add_shift(session, shift: models.Shifts):
+    session.add(shift)
+    session.commit()
+# Get shift from id
+def get_shift(session, id) -> models.Shifts:
+    shift = session.query(models.Shifts).filter(
+        models.Shifts.shift_id == id).first()
+    return shift
+# Update a shift's information
+def update_shift(session, id, field, newVal):
+    session.query(models.Shifts).filter(
+        models.Shifts.shift_id == id).update(
+            {field: newVal}
+        )
+    session.commit()
 #----------------------------------------------------------------------
 
 # Unit testing for these
 def main():
-    # Get 2D roster
-    user_2D = get_roster_for_coop('2D')
-    print(user_2D[0])
-    email = user_2D[0].get_email()
-    # Change allergies (bad syntax but wouldn't be done in actual site)
-    user_2D[0]._allergies = "Hates Potatoes"
-    update_user(user_2D[0])
+    # Create engine and drop and recreate all tables
+    engine = sqlalchemy.create_engine(db_url)
 
-    # See if update worked and test get_user
-    user_2D_update = get_user(email)
-    print(user_2D_update)
+    with sqlalchemy.orm.Session(engine) as session:
+        users = get_roster_for_coop(session, '2D')
+        list = get_shopping_for_coop(session, 'Brown')
+        shifts = get_shifts_for_coop(session, 'IFC')
+        # Test user functions
+        user_1 = users[0]
+        user_1_email = users[0].user_email
+        update_user(session, user_1.user_email, 'user_allergies', 'Nut allergy')
 
-    # Get shifts for 2D
-    shifts_2D = get_shifts_for_coop('2D')
-    print(shifts_2D[0])
-
-    # Get shopping list for Brown
-    shopping_brown = get_shopping_for_coop('Brown')
-    print(shopping_brown[0])
-
-    # Add user
-    new_user = User('watsonjia@princeton.edu', "Watson Jia", 'N/A', 
-                False, 'M T W Th F', 'Brown')
-    add_user(new_user)
-    print(get_user('watsonjia@princeton.edu'))
+        print(get_user(session, user_1_email).user_allergies)
+        new_user = models.Roster(user_email='rdondero@cs.princeton.edu',
+                        user_name='Bob Dondero',
+                        user_allergies='JavaScript',
+                        user_admin=True,
+                        user_days='M T W Th F Sat Sun',
+                        coop_name='Brown')
+        add_user(session, new_user)
+        # Test shopping list functions
+        list_1 = list[0]
+        update_item(session, list_1.item_id, 'item_accepted', False)
+        print(get_item(session, list_1.item_id).item_accepted)
+        new_item = models.ShoppingList(item_type=False,
+                            item_name="Chairs",
+                            item_quantity='100',
+                            item_accepted=False,
+                            item_reason='Guest seating',
+                            requesting_user='rdondero@cs.princeton.edu',
+                            coop_name='Brown')
+        add_item(session, new_item)
+        # Test shift functions
+        shift_1 = shifts[0]
+        update_shift(session, shift_1.shift_id, 'shift_time', '10 21 9 Friday')
+        print(get_shift(session, shift_1.shift_id).shift_time)
+        new_shift = models.Shifts(shift_name='Cooking Some Computers',
+                        shift_type='Cooking',
+                        shift_item='Macbooks',
+                        shift_time='10 22 5 Saturday',
+                        shift_creator='dpw@cs.princeton.edu',
+                        shift_members=['dpw@cs.princeton.edu', 'rdondero@cs.princeton.edu'],
+                        coop_name='Brown')
+        add_shift(session, new_shift)
+    engine.dispose()
 if __name__ == '__main__':
     main()
