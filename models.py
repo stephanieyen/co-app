@@ -35,6 +35,7 @@ class Shifts (Base):
     shift_type = sqlalchemy.Column(sqlalchemy.String)
     shift_item = sqlalchemy.Column(sqlalchemy.String)
     shift_time = sqlalchemy.Column(sqlalchemy.String)
+    shift_day = sqlalchemy.Column(sqlalchemy.String)
     shift_creator = sqlalchemy.Column(sqlalchemy.String)
     shift_members = sqlalchemy.Column(sqlalchemy.ARRAY(sqlalchemy.String))
     coop_name = sqlalchemy.Column(sqlalchemy.String)

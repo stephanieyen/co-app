@@ -127,7 +127,8 @@ def add_test_shifts(session):
     shift = models.Shifts(shift_name='Going to Wegmans',
                         shift_type='Shopping',
                         shift_item='N/A',
-                        shift_time='10 20 9 Thursday',
+                        shift_time='2022-11-03T03:30:00',
+                        shift_day='Thursday',
                         shift_creator='amkumar@princeton.edu',
                         shift_members=['amkumar@princeton.edu', 'sy7@princeton.edu'],
                         coop_name='2D')
@@ -135,7 +136,8 @@ def add_test_shifts(session):
     shift = models.Shifts(shift_name='Brunch',
                         shift_type='Cooking',
                         shift_item='French Toast With Berries',
-                        shift_time='10 23 11 Sunday',
+                        shift_time='2022-10-30T09:30:00',
+                        shift_day='Sunday',
                         shift_creator='thaldiya@princeton.edu',
                         shift_members=['thaldiya@princeton.edu'],
                         coop_name='IFC')
