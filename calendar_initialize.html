@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='utf-8' />
+    <!------------------------BOOTSRAP/CSS/JS scripts---------------------------->
+  
+    <link href='./calendar_modules/fullcalendar/main.css' rel='stylesheet' />
+    <script src='./calendar_modules/fullcalendar/main.js'></script>
+
+    <!------------------------CALENDAR SCRIPT ------------------------------------>
+    <script>
+      document.addEventListener('DOMContentLoaded', generate_calendar)
+
+      // CALENDAR GENERATION FUNCTION
+      function generate_calendar(myEvents) {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, 
+        // calendar API properties
+        {
+          headerToolbar: {
+            left:'title',
+            right: 'prev,next today'
+          },
+          titleFormat: { year: 'numeric', month: 'short', day: 'numeric'},
+          initialView: 'dayGridWeek',
+          initialDate: new Date().toISOString().slice(0, 10), // today's date
+          selectable: true,
+          nowIndicator: true,
+          dayMaxEvents: true,
+          // EVENT RENDERING CODE
+          events: myEvents,
+            eventRender: function (event, element, view) {
+              element.find('.fc-title').append(
+                // append event description
+                '<div class="hr-line-solid-no-margin"></div><span style="font-size: 10px">' + event.description + '</span></div>'
+                );
+              },
+        }
+        );
+        calendar.render();
+      };
+    </script>
+  </head>
+  <!--------------------------------BODY-------------------------------------->
+  <body>
+    <div id='calendar'></div>
+  </body>
+</html>
