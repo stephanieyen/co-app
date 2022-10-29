@@ -22,7 +22,9 @@ def index():
 @app.route('/brown', methods=['GET'])
 @app.route('/brown/calendar', methods=['GET'])
 def brown_calendar():
-    print('brown calendar')
+    html_code = flask.render_template('calendar_initialize.html')
+    response = flask.make_response(html_code)
+    return response
 
 # Brown Roster
 @app.route('/brown/roster', methods=['GET'])
