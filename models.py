@@ -17,7 +17,7 @@ class Roster (Base):
 class ShoppingList (Base):
     __tablename__ = 'shoppinglist'
     item_id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True)
-    item_type = sqlalchemy.Column(sqlalchemy.Boolean)
+    item_type = sqlalchemy.Column(sqlalchemy.String)
     item_name = sqlalchemy.Column(sqlalchemy.String)
     item_quantity = sqlalchemy.Column(sqlalchemy.String)
     item_accepted = sqlalchemy.Column(sqlalchemy.String)

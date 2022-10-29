@@ -21,25 +21,17 @@
                       </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <th scope="row">Avocadoes</th>
-                        <td>Produce</td>
-                        <td>5</td>
-                        <td>For breakfast!</td>
-                        <td>N/A</td>
-                        <td>Yes</td>
-                        <td>No</td>
-                    </tr>
-                      <!-- {% for item in items: %}
+                      {% for item in items: %}
                         <tr>
                             <th scope="row">{{item.item_name}}</th>
                             <td>{{item.item_type}}</td>
                             <td>{{item.item_quantity}}</td>
                             <td>{{item.item_reason}}</td>
+                            <td>{{item.alt_request}}</td>
                             <td>Yes</td>
                             <td>No</td>
                         </tr>
-                      {% endfor %} -->
+                      {% endfor %}
                 </tbody>
               </table>
         </div>

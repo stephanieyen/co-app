@@ -22,7 +22,7 @@ def index():
 @app.route('/brown', methods=['GET'])
 @app.route('/brown/calendar', methods=['GET'])
 def brown_calendar():
-    print("brown calendar")
+    print('brown calendar')
 
 # Brown Roster
 @app.route('/brown/roster', methods=['GET'])
@@ -32,7 +32,12 @@ def brown_roster():
 # Brown Shopping List
 @app.route('/brown/list', methods=['GET'])
 def brown_list():
-    print("brown list")
-    
+    coop = 'Brown'
+    items = database.get_shopping_for_coop(coop)
+    print(items)
+    html = flask.render_template('shoppinglist.html', items=items)
+    response = flask.make_response(html)
+    return response
+
 
 #----------------------------------------------------------------------

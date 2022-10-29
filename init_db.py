@@ -62,7 +62,7 @@ def add_test_roster(session):
     session.add(user)
 # Add test shopping list
 def add_test_shopping(session):
-    item = models.ShoppingList(item_type=True,
+    item = models.ShoppingList(item_type="Food",
                             item_name="Avocadoes",
                             item_quantity='N/A',
                             item_accepted=True,
@@ -72,7 +72,7 @@ def add_test_shopping(session):
                             alt_request="N/A",
                             coop_name='2D')
     session.add(item)
-    item = models.ShoppingList(item_type=True,
+    item = models.ShoppingList(item_type="Food",
                             item_name="Sriracha",
                             item_quantity='1',
                             item_accepted=True,
@@ -82,7 +82,7 @@ def add_test_shopping(session):
                             alt_request="Tabasco",
                             coop_name='2D')
     session.add(item)
-    item = models.ShoppingList(item_type=True,
+    item = models.ShoppingList(item_type="Food",
                             item_name="Coffee syrups",
                             item_quantity='3',
                             item_accepted=True,
@@ -92,7 +92,7 @@ def add_test_shopping(session):
                             alt_request="Creamer",
                             coop_name='Scully')
     session.add(item)
-    item = models.ShoppingList(item_type=False,
+    item = models.ShoppingList(item_type="Equipment",
                             item_name="Nonstick Frying Pan",
                             item_quantity='1',
                             item_accepted=True,
@@ -102,7 +102,7 @@ def add_test_shopping(session):
                             alt_request="Stick Frying Pan",
                             coop_name='Real Food')
     session.add(item)
-    item = models.ShoppingList(item_type=False,
+    item = models.ShoppingList(item_type="Equipment",
                             item_name="Bread Roller",
                             item_quantity='1',
                             item_accepted=False,
@@ -112,7 +112,7 @@ def add_test_shopping(session):
                             alt_request="Hammer",
                             coop_name='IFC')
     session.add(item)
-    item = models.ShoppingList(item_type=False,
+    item = models.ShoppingList(item_type="Equipment",
                             item_name="Computer",
                             item_quantity='10',
                             item_accepted=False,
