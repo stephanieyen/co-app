@@ -23,6 +23,8 @@ class ShoppingList (Base):
     item_accepted = sqlalchemy.Column(sqlalchemy.String)
     item_reason = sqlalchemy.Column(sqlalchemy.String)
     requesting_user = sqlalchemy.Column(sqlalchemy.String)
+    food_type = sqlalchemy.Column(sqlalchemy.String)
+    alt_request = sqlalchemy.Column(sqlalchemy.String)
     coop_name = sqlalchemy.Column(sqlalchemy.String)
 
 # Shifts table

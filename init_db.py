@@ -68,6 +68,8 @@ def add_test_shopping(session):
                             item_accepted=True,
                             item_reason='For breakfast',
                             requesting_user='amkumar@princeton.edu',
+                            food_type="Fruit",
+                            alt_request="N/A",
                             coop_name='2D')
     session.add(item)
     item = models.ShoppingList(item_type=True,
@@ -76,6 +78,8 @@ def add_test_shopping(session):
                             item_accepted=True,
                             item_reason='One large bottle',
                             requesting_user='sy7@princeton.edu',
+                            food_type="Condiment",
+                            alt_request="Tabasco",
                             coop_name='2D')
     session.add(item)
     item = models.ShoppingList(item_type=True,
@@ -84,6 +88,8 @@ def add_test_shopping(session):
                             item_accepted=True,
                             item_reason='Lavender, pumpkin spice',
                             requesting_user='petrino@princeton.edu',
+                            food_type="Special",
+                            alt_request="Creamer",
                             coop_name='Scully')
     session.add(item)
     item = models.ShoppingList(item_type=False,
@@ -92,6 +98,8 @@ def add_test_shopping(session):
                             item_accepted=True,
                             item_reason='Old one broke, other pan too sticky',
                             requesting_user='sarahep@princeton.edu',
+                            food_type="Item",
+                            alt_request="Stick Frying Pan",
                             coop_name='Real Food')
     session.add(item)
     item = models.ShoppingList(item_type=False,
@@ -100,6 +108,8 @@ def add_test_shopping(session):
                             item_accepted=False,
                             item_reason='Want to make pizza one day',
                             requesting_user='thaldiya@princeton.edu',
+                            food_type="Item",
+                            alt_request="Hammer",
                             coop_name='IFC')
     session.add(item)
     item = models.ShoppingList(item_type=False,
@@ -108,6 +118,8 @@ def add_test_shopping(session):
                             item_accepted=False,
                             item_reason='Turn Brown into computer hub',
                             requesting_user='dpw@cs.princeton.edu',
+                            food_type="Special",
+                            alt_request="Laptops",
                             coop_name='Brown')
     session.add(item)
 # Add test shifts

@@ -120,6 +120,8 @@ def main():
                             item_accepted=False,
                             item_reason='Guest seating',
                             requesting_user='rdondero@cs.princeton.edu',
+                            food_type="Item",
+                            alt_request="N/A",
                             coop_name='Brown')
         add_item(session, new_item)
         # Test shift functions
