@@ -19,9 +19,14 @@ def index():
 # Routes for Brown co-op
 
 # Brown Calendar
+@app.route('/calendar', methods=['GET'])
 @app.route('/brown', methods=['GET'])
 @app.route('/brown/calendar', methods=['GET'])
 def brown_calendar():
+    # TO-DO: convert shifts to JSON for calendar API  
+    coop = 'Brown'
+    shifts = database.get_shifts_for_coop(coop)
+
     html_code = flask.render_template('calendar_initialize.html')
     response = flask.make_response(html_code)
     return response
