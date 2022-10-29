@@ -131,7 +131,8 @@ def main():
         new_shift = models.Shifts(shift_name='Cooking Some Computers',
                         shift_type='Cooking',
                         shift_item='Macbooks',
-                        shift_time='10 22 5 Saturday',
+                        shift_time='2022-10-31T16:00:00',
+                        shift_day='Monday',
                         shift_creator='dpw@cs.princeton.edu',
                         shift_members=['dpw@cs.princeton.edu', 'rdondero@cs.princeton.edu'],
                         coop_name='Brown')
