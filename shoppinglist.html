@@ -7,6 +7,7 @@
     </head>
     <body>
         {% include 'navbar.html' %}
+        <br>
         <h2>Food Requests</h2><br>
         <div class="table-responsive">
             <table class="table">
@@ -29,8 +30,8 @@
                             <td>{{item.item_quantity}}</td>
                             <td>{{item.item_reason}}</td>
                             <td>{{item.alt_request}}</td>
-                            <td>Yes</td>
-                            <td>No</td>
+                            <td>{{item.for_shift}}</td>
+                            <td>{{item.item_ordered}}</td>
                         </tr>
                       {% endfor %}
                 </tbody>
