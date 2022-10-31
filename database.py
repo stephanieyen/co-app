@@ -38,6 +38,7 @@ def get_shifts_for_coop(coop) -> List[models.Shifts]:
     with sqlalchemy.orm.Session(engine) as session:
         coop_shifts = session.query(models.Shifts).filter(
             models.Shifts.coop_name==coop).all()
+        print(coop_shifts)
     return coop_shifts
 #----------------------------------------------------------------------
 # User queries
@@ -110,3 +111,9 @@ def update_shift(id, field, newVal):
             )
         session.commit()
 #----------------------------------------------------------------------
+
+# Unit testing for these
+def main():
+    print("test")
+if __name__ == '__main__':
+    main()

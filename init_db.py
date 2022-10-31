@@ -24,7 +24,7 @@ def add_test_roster(session):
                         user_admin=False,
                         user_cookday='M W F',
                         user_choreday='M',
-                        coop_name='2D')
+                        coop_name='2d')
     session.add(user)
     user = models.Roster(user_email='sy7@princeton.edu',
                         user_name='Stephanie Yen',
@@ -32,7 +32,7 @@ def add_test_roster(session):
                         user_admin=True,
                         user_cookday='T W F',
                         user_choreday='T',
-                        coop_name='2D')
+                        coop_name='2d')
     session.add(user)
     user = models.Roster(user_email='petrino@princeton.edu',
                         user_name='Erin Petrino',
@@ -40,7 +40,7 @@ def add_test_roster(session):
                         user_admin=False,
                         user_cookday='T Th Sat Sun',
                         user_choreday='T',
-                        coop_name='Scully')
+                        coop_name='scully')
     session.add(user)
     user = models.Roster(user_email='sarahep@princeton.edu',
                         user_name='Sarah Pedersen',
@@ -48,7 +48,7 @@ def add_test_roster(session):
                         user_admin=False,
                         user_cookday='M W F Sun',
                         user_choreday='M',
-                        coop_name='Real Food')
+                        coop_name='realfood')
     session.add(user)
     user = models.Roster(user_email='thaldiya@princeton.edu',
                         user_name='Tanvi Haldiya',
@@ -56,7 +56,7 @@ def add_test_roster(session):
                         user_admin=False,
                         user_cookday='M T Th F',
                         user_choreday='M',
-                        coop_name='IFC')
+                        coop_name='ifc')
     session.add(user)
     user = models.Roster(user_email='dpw@cs.princeton.edu',
                         user_name='David Walker',
@@ -64,7 +64,7 @@ def add_test_roster(session):
                         user_admin=True,
                         user_cookday='T W F',
                         user_choreday='T',
-                        coop_name='Brown')
+                        coop_name='brown')
     session.add(user)
 # Add test shopping list
 def add_test_shopping(session):
@@ -77,7 +77,7 @@ def add_test_shopping(session):
                             requesting_user='amkumar@princeton.edu',
                             food_type="Fruit",
                             alt_request="N/A",
-                            coop_name='2D')
+                            coop_name='2d')
     session.add(item)
     item = models.ShoppingList(item_type="Food",
                             item_name="Sriracha",
@@ -88,7 +88,7 @@ def add_test_shopping(session):
                             requesting_user='sy7@princeton.edu',
                             food_type="Condiment",
                             alt_request="Tabasco",
-                            coop_name='2D')
+                            coop_name='2d')
     session.add(item)
     item = models.ShoppingList(item_type="Food",
                             item_name="Coffee syrups",
@@ -99,7 +99,7 @@ def add_test_shopping(session):
                             requesting_user='petrino@princeton.edu',
                             food_type="Special",
                             alt_request="Creamer",
-                            coop_name='Scully')
+                            coop_name='scully')
     session.add(item)
     item = models.ShoppingList(item_type="Equipment",
                             item_name="Nonstick Frying Pan",
@@ -110,7 +110,7 @@ def add_test_shopping(session):
                             requesting_user='sarahep@princeton.edu',
                             food_type="Item",
                             alt_request="Stick Frying Pan",
-                            coop_name='Real Food')
+                            coop_name='realfood')
     session.add(item)
     item = models.ShoppingList(item_type="Equipment",
                             item_name="Bread Roller",
@@ -121,7 +121,7 @@ def add_test_shopping(session):
                             requesting_user='thaldiya@princeton.edu',
                             food_type="Item",
                             alt_request="Hammer",
-                            coop_name='IFC')
+                            coop_name='ifc')
     session.add(item)
     item = models.ShoppingList(item_type="Equipment",
                             item_name="Computer",
@@ -132,7 +132,7 @@ def add_test_shopping(session):
                             requesting_user='dpw@cs.princeton.edu',
                             food_type="Special",
                             alt_request="Laptops",
-                            coop_name='Brown')
+                            coop_name='brown')
     session.add(item)
 # Add test shifts
 def add_test_shifts(session):
@@ -143,7 +143,7 @@ def add_test_shifts(session):
                         shift_day='Thursday',
                         shift_creator='amkumar@princeton.edu',
                         shift_members=['amkumar@princeton.edu', 'sy7@princeton.edu'],
-                        coop_name='2D')
+                        coop_name='brown')
     session.add(shift)
     shift = models.Shifts(shift_name='Brunch',
                         shift_type='Cooking',
@@ -152,7 +152,7 @@ def add_test_shifts(session):
                         shift_day='Sunday',
                         shift_creator='thaldiya@princeton.edu',
                         shift_members=['thaldiya@princeton.edu'],
-                        coop_name='IFC')
+                        coop_name='ifc')
     session.add(shift)
 
 def main():

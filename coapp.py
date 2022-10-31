@@ -53,6 +53,7 @@ def roster(coop):
 @app.route('/<coop>/list', methods=['GET'])
 def list(coop):
     items = database.get_shopping_for_coop(coop)
+    print(items)
     coop_upper = database.get_upper_coop(coop)
     html = flask.render_template('shoppinglist.html',
             items=items, coop=coop, coop_upper=coop_upper)
