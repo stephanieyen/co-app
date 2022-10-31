@@ -25,27 +25,34 @@
             left:'title',
             right: 'prev,next today'
           },
+          eventDisplay: 'block',
           titleFormat: { year: 'numeric', month: 'short', day: 'numeric'},
           initialView: 'dayGridWeek',
           initialDate: new Date().toISOString().slice(0, 10), // today's date
           selectable: true,
+          editable: true,
           nowIndicator: true,
           dayMaxEvents: true,
+          // eventRender: function(info) {
+          //   var tooltip = new Tooltip(info.el, {
+          //   title: info.event.extendedProps.type,
+          //   placement: 'top',
+          //   trigger: 'hover',
+          //   container: 'body'
+          // });
+          // },
           events: [
             {% for event in events %}
             {
               title: '{{event.title}}',
               start: '{{event.start}}',
-              type: '{{event.shift_type}}'
+              type: '{{event.shift_type}}',
+              color: '{{event.color}}'
             },
             {% endfor %}
           ],
-          // eventRender: function (event, element, view) {
-          //   element.find('.fc-title').append('<div class="hr-line-solid-no-margin"></div><span style="font-size: 10px">' + event.type + '</span></div>');
-          // },
           }
         );
-        
         calendar.render();
       };
 

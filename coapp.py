@@ -32,6 +32,14 @@ def calendar(coop):
         data['title'] = shift.shift_name
         data['type'] = shift.shift_type
         data['members'] = shift.shift_members
+        data['item'] = shift.shift_item
+        type = shift.shift_type
+        if type == "Shopping":
+            data['color'] = "#a5d4e8"
+        elif type == "Cooking":
+            data['color'] = "#c4f5d3"
+        else:
+            data['color'] = "#f1d5f2"
         event_json.append(data)
     coop_upper = database.get_upper_coop(coop)
     html_code = flask.render_template('calendar_initialize.html',
