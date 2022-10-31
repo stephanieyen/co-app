@@ -1,6 +1,7 @@
 import flask
 import database
 import json
+from flask import request
 
 #----------------------------------------------------------------------
 
@@ -46,6 +47,16 @@ def calendar(coop):
                 events=event_json, coop=coop, coop_upper=coop_upper)
     response = flask.make_response(html_code)
     return response
+
+# handle event posting from calendar
+@app.route('/postmethod', methods = ['POST'])
+def get_post_javascript_data():
+    # event data is a JSON with shift_time, shift_name, and shift_type
+    jsdata = request.form['event_data']
+    # will eventually make as shift object and send to sqlalchemy? 
+    # but printing for now
+    print(json.loads(jsdata)[0])
+    return
 
 # Co-op Roster
 @app.route('/<coop>/roster', methods=['GET'])
