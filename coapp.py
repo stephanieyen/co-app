@@ -17,15 +17,13 @@ def index():
     return response
 
 #----------------------------------------------------------------------
-# Routes for Brown co-op
+# Routes for Co-ops
 
-# Brown Calendar
-@app.route('/calendar', methods=['GET'])
-@app.route('/brown', methods=['GET'])
-@app.route('/brown/calendar', methods=['GET'])
-def brown_calendar():
+# Co-op Calendar
+@app.route('/<coop>', methods=['GET'])
+@app.route('/<coop>/calendar', methods=['GET'])
+def calendar(coop):
     # TO-DO: convert shifts to JSON for calendar API  
-    coop = 'Brown'
     shifts = database.get_shifts_for_coop(coop)
     event_json = []
     for shift in shifts: 
@@ -41,18 +39,16 @@ def brown_calendar():
     return response
 
 # Brown Roster
-@app.route('/brown/roster', methods=['GET'])
-def brown_roster():
-    coop = 'Brown'
+@app.route('/<coop>/roster', methods=['GET'])
+def roster(coop):
     members = database.get_roster_for_coop(coop)
     html = flask.render_template('roster.html', members=members)
     response = flask.make_response(html)
     return response
 
 # Brown Shopping List
-@app.route('/brown/list', methods=['GET'])
-def brown_list():
-    coop = 'Brown'
+@app.route('/<coop>/list', methods=['GET'])
+def list(coop):
     items = database.get_shopping_for_coop(coop)
     print(items)
     html = flask.render_template('shoppinglist.html', items=items)
