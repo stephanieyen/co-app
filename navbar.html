@@ -1,16 +1,21 @@
 <nav class="navbar navbar-expand-lg bg-light" style="background-color: #a6daff;">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">Brown</a>
+      <a class="navbar-brand" href="/{{coop}}/calendar">{{coop_upper}}</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
-          <a class="nav-link" href='/brown/roster'>Roster</a>
-          <a class="nav-link" href='/brown/calendar'>Calendar</a>
-          <a class="nav-link" href='/brown/list'>ShoppingList</a>
-        </div>
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href='/{{coop}}/roster'>Roster</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href='/{{coop}}/calendar'>Calendar</a>
+          </li>
+          <li>
+            <a class="nav-link" href='/{{coop}}/list'>ShoppingList</a>
+          </li>
+        </ul>
       </div>
     </div>
   </nav>

@@ -10,7 +10,8 @@ class Roster (Base):
     user_name = sqlalchemy.Column(sqlalchemy.String)
     user_allergies = sqlalchemy.Column(sqlalchemy.String)
     user_admin = sqlalchemy.Column(sqlalchemy.Boolean)
-    user_days = sqlalchemy.Column(sqlalchemy.String)
+    user_cookday = sqlalchemy.Column(sqlalchemy.String)
+    user_choreday = sqlalchemy.Column(sqlalchemy.String)
     coop_name = sqlalchemy.Column(sqlalchemy.String)
 
 # Shopping list table

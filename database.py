@@ -1,7 +1,9 @@
+from tokenize import String
 from typing import List
 import sqlalchemy
 import sqlalchemy.orm
 import models
+import coops
 
 # How to use env var for this???
 db_url = 'postgresql://qqoyksvp:4DE2MIUDdxlcY8L66A5aMLj5ze4zaNbF@peanut.db.elephantsql.com/qqoyksvp'
@@ -10,6 +12,9 @@ engine =  sqlalchemy.create_engine(db_url)
 #----------------------------------------------------------------------
 # Co-op info queries
 #----------------------------------------------------------------------
+def get_upper_coop(coop):
+    return coops.get_coop_names()[coop]
+
 # Get the entire roster for a given coop
 def get_roster_for_coop(coop) -> List[models.Roster]:
     coop_roster = []
