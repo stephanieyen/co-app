@@ -1,5 +1,6 @@
 import flask
 import database
+import json
 
 #----------------------------------------------------------------------
 
@@ -26,8 +27,16 @@ def brown_calendar():
     # TO-DO: convert shifts to JSON for calendar API  
     coop = 'Brown'
     shifts = database.get_shifts_for_coop(coop)
+    event_json = []
+    for shift in shifts: 
+        data = {}
+        data['start'] = shift.shift_time
+        data['title'] = shift.shift_name
+        data['type'] = shift.shift_type
+        data['members'] = shift.shift_members
+        event_json.append(data)
 
-    html_code = flask.render_template('calendar_initialize.html')
+    html_code = flask.render_template('calendar_initialize.html', events=event_json)
     response = flask.make_response(html_code)
     return response
 
@@ -45,6 +54,5 @@ def brown_list():
     html = flask.render_template('shoppinglist.html', items=items)
     response = flask.make_response(html)
     return response
-
 
 #----------------------------------------------------------------------
