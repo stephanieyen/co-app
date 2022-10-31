@@ -18,22 +18,17 @@
                       </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <th scope="row">Bob Dondero</th>
-                        <td>Vegan</td>
-                        <td>Sat</td>
-                        <td>Vehicle</td>
-                    </tr>
-                      <!-- {% for item in items: %}
+                      {% for member in members: %}
                         <tr>
-                            <th scope="row">{{item.item_name}}</th>
-                            <td>{{item.item_type}}</td>
-                            <td>{{item.item_quantity}}</td>
-                            <td>{{item.item_reason}}</td>
+                            <th scope="row">{{member.user_name}}</th>
+                            <td>{{member.user_allergies}}</td>
+                            <td>{{member.user_cookday}}</td>
+                            <td>{{member.user_choreday}}</td>
+                            <td>{{member.user_choretype}}</td>
                             <td>Yes</td>
                             <td>No</td>
                         </tr>
-                      {% endfor %} -->
+                      {% endfor %}
                 </tbody>
               </table>
         </div>

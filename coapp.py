@@ -34,7 +34,11 @@ def brown_calendar():
 # Brown Roster
 @app.route('/brown/roster', methods=['GET'])
 def brown_roster():
-    print("brown roster")
+    coop = 'Brown'
+    members = database.get_roster_for_coop(coop)
+    html = flask.render_template('roster.html', members=members)
+    response = flask.make_response(html)
+    return response
 
 # Brown Shopping List
 @app.route('/brown/list', methods=['GET'])
