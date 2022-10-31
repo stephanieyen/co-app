@@ -1,8 +1,8 @@
+from hashlib import new
 import flask
 import database
 import json
-from flask import request
-
+import models
 #----------------------------------------------------------------------
 
 app = flask.Flask(__name__, template_folder='.')
@@ -19,12 +19,36 @@ def index():
 
 #----------------------------------------------------------------------
 # Routes for Co-ops
-
 # Co-op Calendar
-@app.route('/<coop>', methods=['GET'])
-@app.route('/<coop>/calendar', methods=['GET'])
+@app.route('/<coop>', methods=['GET', 'POST'])
+@app.route('/<coop>/calendar', methods=['GET', 'POST'])
 def calendar(coop):
-    # TO-DO: convert shifts to JSON for calendar API  
+    # If posting, create new shift and then load in shifts
+    if flask.request.method == 'POST':
+        data = flask.request.form
+        new_shift_vals = [
+            data['event_data[shift_name]'],
+            data['event_data[shift_type]'],
+            data['event_data[shift_item]'],
+            data['event_data[shift_time]'],
+            data['event_data[shift_day]'],
+            data['event_data[shift_creator]'],
+            [data['event_data[shift_members]']],
+            coop
+        ]
+        # jsdata = request.form['event_data']
+        # print(json.loads(jsdata[0]))
+        new_shift = models.Shifts(shift_name=new_shift_vals[0],
+                                shift_type=new_shift_vals[1],
+                                shift_item=new_shift_vals[2],
+                                shift_time=new_shift_vals[3],
+                                shift_day=new_shift_vals[4],
+                                shift_creator=new_shift_vals[5],
+                                shift_members=new_shift_vals[6],
+                                coop_name=new_shift_vals[7]
+                                )
+        print(new_shift)
+        database.add_shift(new_shift)
     shifts = database.get_shifts_for_coop(coop)
     event_json = []
     for shift in shifts: 
@@ -48,16 +72,6 @@ def calendar(coop):
     response = flask.make_response(html_code)
     return response
 
-# handle event posting from calendar
-@app.route('/postmethod', methods = ['POST'])
-def get_post_javascript_data():
-    # event data is a JSON with shift_time, shift_name, and shift_type
-    jsdata = request.form['event_data']
-    # will eventually make as shift object and send to sqlalchemy? 
-    # but printing for now
-    print(json.loads(jsdata)[0])
-    return
-
 # Co-op Roster
 @app.route('/<coop>/roster', methods=['GET'])
 def roster(coop):
@@ -72,7 +86,6 @@ def roster(coop):
 @app.route('/<coop>/list', methods=['GET'])
 def list(coop):
     items = database.get_shopping_for_coop(coop)
-    print(items)
     coop_upper = database.get_upper_coop(coop)
     html = flask.render_template('shoppinglist.html',
             items=items, coop=coop, coop_upper=coop_upper)

@@ -18,7 +18,6 @@
   <!------------------------CALENDAR SCRIPT ------------------------------------>
   <script>
     document.addEventListener('DOMContentLoaded', generate_calendar)
-
     // CALENDAR GENERATION FUNCTION
     function generate_calendar() {
       var calendarEl = document.getElementById('calendar');
@@ -77,12 +76,18 @@
                   shift_title_input = ""
                 }
 
-                var json_event = {"shift_type":shift_name_input,
-                "shift_time": shift_time_input,
-                 "shift_name":shift_title_input};
+                var json_event = {
+                  "shift_name":shift_title_input,
+                  "shift_type":shift_name_input,
+                  "shift_item":"",
+                  "shift_time": shift_time_input,
+                  "shift_day": "",
+                  "shift_creator": "dpw@cs.princeton.edu",
+                  "shift_members": "dpw@cs.princeton.edu"
+                };
 
                 // AJAX post request
-                 $.post( "/postmethod", {
+                 $.post( "/{{coop}}", {
                     event_data: json_event 
                 });
            });
