@@ -33,8 +33,9 @@ def calendar(coop):
         data['type'] = shift.shift_type
         data['members'] = shift.shift_members
         event_json.append(data)
-
-    html_code = flask.render_template('calendar_initialize.html', events=event_json, coop=coop)
+    coop_upper = database.get_upper_coop(coop)
+    html_code = flask.render_template('calendar_initialize.html',
+                events=event_json, coop=coop, coop_upper=coop_upper)
     response = flask.make_response(html_code)
     return response
 
@@ -42,7 +43,9 @@ def calendar(coop):
 @app.route('/<coop>/roster', methods=['GET'])
 def roster(coop):
     members = database.get_roster_for_coop(coop)
-    html = flask.render_template('roster.html', members=members, coop=coop)
+    coop_upper = database.get_upper_coop(coop)
+    html = flask.render_template('roster.html',
+            members=members, coop=coop, coop_upper=coop_upper)
     response = flask.make_response(html)
     return response
 
@@ -50,8 +53,9 @@ def roster(coop):
 @app.route('/<coop>/list', methods=['GET'])
 def list(coop):
     items = database.get_shopping_for_coop(coop)
-    print(items)
-    html = flask.render_template('shoppinglist.html', items=items, coop=coop)
+    coop_upper = database.get_upper_coop(coop)
+    html = flask.render_template('shoppinglist.html',
+            items=items, coop=coop, coop_upper=coop_upper)
     response = flask.make_response(html)
     return response
 
