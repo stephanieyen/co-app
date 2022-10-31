@@ -49,10 +49,11 @@
           
           // EVENT-ADDING FUNCTIONS
           // When u select some space in the calendar do the following:
-          select: function (start, end, allDay) {
+          select: function (info) {
             var myModal = new bootstrap.Modal(document.getElementById('createEventModal'))
             //Show 'add event' modal
             myModal.show();
+            document.getElementById('add_date').value = info.startStr;
           },
           
           }
@@ -65,13 +66,25 @@
         add_button.addEventListener('click', doSubmit(), false);
       }
       function doSubmit(){
-        // ADD EVENT SUBMISSION CODE 
+        console.log("test!")
+        myModal = document.getElementById('createEventModal')
+        //Show 'add event' modal
+        myModal.modal.hide();
+
+        var calendar = document.getElementById('calendar');
+        event = {
+            title: document.getElementById('add_title'),
+            start: document.getElementById('add_date'),
+        }
+        console.log(event)
+        calendar.fullCalendar('addEvent',
+            event,
+            true);
        }
-
-
+       
   </script>
 </head>
-<!--------------------------------BODY-------------------------------------->
+<!--------------------------------BODY---------------------------------------->
 
 <body>
   {% include 'navbar.html' %}
@@ -81,42 +94,39 @@
   <div id="createEventModal" class="modal fade">
     <div class="modal-dialog">
       <div class="modal-content">
+
+        <!-- header and close button -->
         <div class="modal-header">
-          <h4>Add Shift</h4>
-          <button type="button" class="close" data-dismiss="createEventModal"><span aria-hidden="true">&times;</span> <span
+          <h4>Add Shift</h4>  
+          </p><button type="button" class="close" data-bs-dismiss="modal"><span aria-hidden="true">&times;</span> <span
               class="sr-only">close</span></button>
         </div>
+
         <div id="modalBody" class="modal-body">
+          <!-- drop-down menu -->
           <div class="form-group">
-            <input class="form-control" type="text" placeholder="Shift Type" id="add_title">
+            <label for="add_type">Shift Type:</label>
+            <select class="form-control" id="add_type" placeholder="Shift Type">
+              <option>Cooking</option>
+              <option>Shopping</option>
+              <option>Clean-up</option>
+              <option>Other</option>
+            </select>
           </div>
-
-          <!-- <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-              Shift Type
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-              <li><a class="dropdown-item">Cooking</a></li>
-              <li><a class="dropdown-item">Cleaning</a></li>
-              <li><a class="dropdown-item">Shopping</a></li>
-              <li><a class="dropdown-item">Other</a></li>
-            </ul>
-          </div> -->
-
+                    
+          <!-- shift date (autofilled from select) -->
           <div class="form-group form-inline">
-            <div class="input-group date" data-provide="datepicker">
-              <input type="text" id="add_date" class="form-control" placeholder="Due Date mm/dd/yyyy">
-              <div class="input-group-addon">
-                <span class="glyphicon glyphicon-calendar"></span>
-              </div>
-            </div>
+            <br><p>Shift Date:</p><input type="text" id="add_date" class="form-control" placeholder="Date yyyy/mm/dd">
           </div>
 
+          <!-- additional info/comments -->
           <div class="form-group">
-            <textarea class="form-control" type="text" rows="4" placeholder="Planned Meal"
+            <br><p>Additional Info:</p><textarea class="form-control" type="text" rows="4" placeholder="Planned meal, social event, etc:"
               id="add_item"></textarea>
           </div>
         </div>
+
+        <!-- submit button -->
         <div class="modal-footer">
           <button type="submit" class="btn btn-primary" id="add_submit">Add Shift</button>
         </div>
