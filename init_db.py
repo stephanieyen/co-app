@@ -22,42 +22,48 @@ def add_test_roster(session):
                         user_name='Arnav Kumar',
                         user_allergies='N/A',
                         user_admin=False,
-                        user_days='M W F',
+                        user_cookday='M W F',
+                        user_choreday='M',
                         coop_name='2D')
     session.add(user)
     user = models.Roster(user_email='sy7@princeton.edu',
                         user_name='Stephanie Yen',
                         user_allergies='N/A',
                         user_admin=True,
-                        user_days='T W F',
+                        user_cookday='T W F',
+                        user_choreday='T',
                         coop_name='2D')
     session.add(user)
     user = models.Roster(user_email='petrino@princeton.edu',
                         user_name='Erin Petrino',
                         user_allergies='Vegan',
                         user_admin=False,
-                        user_days='T Th Sat Sun',
+                        user_cookday='T Th Sat Sun',
+                        user_choreday='T',
                         coop_name='Scully')
     session.add(user)
     user = models.Roster(user_email='sarahep@princeton.edu',
                         user_name='Sarah Pedersen',
                         user_allergies='Peanut Allergy',
                         user_admin=False,
-                        user_days='M W F Sun',
+                        user_cookday='M W F Sun',
+                        user_choreday='M',
                         coop_name='Real Food')
     session.add(user)
     user = models.Roster(user_email='thaldiya@princeton.edu',
                         user_name='Tanvi Haldiya',
                         user_allergies='Soy Allergy',
                         user_admin=False,
-                        user_days='M T Th F',
+                        user_cookday='M T Th F',
+                        user_choreday='M',
                         coop_name='IFC')
     session.add(user)
     user = models.Roster(user_email='dpw@cs.princeton.edu',
                         user_name='David Walker',
                         user_allergies='N/A',
                         user_admin=True,
-                        user_days='T W F',
+                        user_cookday='T W F',
+                        user_choreday='T',
                         coop_name='Brown')
     session.add(user)
 # Add test shopping list
