@@ -1,3 +1,4 @@
+# File of coop names by URL
 def get_coop_names():
     coops = {
         'brown': 'Brown',
