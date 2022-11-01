@@ -83,8 +83,36 @@ def roster(coop):
     return response
 
 # Co-op Shopping List
-@app.route('/<coop>/list', methods=['GET'])
+@app.route('/<coop>/list', methods=['GET', 'POST'])
 def list(coop):
+    if flask.request.method == 'POST':
+        data = flask.request.form 
+        new_item_vals = [
+            data['event_data[item_type]'],
+            data['event_data[item_name]'],
+            data['event_data[item_quantity]'],
+            data['event_data[item_ordered]'],
+            data['event_data[for_shift]'],
+            data['event_data[item_reason]'],
+            data['event_data[requesting_user]'],
+            data['event_data[food_type]'],
+            data['event_data[alt_request]'],
+            coop
+        ]
+        new_item = models.ShoppingList(item_type=new_item_vals[0],
+                                    item_name=new_item_vals[1],
+                                    item_quantity=new_item_vals[2],
+                                    item_ordered=new_item_vals[3],
+                                    for_shift=new_item_vals[4],
+                                    item_reason=new_item_vals[5],
+                                    requesting_user=new_item_vals[6],
+                                    food_type=new_item_vals[7],
+                                    alt_request=new_item_vals[8],
+                                    coop_name=new_item_vals[9]
+                                    )
+        print(new_item)
+        database.add_item(new_item)
+
     items = database.get_shopping_for_coop(coop)
     coop_upper = database.get_upper_coop(coop)
     html = flask.render_template('shoppinglist.html',

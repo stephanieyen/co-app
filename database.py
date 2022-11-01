@@ -13,6 +13,7 @@ engine =  sqlalchemy.create_engine(db_url)
 # Co-op info queries
 #----------------------------------------------------------------------
 def get_upper_coop(coop):
+    ''' returns the correctly-cased string of the input co-op name'''
     return coops.get_coop_names()[coop]
 
 # Get the entire roster for a given coop
