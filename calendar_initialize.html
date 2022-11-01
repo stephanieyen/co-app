@@ -58,10 +58,16 @@
 
             // add event to calendar if submitted & hide modal
             $('#add_submit').on('click', function(){
+              let newColor = "#f1d5f2";
+              if (document.getElementById('add_type').value == "Shopping")
+                newColor = "#a5d4e8";
+              else if (document.getElementById('add_type').value == "Cooking")
+                newColor = "#c4f5d3";
+
               var event = {
                 title: document.getElementById('add_title').value,
                 start: document.getElementById('add_date').value,
-                // color: newColor,
+                color: newColor,
               }
               calendar.addEvent(event);
               $('#add_submit').unbind('click');
