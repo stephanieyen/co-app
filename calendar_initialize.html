@@ -58,38 +58,43 @@
 
             // add event to calendar if submitted & hide modal
             $('#add_submit').on('click', function(){
-                var event = {
-                  title: document.getElementById('add_type').value,
-                  start: document.getElementById('add_date').value,
-                }
-                calendar.addEvent(event);
-                $('#add_submit').unbind('click');
-                $('#createEventModal').modal('hide');
+              var event = {
+                title: document.getElementById('add_title').value,
+                start: document.getElementById('add_date').value,
+                // color: newColor,
+              }
+              calendar.addEvent(event);
+              $('#add_submit').unbind('click');
+              $('#createEventModal').modal('hide');
 
-                // AJAX update database
-                let shift_title_input = ""
-                let shift_name_input = document.getElementById('add_type').value;
-                let shift_time_input = document.getElementById('add_date').value;
-                if (document.getElementById('add_item') != null) {
-                  let shift_title_input = document.getElementById('add_item').value;
-                } else {
-                  shift_title_input = ""
-                }
+              // extract input from modal
+              let shift_meal_input = ""
+              let shift_members_input = ""
+              let shift_title_input = document.getElementById('add_title').value;
+              let shift_name_input = document.getElementById('add_type').value;
+              let shift_time_input = document.getElementById('add_date').value;
+              if (document.getElementById('add_meal') != null) {
+                shift_meal_input = document.getElementById('add_meal').value;
+              }
+              if (document.getElementById('add_members') != null) {
+                shift_members_input = document.getElementById('add_members').value;
+              }
 
-                var json_event = {
-                  "shift_name":shift_title_input,
-                  "shift_type":shift_name_input,
-                  "shift_item":"",
-                  "shift_time": shift_time_input,
-                  "shift_day": "",
-                  "shift_creator": "dpw@cs.princeton.edu",
-                  "shift_members": "dpw@cs.princeton.edu"
-                };
+              // AJAX update database
+              var json_event = {
+                "shift_name": shift_title_input,
+                "shift_type": shift_name_input,
+                "shift_item": shift_meal_input,
+                "shift_time": shift_time_input,
+                "shift_day": "", // i think this might be causing errors: info.start.toLocaleString('default', {weekday: 'long'}),
+                "shift_creator": "dpw@cs.princeton.edu",
+                "shift_members": shift_members_input
+              };
 
-                // AJAX post request
-                 $.post( "/{{coop}}", {
-                    event_data: json_event 
-                });
+              // AJAX post request
+              $.post( "/{{coop}}", {
+                event_data: json_event 
+              });
            });
 
           },
@@ -98,6 +103,16 @@
         );
         calendar.render();
       };
+
+      // will display additional form fields if "cooking" chosen
+      function checkIfCook() {
+        if (document.getElementById('add_type').value == 'Cooking') {
+          document.getElementById('extra').style.display = '';
+          document.getElementById('add_meal').disabled = false;
+        } else {
+          document.getElementById('extra').style.display = 'none';
+        }
+      }
 
   </script>
 </head>
@@ -118,29 +133,43 @@
           </p><button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span
               class="sr-only">close</span></button>
         </div>
-
+        
         <div id="modalBody" class="modal-body">
+
+          <!-- shift description -->
+          <div class="form-group form-inline">
+            <p>Shift Description:</p><input type="text" id="add_title" class="form-control" placeholder="Brunch? Going to Wegmans?" required>
+          </div>
+
           <!-- drop-down menu -->
-          <div class="form-group">
-            <label for="add_type">Shift Type:</label>
-            <select class="form-control" id="add_type" placeholder="Shift Type">
+          <div select onchange='checkIfCook()' class="form-group">
+            <br><label for="add_type">Shift Type:</label>
+            <select class="form-control" id="add_type" placeholder="Shift Type" required>
               <option>Cooking</option>
               <option>Shopping</option>
               <option>Clean-up</option>
               <option>Other</option>
             </select>
           </div>
-                    
+
+          <!-- planned meal only shown if "cooking" shift -->
+          <div id="extra" name="extra" style="display: none">
+              <div class="form-group">
+                  <br><p>Planned Meal:</p><textarea class="form-control" type="text" rows="4" placeholder="Planned meal:"
+                  id="add_meal" disabled></textarea>
+              </div>
+          </div>
+                 
           <!-- shift date (autofilled from select) -->
           <div class="form-group form-inline">
-            <br><p>Shift Date:</p><input type="text" id="add_date" class="form-control" placeholder="Date yyyy/mm/dd">
+            <br><p>Shift Date:</p><input type="text" id="add_date" class="form-control" placeholder="Date yyyy/mm/dd" required>
           </div>
 
-          <!-- additional info/comments -->
-          <div class="form-group">
-            <br><p>Additional Info:</p><textarea class="form-control" type="text" rows="4" placeholder="Planned meal, social event, etc:"
-              id="add_item"></textarea>
+          <!-- shift members -->
+          <div class="form-group form-inline">
+              <br><p>Shift Members:</p><input type="text" id="add_members" class="form-control" placeholder="Emails:">
           </div>
+          
         </div>
 
         <!-- submit button -->
