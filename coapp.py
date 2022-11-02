@@ -86,29 +86,18 @@ def roster(coop):
 @app.route('/<coop>/list', methods=['GET', 'POST'])
 def list(coop):
     if flask.request.method == 'POST':
-        data = flask.request.form 
-        new_item_vals = [
-            data['event_data[item_type]'],
-            data['event_data[item_name]'],
-            data['event_data[item_quantity]'],
-            data['event_data[item_ordered]'],
-            data['event_data[for_shift]'],
-            data['event_data[item_reason]'],
-            data['event_data[requesting_user]'],
-            data['event_data[food_type]'],
-            data['event_data[alt_request]'],
-            coop
-        ]
-        new_item = models.ShoppingList(item_type=new_item_vals[0],
-                                    item_name=new_item_vals[1],
-                                    item_quantity=new_item_vals[2],
-                                    item_ordered=new_item_vals[3],
-                                    for_shift=new_item_vals[4],
-                                    item_reason=new_item_vals[5],
-                                    requesting_user=new_item_vals[6],
-                                    food_type=new_item_vals[7],
-                                    alt_request=new_item_vals[8],
-                                    coop_name=new_item_vals[9]
+        data = json.loads(flask.request.form.to_dict()['event_data'])
+
+        new_item = models.ShoppingList(item_type=data['item_type'],
+                                    item_name=data['item_name'],
+                                    item_quantity=data['item_quantity'],
+                                    item_ordered=False,
+                                    for_shift=False,
+                                    item_reason=data['item_reason'],
+                                    requesting_user=data['requesting_user'],
+                                    food_type=data['food_type'],
+                                    alt_request=data['alt_request'],
+                                    coop_name=coop
                                     )
         print(new_item)
         database.add_item(new_item)

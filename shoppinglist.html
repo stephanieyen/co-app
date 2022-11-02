@@ -12,49 +12,7 @@
     <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
-  
-
-    <script>
-      document.addEventListener('DOMContentLoaded', submit)
-
-      // add item to shopping list if submitted & hide modal
-      function submit() {
-        $('#add_submit').on('click', function(){
-          console.log('clicked')
-
-          $('#add_submit').unbind('click');
-          $('#createItemModal').modal('hide');
-
-          // AJAX update database
-          let item_type = document.getElementById('itemtype').value;
-          let food_type = document.getElementById('foodtype').value;
-          let item_name = document.getElementById('item').value;
-          let item_reason = document.getElementById('comments').value;
-          let alt_request = document.getElementById('alt_item').value;
-          let for_shift = document.getElementById('for_shift').value;
-
-          var json_event = {
-            "item_type":item_type,
-            "item_name":item,
-            "item_quantity":"",
-            "item_ordered":"",
-            "for_shift": for_shift,
-            "item_reason": item_reason,
-            "requesting_user": "dpw@cs.princeton.edu",
-            "food_type": food_type,
-            "alt_request": alt_request
-          };
-
-          console.log(json_event)
-
-          // AJAX post request
-          $.post( "/{{coop}}/list", {
-            event_data: json_event 
-          });
-        });
-      }
-    </script>
-  </head>
+</head>
 
 <body>
     {% include 'navbar.html' %}
@@ -125,6 +83,58 @@
     </div>
   </div>
 
-
 </body>
+
+<script>
+  // document.addEventListener('DOMContentLoaded', submit)
+
+  // var addSubmit = document.getElementById('add_submit');
+  // // if(addSubmit){
+  //   addSubmit.addEventListener('click', addItem);
+  // }
+
+  // // add item to shopping list if submitted & hide modal
+  // function submit() {
+    // $('#add_submit').on('click', function(){
+  // function addItem() {
+    $("#createItemModal").on( "click", "#add_submit", function() {
+      console.log('clicked')
+
+      $('#add_submit').unbind('click');
+      $('#createItemModal').modal('hide');
+
+      // AJAX update database
+      let item_type = document.getElementById('item_type').value;
+      let food_type = document.getElementById('food_type').value;
+      let item_name = document.getElementById('item_name').value;
+      let item_reason = document.getElementById('item_reason').value;
+      let alt_request = document.getElementById('alt_request').value;
+      let for_shift = document.getElementById('for_shift').value;
+
+      var json_event = {
+        "item_type":item_type,
+        "item_name":item_name,
+        "item_quantity":"",
+        "item_ordered":false,
+        "for_shift": false,
+        "item_reason": item_reason,
+        "requesting_user": "dpw@cs.princeton.edu",
+        "food_type": food_type,
+        "alt_request": alt_request
+      };
+
+      console.log(json_event)
+
+      // AJAX post request
+      $.post( "/{{coop}}/list", {
+        dataType: 'json',
+        contentType: 'application/json',
+        event_data: JSON.stringify(json_event)
+      });
+    });
+
+
+</script>
+
+
 </html>
