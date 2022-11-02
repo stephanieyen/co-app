@@ -13,7 +13,6 @@
 
   <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='calendar.css') }}" />
   <script type='text/javascript' src="{{ url_for('static',filename='calendar.js') }}"></script>
-
   
   <!------------------------CALENDAR SCRIPT ------------------------------------>
   <script>
@@ -44,11 +43,36 @@
               {
               title: '{{event.title}}',
               start: '{{event.start}}',
-              type: '{{event.shift_type}}',
-              color: '{{event.color}}'
+              color: '{{event.color}}',
+              extendedProps: {
+                type: '{{event.type}}',
+                members: '{{event.members}}',
+                meal: '{{event.item}}'
+              }
               },
             {% endfor %}
           ],
+
+          eventDidMount: function(info) {
+            let isCooking = false;
+            if(info.event.extendedProps.type === 'Cooking') {
+              isCooking = true;
+            };
+            let meal = info.event.extendedProps.meal;
+            $(info.el).tooltip({
+                title: "<b>Shift Type: "+info.event.extendedProps.type +"</b><br>" + 
+                "Members: " + info.event.extendedProps.members + "<br>",
+                // fix jinja to add planned meal if cook shift
+                // {% if isCooking %}
+                // {
+                //    + "Planned Meal: " + meal
+                // }
+                // {% endif %},
+                html: true,
+                container: 'body',
+                delay: { "show": 50, "hide": 50 }
+            });
+          },
           
           // EVENT-EDITING FUNCTIONS
           select: function (info) {
@@ -68,7 +92,13 @@
                 title: document.getElementById('add_title').value,
                 start: document.getElementById('add_date').value,
                 color: newColor,
+                extendedProps: {
+                  type: document.getElementById('add_type').value,
+                  members: document.getElementById('add_members').value,
+                  meal: document.getElementById('add_meal').value
+                }
               }
+
               calendar.addEvent(event);
               $('#add_submit').unbind('click');
               $('#createEventModal').modal('hide');
