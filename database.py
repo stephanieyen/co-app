@@ -57,13 +57,27 @@ def get_user(email) -> models.Roster:
         user = session.query(models.Roster).filter(
             models.Roster.user_email == email).first()
     return user
-# Update a user's information in field to newVal
-def update_user(email, field, newVal):
+# Update a user's information
+def update_user(email, new_user: models.Roster):
     with sqlalchemy.orm.Session(engine) as session:
         session.query(models.Roster).filter(
             models.Roster.user_email == email).update(
-                {field: newVal}
+                {
+                    'user_email': new_user.user_email,
+                    'user_name': new_user.user_name,
+                    'user_allergies': new_user.user_allergies,
+                    'user_admin': new_user.user_admin,
+                    'user_cookday': new_user.user_cookday,
+                    'user_choreday': new_user.user_choreday,
+                    'coop_name': new_user.coop_name,
+                }
             )
+        session.commit()
+# Delete a user's information
+def delete_user(email):
+    with sqlalchemy.orm.Session(engine) as session:
+        session.query(models.Roster).filter(
+            models.Roster.user_email == email).delete()
         session.commit()
 #----------------------------------------------------------------------
 # Shopping List queries
@@ -81,12 +95,28 @@ def get_item(id) -> models.ShoppingList:
             models.ShoppingList.item_id == id).first()
     return item
 # Update a item's information
-def update_item(id, field, newVal):
+def update_item(id, new_item: models.ShoppingList):
     with sqlalchemy.orm.Session(engine) as session:
         session.query(models.ShoppingList).filter(
             models.ShoppingList.item_id == id).update(
-                {field: newVal}
+                {
+                    'item_type': new_item.item_type,
+                    'item_name': new_item.item_name,
+                    'item_quantity': new_item.item_quantity,
+                    'for_shift': new_item.for_shift,
+                    'item_reason': new_item.item_reason,
+                    'requesting_user': new_item.requesting_user,
+                    'food_type': new_item.food_type,
+                    'alt_request': new_item.alt_request,
+                    'coop_name': new_item.coop_name
+                }
             )
+        session.commit()
+# Delete a shift's information
+def delete_item(id):
+    with sqlalchemy.orm.Session(engine) as session:
+        session.query(models.ShoppingList).filter(
+            models.ShoppingList.item_id == id).delete()
         session.commit()
 #----------------------------------------------------------------------
 # Shift queries
@@ -104,17 +134,32 @@ def get_shift(id) -> models.Shifts:
             models.Shifts.shift_id == id).first()
     return shift
 # Update a shift's information
-def update_shift(id, field, newVal):
+def update_shift(id, new_shift: models.Shifts):
     with sqlalchemy.orm.Session(engine) as session:
         session.query(models.Shifts).filter(
             models.Shifts.shift_id == id).update(
-                {field: newVal}
+                {
+                    'shift_name': new_shift.shift_name,
+                    'shift_type': new_shift.shift_type,
+                    'shift_item': new_shift.shift_item,
+                    'shift_time': new_shift.shift_time,
+                    'shift_day': new_shift.shift_day,
+                    'shift_creator': new_shift.shift_creator,
+                    'shift_members': new_shift.shift_members,
+                    'coop_name': new_shift.coop_name
+                }
             )
+        session.commit()
+# Delete a shift's information
+def delete_shift(id):
+    with sqlalchemy.orm.Session(engine) as session:
+        session.query(models.Shifts).filter(
+            models.Shifts.shift_id == id).delete()
         session.commit()
 #----------------------------------------------------------------------
 
 # Unit testing for these
 def main():
-    print("test")
+    print("No testing available for this")
 if __name__ == '__main__':
     main()
