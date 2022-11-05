@@ -1,4 +1,3 @@
-from hashlib import new
 import flask
 import database
 import json
@@ -7,6 +6,11 @@ import models
 
 app = flask.Flask(__name__, template_folder='.')
 
+# Import after making auth since auth uses app
+import auth
+
+# Fake secret key ???
+app.secret_key = b'\xbc>\xe0\xf8\xdf\x84\xe9aS\x02`i\x8e\xa1\xee\x92'
 #----------------------------------------------------------------------
 
 # Home page
@@ -110,3 +114,19 @@ def list(coop):
     return response
 
 #----------------------------------------------------------------------
+# CAS Login Route
+@app.route('/netID', methods=['GET'])
+def netID():
+    _ = auth.authenticate()
+    coop = flask.session.get('coop')
+    if coop == 'brown':
+        return flask.redirect('/brown')
+    elif coop == 'scully':
+        return flask.redirect('/scully')
+    elif coop == 'ifc':
+        return flask.redirect('/ifc')
+    elif coop == '2d':
+        return flask.redirect('/2d')
+    elif coop == 'realfood':
+        return flask.redirect('/realfood')
+
