@@ -57,6 +57,7 @@ def calendar(coop):
     event_json = []
     for shift in shifts: 
         data = {}
+        data['id'] = shift.shift_id
         data['start'] = shift.shift_time
         data['title'] = shift.shift_name
         data['type'] = shift.shift_type

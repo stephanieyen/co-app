@@ -578,6 +578,7 @@ A HORIZONTAL event
 .fc-h-event { /* allowed to be top-level */
   display: block;
   border: 1px solid #3788d8;
+  height: 70px !important; /* CHANGED HEIGHT OF EVENT */
   border: 1px solid var(--fc-event-border-color, #3788d8);
   background-color: #3788d8;
   background-color: var(--fc-event-bg-color, #3788d8)
@@ -588,7 +589,7 @@ A HORIZONTAL event
     color: var(--fc-event-text-color, #fff);
   }
 .fc-h-event .fc-event-main-frame {
-    display: flex; /* for make fc-event-title-container expand */
+    display: block; /* for make fc-event-title-container expand */
   }
 .fc-h-event .fc-event-time {
     max-width: 100%; /* clip overflow on this element */

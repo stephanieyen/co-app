@@ -9,11 +9,13 @@
   <link href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css' rel='stylesheet'>
   <!------------------------JS/CSS/JQuery/Bootstrap src for calendar ------------>
   <script type='text/javascript' src="{{ url_for('static',filename='jquery-3.6.1.min.js') }}"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+    crossorigin="anonymous"></script>
 
   <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='calendar.css') }}" />
   <script type='text/javascript' src="{{ url_for('static',filename='calendar.js') }}"></script>
-  
+
   <!------------------------CALENDAR SCRIPT ------------------------------------>
   <script>
     document.addEventListener('DOMContentLoaded', generate_calendar)
@@ -41,146 +43,246 @@
           events: [
             {% for event in events %}
               {
-              title: '{{event.title}}',
-              start: '{{event.start}}',
-              color: '{{event.color}}',
-              extendedProps: {
-                type: '{{event.type}}',
-                members: '{{event.members}}',
-                meal: '{{event.item}}'
-              }
-              },
-            {% endfor %}
-          ],
+          id: '{{event.id}}',
+          title: '{{event.title}}',
+          start: '{{event.start}}',
+          color: '{{event.color}}',
+          extendedProps: {
+            type: '{{event.type}}',
+            members: '{{event.members}}',
+            meal: '{{event.item}}'
+          }
+        },
+        {% endfor %}
+            ],
 
-          eventDidMount: function(info) {
-            let isCooking = false;
-            if(info.event.extendedProps.type === 'Cooking') {
-              isCooking = true;
-            };
-            let meal = info.event.extendedProps.meal;
-            $(info.el).tooltip({
-                title: "<b>Shift Type: "+info.event.extendedProps.type +"</b><br>" + 
-                "Members: " + info.event.extendedProps.members + "<br>",
-                // fix jinja to add planned meal if cook shift
-                // {% if isCooking %}
-                // {
-                //    + "Planned Meal: " + meal
-                // }
-                // {% endif %},
-                html: true,
-                container: 'body',
-                delay: { "show": 50, "hide": 50 }
-            });
-          },
-          
-          // EVENT-EDITING FUNCTIONS
-          select: function (info) {
-            // show event modal (autofill with selected time)
-            $('#createEventModal').modal('show');
-            document.getElementById('add_date').value = info.startStr;
+    // hovering over event 
+    eventDidMount: function(info) {
+      let isCooking = false;
+      if (info.event.extendedProps.type === 'Cooking') {
+        isCooking = true;
+      };
+      let meal = info.event.extendedProps.meal;
+      $(info.el).tooltip({
+        title: "<b>Shift Type: " + info.event.extendedProps.type + "</b><br>" +
+          "Members: " + info.event.extendedProps.members + "<br>",
+        // fix jinja to add planned meal if cook shift
+        // {% if isCooking %}
+        // {
+        //    + "Planned Meal: " + meal
+        // }
+        // {% endif %},
+        html: true,
+        container: 'body',
+        delay: { "show": 50, "hide": 50 }
+      });
+    },
 
-            // add event to calendar if submitted & hide modal
-            $('#add_submit').on('click', function(){
-              let newColor = "#f1d5f2";
-              if (document.getElementById('add_type').value == "Shopping")
-                newColor = "#a5d4e8";
-              else if (document.getElementById('add_type').value == "Cooking")
-                newColor = "#c4f5d3";
+    // when user clicks on an event --> modal with options to delete or edit event
+    eventClick: function(info) {
+      $('#updateEventModal').modal('show');
+      document.getElementById('update_title').value = info.event.title;
+      document.getElementById('update_date').value = info.event.startStr;
+      document.getElementById('update_type').value = info.event.extendedProps.type;
+      // FIX TO SHOW PLANNED MEAL IF COOK SHIFT
+      // checkIfCook();
+      document.getElementById('update_meal').value = info.event.extendedProps.meal;
+      document.getElementById('update_members').value = info.event.extendedProps.members;
 
-              var event = {
-                title: document.getElementById('add_title').value,
-                start: document.getElementById('add_date').value,
-                color: newColor,
-                extendedProps: {
-                  type: document.getElementById('add_type').value,
-                  members: document.getElementById('add_members').value,
-                  meal: document.getElementById('add_meal').value
-                }
-              }
+      // DELETE event from calendar/db if button clicked
+      $('#update_delete').on('click', function () {
+        $('#update_delete').unbind('click');
+        $('#updateEventModal').modal('hide');
+        info.event.remove()
 
-              calendar.addEvent(event);
-              $('#add_submit').unbind('click');
-              $('#createEventModal').modal('hide');
+        // EDIT ajax post request -- need anything other than id?
+        $.post("/{{coop}}", {
+          event_id: info.event.id
+        });
+      });
 
-              // extract input from modal
-              let shift_meal_input = ""
-              let shift_members_input = ""
-              let shift_title_input = document.getElementById('add_title').value;
-              let shift_name_input = document.getElementById('add_type').value;
-              let shift_time_input = document.getElementById('add_date').value;
-              if (document.getElementById('add_meal') != null) {
-                shift_meal_input = document.getElementById('add_meal').value;
-              }
-              if (document.getElementById('add_members') != null) {
-                shift_members_input = document.getElementById('add_members').value;
-              }
+      // UPDATE event on calendar/db if button clicked 
+      $('#update_submit').on('click', function () {
+        $('#update_submit').unbind('click');
+        $('#updateEventModal').modal('hide');
 
-              // AJAX update database
-              var json_event = {
-                "shift_name": shift_title_input,
-                "shift_type": shift_name_input,
-                "shift_item": shift_meal_input,
-                "shift_time": shift_time_input,
-                "shift_day": "", // i think this might be causing errors: info.start.toLocaleString('default', {weekday: 'long'}),
-                "shift_creator": "dpw@cs.princeton.edu",
-                "shift_members": shift_members_input
-              };
+        // EDIT ajax post request -- send all event fields?
+        // easier to remove and re-add? or no?
+        $.post("/{{coop}}", {
+          event_id: info.event.id
+        });
 
-              // AJAX post request
-              $.post( "/{{coop}}", {
-                event_data: json_event 
-              });
-           });
 
-          },
+      });
+    }
+          ,
+    // selecting area on the calendar that does NOT already have an event
+    select: function (info) {
+      // show event modal (autofill with selected time)
+      $('#createEventModal').modal('show');
+      document.getElementById('add_date').value = info.startStr;
+
+      // add event to calendar if submitted & hide modal
+      $('#add_submit').on('click', function () {
+        let newColor = "#f1d5f2";
+        if (document.getElementById('add_type').value == "Shopping")
+          newColor = "#a5d4e8";
+        else if (document.getElementById('add_type').value == "Cooking")
+          newColor = "#c4f5d3";
+
+        var event = {
+          title: document.getElementById('add_title').value,
+          start: document.getElementById('add_date').value,
+          color: newColor,
+          extendedProps: {
+            type: document.getElementById('add_type').value,
+            members: document.getElementById('add_members').value,
+            meal: document.getElementById('add_meal').value
+          }
+        }
+
+        calendar.addEvent(event);
+        $('#add_submit').unbind('click');
+        $('#createEventModal').modal('hide');
+
+        // extract input from modal
+        let shift_meal_input = ""
+        let shift_members_input = ""
+        let shift_title_input = document.getElementById('add_title').value;
+        let shift_name_input = document.getElementById('add_type').value;
+        let shift_time_input = document.getElementById('add_date').value;
+        if (document.getElementById('add_meal') != null) {
+          shift_meal_input = document.getElementById('add_meal').value;
+        }
+        if (document.getElementById('add_members') != null) {
+          shift_members_input = document.getElementById('add_members').value;
+        }
+
+        // AJAX update database
+        var json_event = {
+          "shift_name": shift_title_input,
+          "shift_type": shift_name_input,
+          "shift_item": shift_meal_input,
+          "shift_time": shift_time_input,
+          "shift_day": "", // i think this might be causing errors: info.start.toLocaleString('default', {weekday: 'long'}),
+          "shift_creator": "dpw@cs.princeton.edu",
+          "shift_members": shift_members_input
+        };
+
+        // AJAX post request
+        $.post("/{{coop}}", {
+          event_data: json_event
+        });
+      });
+    },
           
           }
         );
-        calendar.render();
+    calendar.render();
       };
 
-      // will display additional form fields if "cooking" chosen
-      function checkIfCook() {
-        if (document.getElementById('add_type').value == 'Cooking') {
-          document.getElementById('extra').style.display = '';
-          document.getElementById('add_meal').disabled = false;
-        } else {
-          document.getElementById('extra').style.display = 'none';
-        }
+    // will display additional form fields if "cooking" chosen
+    function checkIfCook() {
+      if (document.getElementById('add_type').value == 'Cooking') {
+        document.getElementById('extra').style.display = '';
+        document.getElementById('add_meal').disabled = false;
+      } else {
+        document.getElementById('extra').style.display = 'none';
       }
+    }
 
   </script>
 </head>
-<!--------------------------------BODY---------------------------------------->
+
+<!------------------------------HTML BODY------------------------------------->
 
 <body>
   {% include 'navbar.html' %}
   <div id='calendar'></div>
 
-  <!--------------------------------MODAL------------------------------------->
+  <!--------------------------CURRENT EVENT MODAL------------------------------->
+
+  <div id="updateEventModal" class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- header and close button -->
+        <div class="modal-header">
+          <h4>Shift Information</h4>
+          </p><button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span
+              class="sr-only">close</span></button>
+        </div>
+
+        <div id="modalBody" class="modal-body">
+
+          <!-- shift description -->
+          <div class="form-group form-inline">
+            <p>Shift Description:</p><input type="text" id="update_title" class="form-control"
+              placeholder="Brunch? Going to Wegmans?" required>
+          </div>
+
+          <!-- drop-down menu -->
+          <div select onchange='checkIfCook()' class="form-group">
+            <br><label for="add_type">Shift Type:</label>
+            <select class="form-control" id="update_type" placeholder="Shift Type" required>
+              <option>Cooking</option>
+              <option>Shopping</option>
+              <option>Clean-up</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <br>
+          <!-- shift date (autofilled from select) -->
+          <div class="form-group form-inline">
+            <br>
+            <p>Shift Date:</p><input type="text" id="update_date" class="form-control" placeholder="Date yyyy/mm/dd"
+              required>
+          </div>
+
+          <!-- shift members -->
+          <div class="form-group form-inline">
+            <br>
+            <p>Shift Members:</p><input type="text" id="update_members" class="form-control" placeholder="Emails:">
+          </div>
+
+        </div>
+
+        <!-- submit button -->
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary" id="update_submit">Update Shift</button>
+          <button type="submit" class="btn btn-primary" id="update_delete">Delete Shift</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!----------------------------NEW EVENT MODAL------------------------------>
   <div id="createEventModal" class="modal fade">
     <div class="modal-dialog">
       <div class="modal-content">
 
         <!-- header and close button -->
         <div class="modal-header">
-          <h4>Add Shift</h4>  
+          <h4>Add Shift</h4>
           </p><button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span
               class="sr-only">close</span></button>
         </div>
-        
+
         <div id="modalBody" class="modal-body">
 
           <!-- shift description -->
           <div class="form-group form-inline">
-            <p>Shift Description:</p><input type="text" id="add_title" class="form-control" placeholder="Brunch? Going to Wegmans?" required>
+            <p>Shift Description:</p><input type="text" id="add_title" class="form-control"
+              placeholder="Brunch? Going to Wegmans?" required>
           </div>
 
           <!-- drop-down menu -->
           <div select onchange='checkIfCook()' class="form-group">
             <br><label for="add_type">Shift Type:</label>
             <select class="form-control" id="add_type" placeholder="Shift Type" required>
+              <option>Options</option>
               <option>Cooking</option>
               <option>Shopping</option>
               <option>Clean-up</option>
@@ -190,22 +292,75 @@
 
           <!-- planned meal only shown if "cooking" shift -->
           <div id="extra" name="extra" style="display: none">
-              <div class="form-group">
-                  <br><p>Planned Meal:</p><textarea class="form-control" type="text" rows="4" placeholder="Planned meal:"
-                  id="add_meal" disabled></textarea>
-              </div>
+            <div class="form-group">
+              <br>
+              <p>Planned Meal:</p><textarea class="form-control" type="text" rows="4" placeholder="Planned meal:"
+                id="add_meal" disabled></textarea>
+            </div>
           </div>
-                 
+
+          <br>
+          <!-- one-time shift -->
+
+          <input type="checkbox" checked data-toggle="toggle">
+
+          <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#add_date_group"
+            aria-expanded="false" aria-controls="collapseExample">
+            One-Time Shift
+          </button>
+          <!-- recurring shift -->
+          <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#add_recurring_group"
+            aria-expanded="false" aria-controls="collapseExample">
+            Recurring Shift
+          </button>
+
           <!-- shift date (autofilled from select) -->
-          <div class="form-group form-inline">
-            <br><p>Shift Date:</p><input type="text" id="add_date" class="form-control" placeholder="Date yyyy/mm/dd" required>
+          <div id="add_date_group" class="collapse">
+            <div class="form-group form-inline">
+              <br>
+              <p>Shift Date:</p><input type="text" id="add_date" class="form-control" placeholder="Date yyyy/mm/dd">
+            </div>
+          </div>
+          <!-- recurrings shift checkbox -->
+          <div id="add_recurring_group" class="collapse">
+            <ul class="list-group">
+              <li class="list-group-item">
+                <input class="form-check-input me-1" type="checkbox" value="0" aria-label="Sunday">
+                Sunday
+              </li>
+              <li class="list-group-item">
+                <input class="form-check-input me-1" type="checkbox" value="1" aria-label="Monday">
+                Monday
+              </li>
+              <li class="list-group-item">
+                <input class="form-check-input me-1" type="checkbox" value="2" aria-label="Tuesday">
+                Tuesday
+              </li>
+              <li class="list-group-item">
+                <input class="form-check-input me-1" type="checkbox" value="3" aria-label="Wednesday">
+                Wednesday
+              </li>
+              <li class="list-group-item">
+                <input class="form-check-input me-1" type="checkbox" value="4" aria-label="Thursday">
+                Thursday
+              </li>
+              <li class="list-group-item">
+                <input class="form-check-input me-1" type="checkbox" value="5" aria-label="Friday">
+                Friday
+              </li>
+              <li class="list-group-item">
+                <input class="form-check-input me-1" type="checkbox" value="6" aria-label="Saturday">
+                Saturday
+              </li>
+            </ul>
           </div>
 
           <!-- shift members -->
           <div class="form-group form-inline">
-              <br><p>Shift Members:</p><input type="text" id="add_members" class="form-control" placeholder="Emails:">
+            <br>
+            <p>Shift Members:</p><input type="text" id="add_members" class="form-control" placeholder="Emails:">
           </div>
-          
+
         </div>
 
         <!-- submit button -->
@@ -213,7 +368,7 @@
           <button type="submit" class="btn btn-primary" id="add_submit">Add Shift</button>
         </div>
       </div>
-      
+
     </div>
   </div>
 
