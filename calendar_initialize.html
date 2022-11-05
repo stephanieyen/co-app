@@ -9,8 +9,8 @@
   <link href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css' rel='stylesheet'>
   <!------------------------JS/CSS/JQuery/Bootstrap src for calendar ------------>
   <script type='text/javascript' src="{{ url_for('static',filename='jquery-3.6.1.min.js') }}"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     crossorigin="anonymous"></script>
 
   <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='calendar.css') }}" />
@@ -85,7 +85,6 @@
       document.getElementById('update_date').value = info.event.startStr;
       document.getElementById('update_type').value = info.event.extendedProps.type;
       // FIX TO SHOW PLANNED MEAL IF COOK SHIFT
-      // checkIfCook();
       document.getElementById('update_meal').value = info.event.extendedProps.meal;
       document.getElementById('update_members').value = info.event.extendedProps.members;
 
@@ -114,31 +113,62 @@
 
 
       });
-    }
-          ,
+    },
+
     // selecting area on the calendar that does NOT already have an event
     select: function (info) {
       // show event modal (autofill with selected time)
       $('#createEventModal').modal('show');
-      document.getElementById('add_date').value = info.startStr;
+      $('#add_date').val(info.startStr);
+
+      $('#add_type').on('change', function () {
+        if ($('#add_type').val() == 1) {
+          $('#add_meal_visible').show();
+        } else {
+          $('#add_meal_visible').hide();
+        }
+      });
 
       // add event to calendar if submitted & hide modal
       $('#add_submit').on('click', function () {
         let newColor = "#f1d5f2";
-        if (document.getElementById('add_type').value == "Shopping")
+        if ($('#add_type').val() == 2)
           newColor = "#a5d4e8";
-        else if (document.getElementById('add_type').value == "Cooking")
+        else if ($('#add_type').val() == 1)
           newColor = "#c4f5d3";
 
-        var event = {
-          title: document.getElementById('add_title').value,
-          start: document.getElementById('add_date').value,
+
+        var isRecur = $("#add_recurring_group").is(":visible")
+        // if event is recurring
+        if (isRecur) {
+          // get all checked days
+          var days = [];
+          $.each($("input[name='dayofweek']:checked"), function () {
+            days.push($(this).val());
+          });
+          var event = {
+          title: $('#add_title').val(),
+          daysOfWeek: days,
+          startRecur: info.start,
           color: newColor,
           extendedProps: {
-            type: document.getElementById('add_type').value,
-            members: document.getElementById('add_members').value,
-            meal: document.getElementById('add_meal').value
+            type: $('#add_type option:selected').text(),
+            members: $('#add_members').val(),
+            meal: $('#add_meal').val()
           }
+        }
+        // one-time event
+        } else {
+          var event = {
+          title: $('#add_title').val(),
+          start: $('#add_date').val(),
+          color: newColor,
+          extendedProps: {
+            type: $('#add_type option:selected').text(),
+            members: $('#add_members').val(),
+            meal: $('#add_meal').val()
+          }
+        }
         }
 
         calendar.addEvent(event);
@@ -148,24 +178,26 @@
         // extract input from modal
         let shift_meal_input = ""
         let shift_members_input = ""
-        let shift_title_input = document.getElementById('add_title').value;
-        let shift_name_input = document.getElementById('add_type').value;
-        let shift_time_input = document.getElementById('add_date').value;
-        if (document.getElementById('add_meal') != null) {
-          shift_meal_input = document.getElementById('add_meal').value;
+        let shift_title_input = $('#add_title').val();
+        let shift_type_input = $('#add_type option:selected').text();
+        let shift_time_input = $('#add_date').val();
+        if ($('#add_meal') != null) {
+          shift_meal_input = $('#add_meal').val();
         }
-        if (document.getElementById('add_members') != null) {
-          shift_members_input = document.getElementById('add_members').value;
+        if ($('#add_members') != null) {
+          shift_members_input = $('#add_members').val();
         }
+
+        const date = new Date(info.startStr + "T00:00:00");
 
         // AJAX update database
         var json_event = {
           "shift_name": shift_title_input,
-          "shift_type": shift_name_input,
+          "shift_type": shift_type_input,
           "shift_item": shift_meal_input,
           "shift_time": shift_time_input,
-          "shift_day": "", // i think this might be causing errors: info.start.toLocaleString('default', {weekday: 'long'}),
-          "shift_creator": "dpw@cs.princeton.edu",
+          "shift_day": date.toLocaleString('default', { weekday: 'long' }),
+          "shift_creator": "dpw@cs.princeton.edu", // REPLACE W FLASK CURRENT USER NETID
           "shift_members": shift_members_input
         };
 
@@ -173,23 +205,15 @@
         $.post("/{{coop}}", {
           event_data: json_event
         });
+
       });
+
     },
           
           }
         );
     calendar.render();
       };
-
-    // will display additional form fields if "cooking" chosen
-    function checkIfCook() {
-      if (document.getElementById('add_type').value == 'Cooking') {
-        document.getElementById('extra').style.display = '';
-        document.getElementById('add_meal').disabled = false;
-      } else {
-        document.getElementById('extra').style.display = 'none';
-      }
-    }
 
   </script>
 </head>
@@ -209,41 +233,37 @@
         <!-- header and close button -->
         <div class="modal-header">
           <h4>Shift Information</h4>
-          </p><button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span
-              class="sr-only">close</span></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
         <div id="modalBody" class="modal-body">
 
           <!-- shift description -->
           <div class="form-group form-inline">
-            <p>Shift Description:</p><input type="text" id="update_title" class="form-control"
-              placeholder="Brunch? Going to Wegmans?" required>
+            <label for="update_title" class="form-label">Shift Description:</label>
+            <input type="text" class="form-control" id="update_title" placeholder="Brunch? Going to Wegmans?" required>
           </div>
 
-          <!-- drop-down menu -->
-          <div select onchange='checkIfCook()' class="form-group">
-            <br><label for="add_type">Shift Type:</label>
-            <select class="form-control" id="update_type" placeholder="Shift Type" required>
-              <option>Cooking</option>
-              <option>Shopping</option>
-              <option>Clean-up</option>
-              <option>Other</option>
-            </select>
-          </div>
+          <!-- shift type -->
+          <br><label for="update_type">Shift Type:</label>
+          <select class="form-select" id="update_type" aria-label="Select shift type">
+            <option selected>Choose a type</option>
+            <option value="1">Cooking</option>
+            <option value="2">Shopping</option>
+            <option value="3">Clean-up</option>
+            <option value="4">Other</option>
+          </select>
 
-          <br>
           <!-- shift date (autofilled from select) -->
           <div class="form-group form-inline">
-            <br>
-            <p>Shift Date:</p><input type="text" id="update_date" class="form-control" placeholder="Date yyyy/mm/dd"
-              required>
+            <label for="update_date" class="form-label"><br>Shift Date:</label>
+            <input type="text" class="form-control" id="update_date" placeholder="Date yyyy/mm/dd" required>
           </div>
 
           <!-- shift members -->
           <div class="form-group form-inline">
-            <br>
-            <p>Shift Members:</p><input type="text" id="update_members" class="form-control" placeholder="Emails:">
+            <label for="update_members" class="form-label"><br>Shift Members:</label>
+            <input type="text" class="form-control" id="update_members" placeholder="NetID:" required>
           </div>
 
         </div>
@@ -266,88 +286,86 @@
         <!-- header and close button -->
         <div class="modal-header">
           <h4>Add Shift</h4>
-          </p><button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span
-              class="sr-only">close</span></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
         <div id="modalBody" class="modal-body">
-
           <!-- shift description -->
           <div class="form-group form-inline">
-            <p>Shift Description:</p><input type="text" id="add_title" class="form-control"
-              placeholder="Brunch? Going to Wegmans?" required>
+            <label for="add_title" class="form-label">Shift Description:</label>
+            <input type="text" class="form-control" id="add_title" placeholder="Brunch? Going to Wegmans?" required>
           </div>
 
-          <!-- drop-down menu -->
-          <div select onchange='checkIfCook()' class="form-group">
+          <!-- shift type dropdown -->
+          <div class="form-group">
             <br><label for="add_type">Shift Type:</label>
-            <select class="form-control" id="add_type" placeholder="Shift Type" required>
-              <option>Options</option>
-              <option>Cooking</option>
-              <option>Shopping</option>
-              <option>Clean-up</option>
-              <option>Other</option>
+            <select class="form-select" id="add_type" aria-label="Select shift type">
+              <option selected>Select a type</option>
+              <option value="1">Cooking</option>
+              <option value="2">Shopping</option>
+              <option value="3">Clean-up</option>
+              <option value="4">Other</option>
             </select>
           </div>
 
           <!-- planned meal only shown if "cooking" shift -->
-          <div id="extra" name="extra" style="display: none">
-            <div class="form-group">
-              <br>
-              <p>Planned Meal:</p><textarea class="form-control" type="text" rows="4" placeholder="Planned meal:"
-                id="add_meal" disabled></textarea>
-            </div>
+          <div class="form-group" id="add_meal_visible" style="display: none">
+            <br>
+            <p>Planned Meal:</p><textarea class="form-control" type="text" rows="4" placeholder="Planned meal:"
+              id="add_meal"></textarea>
           </div>
 
           <br>
           <!-- one-time shift -->
-          
-          <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#add_date_group"
-            aria-expanded="false" aria-controls="collapseExample">
+          <button class="btn btn-primary" id="one-time" type="button" data-bs-toggle="collapse"
+            data-bs-target="#add_date_group" aria-expanded="false" aria-controls="collapseExample">
             One-Time Shift
           </button>
           <!-- recurring shift -->
-          <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#add_recurring_group"
-            aria-expanded="false" aria-controls="collapseExample">
+          <button class="btn btn-primary" id="recurring" type="button" data-bs-toggle="collapse"
+            data-bs-target="#add_recurring_group" aria-expanded="false" aria-controls="collapseExample">
             Recurring Shift
           </button>
 
           <!-- shift date (autofilled from select) -->
           <div id="add_date_group" class="collapse">
             <div class="form-group form-inline">
-              <br>
-              <p>Shift Date:</p><input type="text" id="add_date" class="form-control" placeholder="Date yyyy/mm/dd">
+              <div class="mb-3">
+                <label for="add_date" class="form-label"><br>Shift Date:</label>
+                <input type="email" class="form-control" id="add_date" placeholder="Date yyyy/mm/dd">
+              </div>
             </div>
           </div>
+
           <!-- recurrings shift checkbox -->
           <div id="add_recurring_group" class="collapse">
             <ul class="list-group">
               <li class="list-group-item">
-                <input class="form-check-input me-1" type="checkbox" value="0" aria-label="Sunday">
+                <input class="form-check-input me-1" name="dayofweek" type="checkbox" value="0" aria-label="Sunday">
                 Sunday
               </li>
               <li class="list-group-item">
-                <input class="form-check-input me-1" type="checkbox" value="1" aria-label="Monday">
+                <input class="form-check-input me-1" name="dayofweek" type="checkbox" value="1" aria-label="Monday">
                 Monday
               </li>
               <li class="list-group-item">
-                <input class="form-check-input me-1" type="checkbox" value="2" aria-label="Tuesday">
+                <input class="form-check-input me-1" name="dayofweek" type="checkbox" value="2" aria-label="Tuesday">
                 Tuesday
               </li>
               <li class="list-group-item">
-                <input class="form-check-input me-1" type="checkbox" value="3" aria-label="Wednesday">
+                <input class="form-check-input me-1" name="dayofweek" type="checkbox" value="3" aria-label="Wednesday">
                 Wednesday
               </li>
               <li class="list-group-item">
-                <input class="form-check-input me-1" type="checkbox" value="4" aria-label="Thursday">
+                <input class="form-check-input me-1" name="dayofweek" type="checkbox" value="4" aria-label="Thursday">
                 Thursday
               </li>
               <li class="list-group-item">
-                <input class="form-check-input me-1" type="checkbox" value="5" aria-label="Friday">
+                <input class="form-check-input me-1" name="dayofweek" type="checkbox" value="5" aria-label="Friday">
                 Friday
               </li>
               <li class="list-group-item">
-                <input class="form-check-input me-1" type="checkbox" value="6" aria-label="Saturday">
+                <input class="form-check-input me-1" name="dayofweek" type="checkbox" value="6" aria-label="Saturday">
                 Saturday
               </li>
             </ul>
@@ -355,8 +373,10 @@
 
           <!-- shift members -->
           <div class="form-group form-inline">
-            <br>
-            <p>Shift Members:</p><input type="text" id="add_members" class="form-control" placeholder="Emails:">
+            <div class="mb-3">
+              <label for="add_members" class="form-label"><br>Shift Members:</label>
+              <input type="text" class="form-control" id="add_members" placeholder="NetID:">
+            </div>
           </div>
 
         </div>
