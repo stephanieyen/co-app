@@ -41,7 +41,12 @@
                         <td>{{item.item_reason}}</td>
                         <td>{{item.alt_request}}</td>
                         <td>{{item.for_shift}}</td>
-                        <td>{{item.item_ordered}}</td>
+                        <td>
+                          <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="check-{{item.item_id}}">
+                            <label class="custom-control-label" for="customCheck3">{{item.item_ordered}}</label>
+                          </div>
+                        </td>
                     </tr>
                   {% endfor %}
             </tbody>
