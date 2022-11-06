@@ -96,6 +96,18 @@ def roster(coop):
     response = flask.make_response(html)
     return response
 
+# Co-op Roster Update
+@app.route('/<coop>/roster/info', methods=['GET'])
+def roster_info(coop):
+    netid = auth.authenticate()
+    email = netid + '@princeton.edu'
+    user = database.get_user(email)
+    coop_upper = database.get_upper_coop(coop)
+    html = flask.render_template('memberinfo.html',
+            user=user, coop_upper=coop_upper)
+    response = flask.make_response(html)
+    return response
+
 # Co-op Shopping List
 @app.route('/<coop>/list', methods=['GET', 'POST'])
 def list(coop):
