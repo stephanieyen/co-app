@@ -2,6 +2,7 @@ import flask
 import database
 import json
 import models
+from flask import jsonify
 #----------------------------------------------------------------------
 
 app = flask.Flask(__name__, template_folder='.')
@@ -53,16 +54,27 @@ def calendar(coop):
                                 )
         print(new_shift)
         database.add_shift(new_shift)
+    coop_upper = database.get_upper_coop(coop)
+    html_code = flask.render_template('calendar_initialize.html',
+                coop=coop, coop_upper=coop_upper)
+    response = flask.make_response(html_code)
+    return response
+
+@app.route('/<coop>/events', methods=['GET'])
+def events(coop):
     shifts = database.get_shifts_for_coop(coop)
     event_json = []
     for shift in shifts: 
+        extendedProps = {}
+        extendedProps['type'] = shift.shift_type
+        extendedProps['members'] = shift.shift_members
+        extendedProps['meal'] = shift.shift_item
+
         data = {}
         data['id'] = shift.shift_id
         data['start'] = shift.shift_time
         data['title'] = shift.shift_name
-        data['type'] = shift.shift_type
-        data['members'] = shift.shift_members
-        data['item'] = shift.shift_item
+        data['extendedProps'] = extendedProps
         type = shift.shift_type
         if type == "Shopping":
             data['color'] = "#a5d4e8" # blue
@@ -71,11 +83,8 @@ def calendar(coop):
         else:
             data['color'] = "#f1d5f2" # pink
         event_json.append(data)
-    coop_upper = database.get_upper_coop(coop)
-    html_code = flask.render_template('calendar_initialize.html',
-                events=event_json, coop=coop, coop_upper=coop_upper)
-    response = flask.make_response(html_code)
-    return response
+    print(jsonify(event_json))
+    return jsonify(event_json)
 
 # Co-op Roster
 @app.route('/<coop>/roster', methods=['GET'])

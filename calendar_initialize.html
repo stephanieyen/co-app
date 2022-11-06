@@ -40,38 +40,30 @@
           editable: true,
           nowIndicator: true,
           dayMaxEvents: true,
-          events: [
-            {% for event in events %}
-              {
-          id: '{{event.id}}',
-          title: '{{event.title}}',
-          start: '{{event.start}}',
-          color: '{{event.color}}',
-          extendedProps: {
-            type: '{{event.type}}',
-            members: '{{event.members}}',
-            meal: '{{event.item}}'
-          }
-        },
-        {% endfor %}
-            ],
+          // generate/refresh events through JSON stream "GET" event source
+          events:
+          {
+            url: '/{{coop}}/events',
+            method: 'GET',
+            failure: function() {
+            alert('there was an error while fetching events!');
+          }}
+        ,
 
-    // hovering over event 
+    // hovering over event provides more information 
     eventDidMount: function(info) {
-      let isCooking = false;
+      titleStr = "<b>Shift Type: " + info.event.extendedProps.type + "</b><br>" +
+        "Members: " + info.event.extendedProps.members + "<br>"
       if (info.event.extendedProps.type === 'Cooking') {
-        isCooking = true;
+        if (info.event.extendedProps.meal === null || info.event.extendedProps.meal === "") {
+          titleStr = titleStr + "Planned meal: N/A"
+        } else {
+          titleStr = titleStr + "Planned meal: " +
+            info.event.extendedProps.meal
+        }
       };
-      let meal = info.event.extendedProps.meal;
       $(info.el).tooltip({
-        title: "<b>Shift Type: " + info.event.extendedProps.type + "</b><br>" +
-          "Members: " + info.event.extendedProps.members + "<br>",
-        // fix jinja to add planned meal if cook shift
-        // {% if isCooking %}
-        // {
-        //    + "Planned Meal: " + meal
-        // }
-        // {% endif %},
+        title: titleStr,
         html: true,
         container: 'body',
         delay: { "show": 50, "hide": 50 }
@@ -80,13 +72,32 @@
 
     // when user clicks on an event --> modal with options to delete or edit event
     eventClick: function(info) {
+      // autofill event information
       $('#updateEventModal').modal('show');
-      document.getElementById('update_title').value = info.event.title;
-      document.getElementById('update_date').value = info.event.startStr;
-      document.getElementById('update_type').value = info.event.extendedProps.type;
-      // FIX TO SHOW PLANNED MEAL IF COOK SHIFT
-      document.getElementById('update_meal').value = info.event.extendedProps.meal;
-      document.getElementById('update_members').value = info.event.extendedProps.members;
+      $('#update_title').val(info.event.title);
+      $('#update_date').val(info.event.startStr);
+      $('#update_meal').val(info.event.extendedProps.meal);
+      $('#update_members').val(info.event.extendedProps.members);
+      if (info.event.extendedProps.type === "Cooking") {
+        $('#add_type').val(1);
+        $('#update_meal_visible').show();
+      } else if (info.event.extendedProps.type === "Shopping") {
+        $('#add_type').val(2);
+        $('#update_meal_visible').hide();
+      } else if (info.event.extendedProps.type === "Clean-up") {
+        $('#add_type').val(3);
+        $('#update_meal_visible').hide();
+      } else {
+        $('#add_type').val(4);
+        $('#update_meal_visible').hide();
+      }
+      $('#update_type').on('change', function () {
+        if ($('#update_type').val() == 1) {
+          $('#update_meal_visible').show();
+        } else {
+          $('#update_meal_visible').hide();
+        }
+      });
 
       // DELETE event from calendar/db if button clicked
       $('#update_delete').on('click', function () {
@@ -131,49 +142,48 @@
 
       // add event to calendar if submitted & hide modal
       $('#add_submit').on('click', function () {
-        let newColor = "#f1d5f2";
-        if ($('#add_type').val() == 2)
-          newColor = "#a5d4e8";
-        else if ($('#add_type').val() == 1)
-          newColor = "#c4f5d3";
+        // let newColor = "#f1d5f2";
+        // if ($('#add_type').val() == 2)
+        //   newColor = "#a5d4e8";
+        // else if ($('#add_type').val() == 1)
+        //   newColor = "#c4f5d3";
 
 
-        var isRecur = $("#add_recurring_group").is(":visible")
-        // if event is recurring
-        if (isRecur) {
-          // get all checked days
-          var days = [];
-          $.each($("input[name='dayofweek']:checked"), function () {
-            days.push($(this).val());
-          });
-          var event = {
-          title: $('#add_title').val(),
-          daysOfWeek: days,
-          startRecur: info.start,
-          color: newColor,
-          extendedProps: {
-            type: $('#add_type option:selected').text(),
-            members: $('#add_members').val(),
-            meal: $('#add_meal').val()
-          }
-        }
-        // one-time event
-        } else {
-          var event = {
-          title: $('#add_title').val(),
-          start: $('#add_date').val(),
-          color: newColor,
-          extendedProps: {
-            type: $('#add_type option:selected').text(),
-            members: $('#add_members').val(),
-            meal: $('#add_meal').val()
-          }
-        }
-        }
+        // var isRecur = $("#add_recurring_group").is(":visible")
+        // // if event is recurring
+        // if (isRecur) {
+        //   // get all checked days
+        //   var days = [];
+        //   $.each($("input[name='dayofweek']:checked"), function () {
+        //     days.push($(this).val());
+        //   });
+        //   var event = {
+        //     title: $('#add_title').val(),
+        //     daysOfWeek: days,
+        //     startRecur: info.start,
+        //     color: newColor,
+        //     extendedProps: {
+        //       type: $('#add_type option:selected').text(),
+        //       members: $('#add_members').val(),
+        //       meal: $('#add_meal').val()
+        //     }
+        //   }
+        //   // one-time event
+        // } else {
+        //   var event = {
+        //     title: $('#add_title').val(),
+        //     start: $('#add_date').val(),
+        //     color: newColor,
+        //     extendedProps: {
+        //       type: $('#add_type option:selected').text(),
+        //       members: $('#add_members').val(),
+        //       meal: $('#add_meal').val()
+        //     }
+        //   }
+        // }
 
-        calendar.addEvent(event);
+        // calendar.addEvent(event);
         $('#add_submit').unbind('click');
-        $('#createEventModal').modal('hide');
 
         // extract input from modal
         let shift_meal_input = ""
@@ -196,24 +206,28 @@
           "shift_type": shift_type_input,
           "shift_item": shift_meal_input,
           "shift_time": shift_time_input,
-          "shift_day": date.toLocaleString('default', { weekday: 'long' }),
+          "shift_day": "", //date.toLocaleString('default', { weekday: 'long' }),
           "shift_creator": "dpw@cs.princeton.edu", // REPLACE W FLASK CURRENT USER NETID
           "shift_members": shift_members_input
         };
 
         // AJAX post request
         $.post("/{{coop}}", {
-          event_data: json_event
+          event_data: json_event,
+          success: refreshCal()
         });
 
+        function refreshCal() {
+          calendar.refetchEvents()
+        }
+
+        $('#createEventModal').modal('hide');
       });
 
-    },
-          
-          }
-        );
+    },     
+    });
     calendar.render();
-      };
+    };
 
   </script>
 </head>
@@ -253,6 +267,15 @@
             <option value="3">Clean-up</option>
             <option value="4">Other</option>
           </select>
+
+          <!-- planned meal only shown if "cooking" shift -->
+          <div class="form-group" id="update_meal_visible" style="display: none">
+            <br>
+            <p>Planned Meal:</p><textarea class="form-control" type="text" rows="4" placeholder="Planned meal:"
+              id="update_meal"></textarea>
+          </div>
+
+
 
           <!-- shift date (autofilled from select) -->
           <div class="form-group form-inline">
