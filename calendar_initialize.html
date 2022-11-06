@@ -25,7 +25,6 @@
       var calendar = new FullCalendar.Calendar(calendarEl,
         // calendar API properties
         {
-
           themeSystem: 'bootstrap5',
           headerToolbar: {
             left: 'title',
@@ -103,12 +102,14 @@
       $('#update_delete').on('click', function () {
         $('#update_delete').unbind('click');
         $('#updateEventModal').modal('hide');
-        info.event.remove()
 
         // EDIT ajax post request -- need anything other than id?
         $.post("/{{coop}}", {
           event_id: info.event.id
         });
+        
+        // refresh events after deleting from db
+        calendar.refetchEvents()
       });
 
       // UPDATE event on calendar/db if button clicked 
@@ -122,7 +123,8 @@
           event_id: info.event.id
         });
 
-
+        // refresh event after update in db 
+        calendar.refetchEvents()
       });
     },
 

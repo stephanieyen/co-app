@@ -123,6 +123,15 @@ def list(coop):
     response = flask.make_response(html)
     return response
 
+# Co-op Profile
+@app.route('/<coop>/profile', methods=['GET'])
+def profile(coop):
+    coop_upper = database.get_upper_coop(coop)
+    html = flask.render_template('profile.html',
+            coop=coop, coop_upper=coop_upper)
+    response = flask.make_response(html)
+    return response
+
 #----------------------------------------------------------------------
 # CAS Login Route
 @app.route('/netID', methods=['GET'])
