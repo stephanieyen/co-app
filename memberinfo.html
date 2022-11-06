@@ -4,9 +4,15 @@
     <title>member info</title>
 </head>
 <h1>Edit Member Info</h1>
-<h3>Name: Bob Dondero</h3>
-<h3>Co-Op: Brown</h3>
-<h3>Status: Admin</h3>
+<h3>Name: {{user.user_name}}</h3>
+<h3>Co-Op: {{coop_upper}}</h3>
+<h3>Status: 
+    {% if user.user_admin == True %}
+        Admin
+    {% else %}
+        Member
+    {% endif %}
+</h3>
 <h3>Information: </h3>
 <body>
     <div class="form-group">
