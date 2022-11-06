@@ -19,6 +19,15 @@
     <br>
 
     <h2>Shopping Requests</h2><br>
+    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+      <label class="btn btn-secondary active">
+        <input type="radio" name="options" id="food" autocomplete="off" checked> Food
+      </label>
+      <label class="btn btn-secondary">
+        <input type="radio" name="options" id="equip" autocomplete="off"> Equipment
+      </label>
+    </div>
+    
     <div class="table-responsive">
         <table class="table">
             <thead class="table-light">
@@ -30,6 +39,7 @@
                     <th scope="col">Alt Item</th>
                     <th scope="col">For Shift?</th>
                     <th scope="col">Ordered?</th>
+                    <th scope="col"> </th>
                   </tr>
             </thead>
             <tbody>
@@ -46,6 +56,10 @@
                             <input type="checkbox" class="custom-control-input" id="check-{{item.item_id}}">
                             <label class="custom-control-label" for="customCheck3">{{item.item_ordered}}</label>
                           </div>
+                        </td>
+                        <td>
+                          <button type="button" class="btn btn-secondary btn-sm">Remove</button>
+                          <!-- <button type="button" class="btn btn-light"><span class="bi bi-trash"></span></button> -->
                         </td>
                     </tr>
                   {% endfor %}
