@@ -18,6 +18,31 @@
     'use strict'
 
     function setup() {
+        // fill in info from database
+        $('#name').html("{{user.user_name}}");
+        $('#profile_name').val("{{user.user_name}}");
+        $('#profile_allergies').val("{{user.user_allergies}}");
+        if ("{{user.user_admin}}" === "False") {
+            $('#member_status').html('Status: Admin');
+        } else {
+            $('#member_status').html('Status: Member');
+        }
+        // check correct days 
+        let cook_string = "{{user.user_cookday}}";
+        const cook_days = cook_string.split(" ");
+        $("input[name='cook_days']").each(function () {
+            if (cook_days.includes($(this).val())) {
+                $(this).prop('checked', true);
+            }
+        });
+        let chore_string = "{{user.user_choreday}}";
+        const chore_days = chore_string.split(" ");
+        $("input[name='chore_days']").each(function () {
+            if (chore_days.includes($(this).val())) {
+                $(this).prop('checked', true);
+            }
+        });
+
         // make fields editable when update profile checked
         $('#update_profile').on('click', function (event) {
             $('#save_profile').removeClass('d-none');
@@ -88,9 +113,10 @@
             <!-- left side -->
             <div class="col-sm-3">
                 <div class="row">
-                    <h3 class="text-center">Profile Name</h2>
+                    <h3 id="name" class="text-center">
+                        </h2>
                         <p class="text-center">Co-Op: {{coop}}</p>
-                        <p class="text-center">Status: </p>
+                        <p class="text-center" id="member_status"></p>
                 </div>
                 <div class="w-100 p-3">
                     <div class="row">
@@ -128,31 +154,38 @@
                             <div class="row">
                                 <div class="col-md-1">
                                     <label class="form-cook-label" for="monday">M</label>
-                                    <input name="cook_days" type="checkbox" value="M" class="form-cook-input" id="monday">
+                                    <input name="cook_days" type="checkbox" value="M" class="form-cook-input"
+                                        id="monday">
                                 </div>
                                 <div class="col-md-1">
                                     <label class="form-cook-label" for="tuesday">T</label>
-                                    <input name="cook_days" type="checkbox" value="T" class="form-cook-input" id="tuesday">
+                                    <input name="cook_days" type="checkbox" value="T" class="form-cook-input"
+                                        id="tuesday">
                                 </div>
                                 <div class="col-md-1">
                                     <label class="form-cook-label" for="wednesday">W</label>
-                                    <input name="cook_days" type="checkbox" value="W" class="form-cook-input" id="wednesday">
+                                    <input name="cook_days" type="checkbox" value="W" class="form-cook-input"
+                                        id="wednesday">
                                 </div>
                                 <div class="col-md-1">
                                     <label class="form-cook-label" for="thursday">Th</label>
-                                    <input name="cook_days" type="checkbox" value="Th" class="form-cook-input" id="thursday">
+                                    <input name="cook_days" type="checkbox" value="Th" class="form-cook-input"
+                                        id="thursday">
                                 </div>
                                 <div class="col-md-1">
                                     <label class="form-cook-label" for="friday">F</label>
-                                    <input name="cook_days" type="checkbox" value="F" class="form-cook-input" id="friday">
+                                    <input name="cook_days" type="checkbox" value="F" class="form-cook-input"
+                                        id="friday">
                                 </div>
                                 <div class="col-md-1">
                                     <label class="form-cook-label" for="saturday">Sat</label>
-                                    <input name="cook_days" type="checkbox" value="Sat" class="form-cook-input" id="saturday">
+                                    <input name="cook_days" type="checkbox" value="Sat" class="form-cook-input"
+                                        id="saturday">
                                 </div>
                                 <div class="col-md-1">
                                     <label class="form-cook-label" for="sunday">Sun</label>
-                                    <input name="cook_days" type="checkbox" value="Sun" class="form-cook-input" id="sunday">
+                                    <input name="cook_days" type="checkbox" value="Sun" class="form-cook-input"
+                                        id="sunday">
                                 </div>
                             </div>
                         </div>
@@ -162,31 +195,38 @@
                             <div class="row">
                                 <div class="col-md-1">
                                     <label class="form-chore-label" for="monday">M</label>
-                                    <input name="chore_days" type="checkbox" value="M" class="form-chore-input" id="monday">
+                                    <input name="chore_days" type="checkbox" value="M" class="form-chore-input"
+                                        id="monday">
                                 </div>
                                 <div class="col-md-1">
                                     <label class="form-chore-label" for="tuesday">T</label>
-                                    <input name="chore_days" type="checkbox" value="T" class="form-chore-input" id="tuesday">
+                                    <input name="chore_days" type="checkbox" value="T" class="form-chore-input"
+                                        id="tuesday">
                                 </div>
                                 <div class="col-md-1">
                                     <label class="form-chore-label" for="wednesday">W</label>
-                                    <input name="chore_days" type="checkbox" value="W" class="form-chore-input" id="wednesday">
+                                    <input name="chore_days" type="checkbox" value="W" class="form-chore-input"
+                                        id="wednesday">
                                 </div>
                                 <div class="col-md-1">
                                     <label class="form-chore-label" for="thursday">Th</label>
-                                    <input name="chore_days" type="checkbox" value="Th" class="form-chore-input" id="thursday">
+                                    <input name="chore_days" type="checkbox" value="Th" class="form-chore-input"
+                                        id="thursday">
                                 </div>
                                 <div class="col-md-1">
                                     <label class="form-chore-label" for="friday">F</label>
-                                    <input name="chore_days" type="checkbox" value="F" class="form-chore-input" id="friday">
+                                    <input name="chore_days" type="checkbox" value="F" class="form-chore-input"
+                                        id="friday">
                                 </div>
                                 <div class="col-md-1">
                                     <label class="form-chore-label" for="saturday">Sat</label>
-                                    <input name="chore_days" type="checkbox" value="Sat" class="form-chore-input" id="saturday">
+                                    <input name="chore_days" type="checkbox" value="Sat" class="form-chore-input"
+                                        id="saturday">
                                 </div>
                                 <div class="col-md-1">
                                     <label class="form-chore-label" for="sunday">Sun</label>
-                                    <input name="chore_days" type="checkbox" value="Sun" class="form-chore-input" id="sunday">
+                                    <input name="chore_days" type="checkbox" value="Sun" class="form-chore-input"
+                                        id="sunday">
                                 </div>
                             </div>
                         </div>

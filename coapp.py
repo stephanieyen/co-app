@@ -159,9 +159,12 @@ def list(coop):
 # Co-op Profile
 @app.route('/<coop>/profile', methods=['GET'])
 def profile(coop):
+    netid = auth.authenticate()
+    user = database.get_user(netid)
     coop_upper = database.get_upper_coop(coop)
+    print(user.user_choreday)
     html = flask.render_template('profile.html',
-            coop=coop, coop_upper=coop_upper)
+            coop=coop, coop_upper=coop_upper, user=user)
     response = flask.make_response(html)
     return response
 
