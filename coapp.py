@@ -31,13 +31,16 @@ def calendar(coop):
     # If posting, create new shift and then load in shifts
     if flask.request.method == 'POST':
         data = flask.request.form
+        shift_recurring = True
+        if data['event_data[shift_recurring]'] == 'false':
+            shift_recurring = False
         new_shift_vals = [
             data['event_data[shift_name]'],
             data['event_data[shift_type]'],
             data['event_data[shift_item]'],
             data['event_data[shift_time]'],
-            data['event_data[shift_day]'],
-            data['event_data[shift_recurring]'],
+            [],
+            shift_recurring,
             data['event_data[shift_creator]'],
             [data['event_data[shift_members]']],
             coop

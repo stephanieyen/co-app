@@ -141,7 +141,7 @@ def add_test_shifts(session):
                         shift_item='N/A',
                         shift_time='2022-11-03T03:30:00',
                         shift_recurring=False,
-                        shift_day='[4]',
+                        shift_day=[4],
                         shift_creator='amkumar',
                         shift_members=['amkumar', 'sy7'],
                         coop_name='brown')
@@ -151,7 +151,7 @@ def add_test_shifts(session):
                         shift_item='French Toast With Berries',
                         shift_time='2022-10-30T09:30:00',
                         shift_recurring=False,
-                        shift_day='[0]',
+                        shift_day=[0],
                         shift_creator='thaldiya',
                         shift_members=['thaldiya'],
                         coop_name='ifc')

@@ -187,7 +187,6 @@
         // AJAX post request
         $.post("/{{coop}}", {
           event_data: json_event,
-          async: false,
           success: refreshCal()
         });
 
