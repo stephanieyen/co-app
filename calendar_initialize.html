@@ -144,45 +144,15 @@
 
       // add event to calendar if submitted & hide modal
       $('#add_submit').on('click', function () {
-        // let newColor = "#f1d5f2";
-        // if ($('#add_type').val() == 2)
-        //   newColor = "#a5d4e8";
-        // else if ($('#add_type').val() == 1)
-        //   newColor = "#c4f5d3";
-
-
-        // var isRecur = $("#add_recurring_group").is(":visible")
-        // // if event is recurring
-        // if (isRecur) {
-        //   // get all checked days
-        //   var days = [];
-        //   $.each($("input[name='dayofweek']:checked"), function () {
-        //     days.push($(this).val());
-        //   });
-        //   var event = {
-        //     title: $('#add_title').val(),
-        //     daysOfWeek: days,
-        //     startRecur: info.start,
-        //     color: newColor,
-        //     extendedProps: {
-        //       type: $('#add_type option:selected').text(),
-        //       members: $('#add_members').val(),
-        //       meal: $('#add_meal').val()
-        //     }
-        //   }
-        //   // one-time event
-        // } else {
-        //   var event = {
-        //     title: $('#add_title').val(),
-        //     start: $('#add_date').val(),
-        //     color: newColor,
-        //     extendedProps: {
-        //       type: $('#add_type option:selected').text(),
-        //       members: $('#add_members').val(),
-        //       meal: $('#add_meal').val()
-        //     }
-        //   }
-        // }
+        var isRecur = $("#add_recurring_group").is(":visible")
+        // if event is recurring
+        if (isRecur) {
+          // get all checked days
+          var days = [];
+          $.each($("input[name='dayofweek']:checked"), function () {
+            days.push($(this).val());
+          });
+        }
 
         // calendar.addEvent(event);
         $('#add_submit').unbind('click');
@@ -208,8 +178,8 @@
           "shift_type": shift_type_input,
           "shift_item": shift_meal_input,
           "shift_time": shift_time_input,
-          "shift_recurring": false,
-          "shift_day": "",
+          "shift_recurring": isRecur,
+          "shift_day": days,
           "shift_creator": "dpw@cs.princeton.edu", // REPLACE W FLASK CURRENT USER NETID
           "shift_members": shift_members_input
         };

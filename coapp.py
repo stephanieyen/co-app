@@ -37,7 +37,7 @@ def calendar(coop):
             data['event_data[shift_item]'],
             data['event_data[shift_time]'],
             data['event_data[shift_day]'],
-            data['event_data[shift_recurring'],
+            data['event_data[shift_recurring]'],
             data['event_data[shift_creator]'],
             [data['event_data[shift_members]']],
             coop
@@ -75,8 +75,15 @@ def events(coop):
 
         data = {}
         data['id'] = shift.shift_id
-        data['start'] = shift.shift_time
         data['title'] = shift.shift_name
+
+        # account for recurring events
+        if shift.shift_recurring:
+            data['daysOfWeek'] = shift.shift_day
+            data['startRecur'] = shift.shift_time
+        else:
+            data['start'] = shift.shift_time
+
         data['extendedProps'] = extendedProps
         type = shift.shift_type
         if type == "Shopping":
