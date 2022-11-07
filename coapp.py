@@ -138,7 +138,7 @@ def list(coop):
                                     item_name=data['item_name'],
                                     item_quantity=data['item_quantity'],
                                     item_ordered=False,
-                                    for_shift=False,
+                                    for_shift=['for_shift'],
                                     item_reason=data['item_reason'],
                                     requesting_user=data['requesting_user'],
                                     food_type=data['food_type'],
