@@ -67,6 +67,13 @@ def calendar(coop):
     response = flask.make_response(html_code)
     return response
 
+# Co-op Calendar Delete
+@app.route('/<coop>/calendar/delete', methods=['POST'])
+def calendar_delete(coop):
+    shift_id = flask.request.args.get('id')
+    database.delete_shift(shift_id)
+    return ''
+
 @app.route('/<coop>/events', methods=['GET'])
 def events(coop):
     shifts = database.get_shifts_for_coop(coop)

@@ -104,9 +104,7 @@
         $('#updateEventModal').modal('hide');
 
         // EDIT ajax post request -- need anything other than id?
-        $.post("/{{coop}}", {
-          event_id: info.event.id
-        });
+        $.post("/{{coop}}/calendar/delete?id=" + info.event.id, {});
         
         // refresh events after deleting from db
         calendar.refetchEvents()
@@ -187,6 +185,7 @@
         // AJAX post request
         $.post("/{{coop}}", {
           event_data: json_event,
+          async: false,
           success: refreshCal()
         });
 
