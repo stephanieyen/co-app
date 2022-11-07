@@ -32,6 +32,7 @@ def calendar(coop):
     if flask.request.method == 'POST':
         data = flask.request.form
         shift_recurring = True
+        print(data)
         if data['event_data[shift_recurring]'] == 'false':
             shift_recurring = False
         new_shift_vals = [
@@ -39,7 +40,7 @@ def calendar(coop):
             data['event_data[shift_type]'],
             data['event_data[shift_item]'],
             data['event_data[shift_time]'],
-            [],
+            data['event_data[shift_day]'],
             shift_recurring,
             data['event_data[shift_creator]'],
             [data['event_data[shift_members]']],
