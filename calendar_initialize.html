@@ -52,7 +52,8 @@
     // hovering over event provides more information 
     eventDidMount: function(info) {
       titleStr = "<b>Shift Type: " + info.event.extendedProps.type + "</b><br>" +
-        "Members: " + info.event.extendedProps.members + "<br>"
+      "Creator: " + info.event.extendedProps.creator + "<br>" +
+      "Members: " + info.event.extendedProps.members + "<br>"
       if (info.event.extendedProps.type === 'Cooking') {
         if (info.event.extendedProps.meal === null || info.event.extendedProps.meal === "") {
           titleStr = titleStr + "Planned meal: N/A"
@@ -71,6 +72,8 @@
 
     // when user clicks on an event --> modal with options to delete or edit event
     eventClick: function(info) {
+      $("#update_submit").unbind('click');
+
       // autofill event information
       $('#updateEventModal').modal('show');
       $('#update_title').val(info.event.title);
@@ -128,6 +131,8 @@
 
     // selecting area on the calendar that does NOT already have an event
     select: function (info) {
+      $("#add_submit").unbind('click');
+
       // show event modal (autofill with selected time)
       $('#createEventModal').modal('show');
       $('#add_date').val(info.startStr);
@@ -143,10 +148,10 @@
       // add event to calendar if submitted & hide modal
       $('#add_submit').on('click', function () {
         var isRecur = $("#add_recurring_group").is(":visible")
+        var days = [];
         // if event is recurring
         if (isRecur) {
           // get all checked days
-          var days = [];
           $.each($("input[name='dayofweek']:checked"), function () {
             days.push($(this).val());
           });
@@ -178,7 +183,7 @@
           "shift_time": shift_time_input,
           "shift_recurring": isRecur,
           "shift_day": days.toString(),
-          "shift_creator": "dpw@cs.princeton.edu", // REPLACE W FLASK CURRENT USER NETID
+          "shift_creator": "{{user.user_netid}}", // REPLACE W FLASK CURRENT USER NETID
           "shift_members": shift_members_input
         };
 

@@ -15,34 +15,67 @@
 </head>
 
 <script>
-    // make fields editable when update profile checked
-    $('#update_profile').on('click', function () {
-        $('#save_profile').removeClass('d-none');
+    'use strict'
 
-        $("#profile_name").prop("disabled", false);
-        $("#profile_allergies").prop("disabled", false);
+    function setup() {
+        // make fields editable when update profile checked
+        $('#update_profile').on('click', function (event) {
+            $('#save_profile').removeClass('d-none');
+            $('#cancel_save').removeClass('d-none');
 
-        $('#update_profile').unbind('click');
-    });
+            $("#profile_name").prop("disabled", false);
+            $("#profile_allergies").prop("disabled", false);
 
-    // save information and post to db
-    $('#save_profile').on('click', function () {
-        $('#save_profile').addClass('d-none');
+            $('#update_profile').unbind('click');
+        });
 
-        $("#profile_name").prop("disabled", true);
-        $("#profile_allergies").prop("disabled", true);
+        // do nothing when profile edit canceled
+        $('#cancel_save').on('click', function (event) {
+            $('#save_profile').addClass('d-none');
+            $('#cancel_save').addClass('d-none');
 
-        $('#save_profile').unbind('click');
+            $("#profile_name").prop("disabled", true);
+            $("#profile_allergies").prop("disabled", true);
 
-        // // SOME kind of post to update profile information
-        // $.post("/{{coop}}", {
-        //     name: $('#profile_name').val()
-        //     allergies: $('#profile_allergies').val()
-        //     // gather all checked boxes
-        // });
-    });
+            $('#cancel_save').unbind('click');
+        });
+
+        // save information and post to db if updating information
+        $('#save_profile').on('click', function () {
+            $('#save_profile').addClass('d-none');
+            $('#cancel_save').addClass('d-none');
+
+            $("#profile_name").prop("disabled", true);
+            $("#profile_allergies").prop("disabled", true);
+
+            // extract input
+            let profile_name = $('#profile_name').val();
+            let profile_allergie = $('#profile_allergies').val();
+
+            let cook_days = [];
+            $.each($("input[name='cook_days']:checked"), function () {
+                cook_days.push($(this).val());
+            });
 
 
+            let chore_days = [];
+            $.each($("input[name='chore_days']:checked"), function () {
+                chore_days.push($(this).val());
+            });
+
+
+            $('#save_profile').unbind('click');
+
+            // // SOME kind of post to update profile information
+            // $.post("/{{coop}}", {
+            //     name: $('#profile_name').val()
+            //     allergies: $('#profile_allergies').val()
+            //     // gather all checked boxes
+            // });
+        });
+
+    }
+    $('document').ready(setup);
 
 </script>
 <!------------------------------HTML BODY------------------------------------->
@@ -61,11 +94,13 @@
                 </div>
                 <div class="w-100 p-3">
                     <div class="row">
-                        <button type="button" id="update_profile" class="btn btn-secondary border border-dark">Edit Profile Info</button>
+                        <button type="button" id="update_profile" class="btn btn-secondary border border-dark">Edit
+                            Profile Info</button>
                     </div>
                     <br>
                     <div class="row">
-                        <a href="/logout" type="button" class="btn btn-secondary border border-dark" role="button">Log Out</a>
+                        <a href="/logout" type="button" class="btn btn-secondary border border-dark" role="button">Log
+                            Out</a>
                     </div>
                     <br>
                     <div class="row">
@@ -93,31 +128,31 @@
                             <div class="row">
                                 <div class="col-md-1">
                                     <label class="form-cook-label" for="monday">M</label>
-                                    <input type="checkbox" value="M" class="form-cook-input" id="monday">
+                                    <input name="cook_days" type="checkbox" value="M" class="form-cook-input" id="monday">
                                 </div>
                                 <div class="col-md-1">
                                     <label class="form-cook-label" for="tuesday">T</label>
-                                    <input type="checkbox" value="T" class="form-cook-input" id="tuesday">
+                                    <input name="cook_days" type="checkbox" value="T" class="form-cook-input" id="tuesday">
                                 </div>
                                 <div class="col-md-1">
                                     <label class="form-cook-label" for="wednesday">W</label>
-                                    <input type="checkbox" value="W" class="form-cook-input" id="wednesday">
+                                    <input name="cook_days" type="checkbox" value="W" class="form-cook-input" id="wednesday">
                                 </div>
                                 <div class="col-md-1">
                                     <label class="form-cook-label" for="thursday">Th</label>
-                                    <input type="checkbox" value="Th" class="form-cook-input" id="thursday">
+                                    <input name="cook_days" type="checkbox" value="Th" class="form-cook-input" id="thursday">
                                 </div>
                                 <div class="col-md-1">
                                     <label class="form-cook-label" for="friday">F</label>
-                                    <input type="checkbox" value="F" class="form-cook-input" id="friday">
+                                    <input name="cook_days" type="checkbox" value="F" class="form-cook-input" id="friday">
                                 </div>
                                 <div class="col-md-1">
                                     <label class="form-cook-label" for="saturday">Sat</label>
-                                    <input type="checkbox" value="Sat" class="form-cook-input" id="saturday">
+                                    <input name="cook_days" type="checkbox" value="Sat" class="form-cook-input" id="saturday">
                                 </div>
                                 <div class="col-md-1">
                                     <label class="form-cook-label" for="sunday">Sun</label>
-                                    <input type="checkbox" value="Sun" class="form-cook-input" id="sunday">
+                                    <input name="cook_days" type="checkbox" value="Sun" class="form-cook-input" id="sunday">
                                 </div>
                             </div>
                         </div>
@@ -127,36 +162,37 @@
                             <div class="row">
                                 <div class="col-md-1">
                                     <label class="form-chore-label" for="monday">M</label>
-                                    <input type="checkbox" value="M" class="form-chore-input" id="monday">
+                                    <input name="chore_days" type="checkbox" value="M" class="form-chore-input" id="monday">
                                 </div>
                                 <div class="col-md-1">
                                     <label class="form-chore-label" for="tuesday">T</label>
-                                    <input type="checkbox" value="T" class="form-chore-input" id="tuesday">
+                                    <input name="chore_days" type="checkbox" value="T" class="form-chore-input" id="tuesday">
                                 </div>
                                 <div class="col-md-1">
                                     <label class="form-chore-label" for="wednesday">W</label>
-                                    <input type="checkbox" value="W" class="form-chore-input" id="wednesday">
+                                    <input name="chore_days" type="checkbox" value="W" class="form-chore-input" id="wednesday">
                                 </div>
                                 <div class="col-md-1">
                                     <label class="form-chore-label" for="thursday">Th</label>
-                                    <input type="checkbox" value="Th" class="form-chore-input" id="thursday">
+                                    <input name="chore_days" type="checkbox" value="Th" class="form-chore-input" id="thursday">
                                 </div>
                                 <div class="col-md-1">
                                     <label class="form-chore-label" for="friday">F</label>
-                                    <input type="checkbox" value="F" class="form-chore-input" id="friday">
+                                    <input name="chore_days" type="checkbox" value="F" class="form-chore-input" id="friday">
                                 </div>
                                 <div class="col-md-1">
                                     <label class="form-chore-label" for="saturday">Sat</label>
-                                    <input type="checkbox" value="Sat" class="form-chore-input" id="saturday">
+                                    <input name="chore_days" type="checkbox" value="Sat" class="form-chore-input" id="saturday">
                                 </div>
                                 <div class="col-md-1">
                                     <label class="form-chore-label" for="sunday">Sun</label>
-                                    <input type="checkbox" value="Sun" class="form-chore-input" id="sunday">
+                                    <input name="chore_days" type="checkbox" value="Sun" class="form-chore-input" id="sunday">
                                 </div>
                             </div>
                         </div>
                         <br>
                         <button type="submit" id="save_profile" class="btn btn-secondary d-none">Save Profile</button>
+                        <button type="submit" id="cancel_save" class="btn btn-secondary d-none">Cancel Changes</button>
                     </form>
                     <br>
                 </div>

@@ -83,6 +83,7 @@ def events(coop):
         extendedProps['type'] = shift.shift_type
         extendedProps['members'] = shift.shift_members
         extendedProps['meal'] = shift.shift_item
+        extendedProps['creator'] = shift.shift_creator
 
         data = {}
         data['id'] = shift.shift_id
