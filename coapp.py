@@ -100,10 +100,9 @@ def roster(coop):
 @app.route('/<coop>/roster/info', methods=['GET'])
 def roster_info(coop):
     netid = auth.authenticate()
-    email = netid + '@princeton.edu'
-    user = database.get_user(email)
+    user = database.get_user(netid)
     coop_upper = database.get_upper_coop(coop)
-    html = flask.render_template('memberinfo.html',
+    html = flask.render_template('profile.html',
             user=user, coop_upper=coop_upper)
     response = flask.make_response(html)
     return response

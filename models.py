@@ -6,7 +6,7 @@ Base = sqlalchemy.ext.declarative.declarative_base()
 # Roster table
 class Roster (Base):
     __tablename__ = 'roster'
-    user_email = sqlalchemy.Column(sqlalchemy.String, primary_key=True)
+    user_netid = sqlalchemy.Column(sqlalchemy.String, primary_key=True)
     user_name = sqlalchemy.Column(sqlalchemy.String)
     user_allergies = sqlalchemy.Column(sqlalchemy.String)
     user_admin = sqlalchemy.Column(sqlalchemy.Boolean)
@@ -37,7 +37,8 @@ class Shifts (Base):
     shift_type = sqlalchemy.Column(sqlalchemy.String)
     shift_item = sqlalchemy.Column(sqlalchemy.String)
     shift_time = sqlalchemy.Column(sqlalchemy.String)
-    shift_day = sqlalchemy.Column(sqlalchemy.String)
+    shift_recurring = sqlalchemy.Column(sqlalchemy.Boolean)
+    shift_day = sqlalchemy.Column(sqlalchemy.ARRAY(sqlalchemy.String))
     shift_creator = sqlalchemy.Column(sqlalchemy.String)
     shift_members = sqlalchemy.Column(sqlalchemy.ARRAY(sqlalchemy.String))
     coop_name = sqlalchemy.Column(sqlalchemy.String)

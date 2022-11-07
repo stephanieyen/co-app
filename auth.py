@@ -72,8 +72,7 @@ def authenticate():
     # authenticated previously.  So return the username.
     if 'username' in session:
         username = session.get('username').strip()
-        email = username + '@princeton.edu'
-        user = get_user(email)
+        user = get_user(username)
         coop = user.coop_name
         session['coop'] = coop
         return username
@@ -92,8 +91,7 @@ def authenticate():
                      + quote(strip_ticket(request.url)))
         abort(redirect(login_url))
         
-    email = username + '@princeton.edu'
-    user = get_user(email)
+    user = get_user(username)
     coop = user.coop_name
 
     # The user is authenticated, so store the username in

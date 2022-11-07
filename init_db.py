@@ -18,7 +18,7 @@ db_url = 'postgresql://qqoyksvp:4DE2MIUDdxlcY8L66A5aMLj5ze4zaNbF@peanut.db.eleph
 
 # Add test users
 def add_test_roster(session):
-    user = models.Roster(user_email='amkumar@princeton.edu',
+    user = models.Roster(user_netid='amkumar',
                         user_name='Arnav Kumar',
                         user_allergies='N/A',
                         user_admin=False,
@@ -26,7 +26,7 @@ def add_test_roster(session):
                         user_choreday='M',
                         coop_name='2d')
     session.add(user)
-    user = models.Roster(user_email='sy7@princeton.edu',
+    user = models.Roster(user_netid='sy7',
                         user_name='Stephanie Yen',
                         user_allergies='N/A',
                         user_admin=True,
@@ -34,7 +34,7 @@ def add_test_roster(session):
                         user_choreday='T',
                         coop_name='2d')
     session.add(user)
-    user = models.Roster(user_email='petrino@princeton.edu',
+    user = models.Roster(user_netid='petrino',
                         user_name='Erin Petrino',
                         user_allergies='Vegan',
                         user_admin=False,
@@ -42,7 +42,7 @@ def add_test_roster(session):
                         user_choreday='T',
                         coop_name='scully')
     session.add(user)
-    user = models.Roster(user_email='sarahep@princeton.edu',
+    user = models.Roster(user_netid='sarahep',
                         user_name='Sarah Pedersen',
                         user_allergies='Peanut Allergy',
                         user_admin=False,
@@ -50,7 +50,7 @@ def add_test_roster(session):
                         user_choreday='M',
                         coop_name='realfood')
     session.add(user)
-    user = models.Roster(user_email='thaldiya@princeton.edu',
+    user = models.Roster(user_netid='thaldiya',
                         user_name='Tanvi Haldiya',
                         user_allergies='Soy Allergy',
                         user_admin=False,
@@ -58,7 +58,7 @@ def add_test_roster(session):
                         user_choreday='M',
                         coop_name='ifc')
     session.add(user)
-    user = models.Roster(user_email='dpw@cs.princeton.edu',
+    user = models.Roster(user_netid='dpw',
                         user_name='David Walker',
                         user_allergies='N/A',
                         user_admin=True,
@@ -74,7 +74,7 @@ def add_test_shopping(session):
                             item_ordered=True,
                             for_shift = True,
                             item_reason='For breakfast',
-                            requesting_user='amkumar@princeton.edu',
+                            requesting_user='amkumar',
                             food_type="Fruit",
                             alt_request="N/A",
                             coop_name='2d')
@@ -85,7 +85,7 @@ def add_test_shopping(session):
                             item_ordered=True,
                             for_shift = True,
                             item_reason='One large bottle',
-                            requesting_user='sy7@princeton.edu',
+                            requesting_user='sy7',
                             food_type="Condiment",
                             alt_request="Tabasco",
                             coop_name='2d')
@@ -96,7 +96,7 @@ def add_test_shopping(session):
                             item_ordered=False,
                             for_shift = False,
                             item_reason='Lavender, pumpkin spice',
-                            requesting_user='petrino@princeton.edu',
+                            requesting_user='petrino',
                             food_type="Special",
                             alt_request="Creamer",
                             coop_name='scully')
@@ -107,7 +107,7 @@ def add_test_shopping(session):
                             item_ordered=True,
                             for_shift = False,
                             item_reason='Old one broke, other pan too sticky',
-                            requesting_user='sarahep@princeton.edu',
+                            requesting_user='sarahep',
                             food_type="Item",
                             alt_request="Stick Frying Pan",
                             coop_name='realfood')
@@ -118,7 +118,7 @@ def add_test_shopping(session):
                             item_ordered=False,
                             for_shift = False,
                             item_reason='Want to make pizza one day',
-                            requesting_user='thaldiya@princeton.edu',
+                            requesting_user='thaldiya',
                             food_type="Item",
                             alt_request="Hammer",
                             coop_name='ifc')
@@ -129,7 +129,7 @@ def add_test_shopping(session):
                             item_ordered=False,
                             for_shift = False,
                             item_reason='Turn Brown into computer hub',
-                            requesting_user='dpw@cs.princeton.edu',
+                            requesting_user='dpw',
                             food_type="Special",
                             alt_request="Laptops",
                             coop_name='brown')
@@ -140,18 +140,20 @@ def add_test_shifts(session):
                         shift_type='Shopping',
                         shift_item='N/A',
                         shift_time='2022-11-03T03:30:00',
-                        shift_day='Thursday',
-                        shift_creator='amkumar@princeton.edu',
-                        shift_members=['amkumar@princeton.edu', 'sy7@princeton.edu'],
+                        shift_recurring=False,
+                        shift_day='4',
+                        shift_creator='amkumar',
+                        shift_members=['amkumar', 'sy7'],
                         coop_name='brown')
     session.add(shift)
     shift = models.Shifts(shift_name='Brunch',
                         shift_type='Cooking',
                         shift_item='French Toast With Berries',
                         shift_time='2022-10-30T09:30:00',
-                        shift_day='Sunday',
-                        shift_creator='thaldiya@princeton.edu',
-                        shift_members=['thaldiya@princeton.edu'],
+                        shift_recurring=False,
+                        shift_day='0',
+                        shift_creator='thaldiya',
+                        shift_members=['thaldiya'],
                         coop_name='ifc')
     session.add(shift)
 

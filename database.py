@@ -49,21 +49,21 @@ def add_user(user:models.Roster):
     with sqlalchemy.orm.Session(engine) as session:
         session.add(user)
         session.commit()
-# Get user from email
-def get_user(email) -> models.Roster:
+# Get user from netid
+def get_user(netid) -> models.Roster:
     # Make sure to only get one user
     user = None
     with sqlalchemy.orm.Session(engine) as session:
         user = session.query(models.Roster).filter(
-            models.Roster.user_email == email).first()
+            models.Roster.user_netid == netid).first()
     return user
 # Update a user's information
-def update_user(email, new_user: models.Roster):
+def update_user(netid, new_user: models.Roster):
     with sqlalchemy.orm.Session(engine) as session:
         session.query(models.Roster).filter(
-            models.Roster.user_email == email).update(
+            models.Roster.user_netid == netid).update(
                 {
-                    'user_email': new_user.user_email,
+                    'user_netid': new_user.user_netid,
                     'user_name': new_user.user_name,
                     'user_allergies': new_user.user_allergies,
                     'user_admin': new_user.user_admin,
@@ -74,10 +74,10 @@ def update_user(email, new_user: models.Roster):
             )
         session.commit()
 # Delete a user's information
-def delete_user(email):
+def delete_user(netid):
     with sqlalchemy.orm.Session(engine) as session:
         session.query(models.Roster).filter(
-            models.Roster.user_email == email).delete()
+            models.Roster.user_netid == netid).delete()
         session.commit()
 #----------------------------------------------------------------------
 # Shopping List queries
@@ -143,6 +143,7 @@ def update_shift(id, new_shift: models.Shifts):
                     'shift_type': new_shift.shift_type,
                     'shift_item': new_shift.shift_item,
                     'shift_time': new_shift.shift_time,
+                    'shift_recurring': new_shift.shift_recurring,
                     'shift_day': new_shift.shift_day,
                     'shift_creator': new_shift.shift_creator,
                     'shift_members': new_shift.shift_members,
