@@ -208,7 +208,8 @@
           "shift_type": shift_type_input,
           "shift_item": shift_meal_input,
           "shift_time": shift_time_input,
-          "shift_day": "", //date.toLocaleString('default', { weekday: 'long' }),
+          "shift_recurring": false,
+          "shift_day": "",
           "shift_creator": "dpw@cs.princeton.edu", // REPLACE W FLASK CURRENT USER NETID
           "shift_members": shift_members_input
         };
@@ -216,6 +217,7 @@
         // AJAX post request
         $.post("/{{coop}}", {
           event_data: json_event,
+          async: false,
           success: refreshCal()
         });
 
@@ -295,8 +297,8 @@
 
         <!-- submit button -->
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary" id="update_submit">Update Shift</button>
-          <button type="submit" class="btn btn-primary" id="update_delete">Delete Shift</button>
+          <button type="submit" class="btn btn-secondary" id="update_submit">Update Shift</button>
+          <button type="submit" class="btn btn-secondary" id="update_delete">Delete Shift</button>
         </div>
       </div>
 
@@ -342,12 +344,12 @@
 
           <br>
           <!-- one-time shift -->
-          <button class="btn btn-primary" id="one-time" type="button" data-bs-toggle="collapse"
+          <button class="btn btn-secondary" id="one-time" type="button" data-bs-toggle="collapse"
             data-bs-target="#add_date_group" aria-expanded="false" aria-controls="collapseExample">
             One-Time Shift
           </button>
           <!-- recurring shift -->
-          <button class="btn btn-primary" id="recurring" type="button" data-bs-toggle="collapse"
+          <button class="btn btn-secondary" id="recurring" type="button" data-bs-toggle="collapse"
             data-bs-target="#add_recurring_group" aria-expanded="false" aria-controls="collapseExample">
             Recurring Shift
           </button>
@@ -408,7 +410,7 @@
 
         <!-- submit button -->
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary" id="add_submit">Add Shift</button>
+          <button type="submit" class="btn btn-secondary" id="add_submit">Add Shift</button>
         </div>
       </div>
 

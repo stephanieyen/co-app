@@ -17,29 +17,29 @@
 <script>
     // make fields editable when update profile checked
     $('#update_profile').on('click', function () {
-        $('#update_profile').unbind('click');
-        $('#update_profile').hide();
-        $('#save_profile').show();
+        $('#save_profile').removeClass('d-none');
 
         $("#profile_name").prop("disabled", false);
         $("#profile_allergies").prop("disabled", false);
+
+        $('#update_profile').unbind('click');
     });
 
     // save information and post to db
     $('#save_profile').on('click', function () {
-        $('#save_profile').unbind('click');
-        $('#save_profile').hide();
-        $('#update_profile').show();
+        $('#save_profile').addClass('d-none');
 
         $("#profile_name").prop("disabled", true);
         $("#profile_allergies").prop("disabled", true);
 
-        // SOME kind of post to update roster information
-        $.post("/{{coop}}", {
-            name: $('#profile_name').val()
-            allergies: $('#profile_allergies').val()
-            // gather all checked boxes
-        });
+        $('#save_profile').unbind('click');
+
+        // // SOME kind of post to update profile information
+        // $.post("/{{coop}}", {
+        //     name: $('#profile_name').val()
+        //     allergies: $('#profile_allergies').val()
+        //     // gather all checked boxes
+        // });
     });
 
 
@@ -61,11 +61,11 @@
                 </div>
                 <div class="w-100 p-3">
                     <div class="row">
-                        <button type="button" class="btn btn-secondary border border-dark">Edit Profile Info</button>
+                        <button type="button" id="update_profile" class="btn btn-secondary border border-dark">Edit Profile Info</button>
                     </div>
                     <br>
                     <div class="row">
-                        <button type="button" class="btn btn-secondary border border-dark">Log Out</button>
+                        <a href="/logout" type="button" class="btn btn-secondary border border-dark" role="button">Log Out</a>
                     </div>
                     <br>
                     <div class="row">
@@ -156,9 +156,7 @@
                             </div>
                         </div>
                         <br>
-                        <button type="submit" id="update_profile" class="btn btn-secondary">Update Profile</button>
-                        <button type="submit" id="save_profile" class="btn btn-secondary" style="display: none">Save
-                            Profile</button>
+                        <button type="submit" id="save_profile" class="btn btn-secondary d-none">Save Profile</button>
                     </form>
                     <br>
                 </div>
