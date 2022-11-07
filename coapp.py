@@ -37,6 +37,7 @@ def calendar(coop):
             data['event_data[shift_item]'],
             data['event_data[shift_time]'],
             data['event_data[shift_day]'],
+            data['event_data[shift_recurring'],
             data['event_data[shift_creator]'],
             [data['event_data[shift_members]']],
             coop
@@ -48,15 +49,17 @@ def calendar(coop):
                                 shift_item=new_shift_vals[2],
                                 shift_time=new_shift_vals[3],
                                 shift_day=new_shift_vals[4],
-                                shift_creator=new_shift_vals[5],
-                                shift_members=new_shift_vals[6],
-                                coop_name=new_shift_vals[7]
+                                shift_recurring=new_shift_vals[5],
+                                shift_creator=new_shift_vals[6],
+                                shift_members=new_shift_vals[7],
+                                coop_name=new_shift_vals[8]
                                 )
-        print(new_shift)
         database.add_shift(new_shift)
+    netid = auth.authenticate()
+    user = database.get_user(netid)
     coop_upper = database.get_upper_coop(coop)
     html_code = flask.render_template('calendar_initialize.html',
-                coop=coop, coop_upper=coop_upper)
+                coop=coop, coop_upper=coop_upper, user=user)
     response = flask.make_response(html_code)
     return response
 
