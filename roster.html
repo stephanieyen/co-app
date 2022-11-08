@@ -1,45 +1,40 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <meta charset="UTF-8">
-        <title>roster</title>
-    </head>
-    <body>
-        {% include 'navbar.html' %}
-        <h2>Members</h2><br>
-        <div class="table-responsive">
-            <table class="table">
-                <thead class="table-light">
-                    <tr>
-                        <th scope="col">Member Name</th>
-                        <th scope="col">Dietary Restrictions</th>
-                        <th scope="col">Cook Shift</th>
-                        <th scope="col">Chore Shift</th>
-                        <th scope="col">Chore Type</th>
-                    </tr>
-                </thead>
-                <tbody>
-                      {% for member in members: %}
-                        <tr>
-                            <th scope="row">{{member.user_name}}</th>
-                            <td>{{member.user_allergies}}</td>
-                            <td>{{member.user_cookday}}</td>
-                            <td>{{member.user_choreday}}</td>
-                            <td>{{member.user_choretype}}</td>
-                        </tr>
-                      {% endfor %}
-                </tbody>
-              </table>
-              
-        </div>
-        <div>
-          <a href="/{{coop}}/profile" role="button" class="btn btn-primary">
-            Edit My Info
-          </a>
-        </div>
-      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-      <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    </body>
-</html>
+<head>
+  <title>Co-App Roster</title>
+</head>
+
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Members</h2><br>
+<div class="table-responsive">
+    <table class="table">
+        <thead class="table-light">
+            <tr>
+                <th scope="col">Member Name</th>
+                <th scope="col">Dietary Restrictions</th>
+                <th scope="col">Cook Shift</th>
+                <th scope="col">Chore Shift</th>
+                <th scope="col">Chore Type</th>
+            </tr>
+        </thead>
+        <tbody>
+              {% for member in members: %}
+                <tr>
+                    <th scope="row">{{member.user_name}}</th>
+                    <td>{{member.user_allergies}}</td>
+                    <td>{{member.user_cookday}}</td>
+                    <td>{{member.user_choreday}}</td>
+                    <td>{{member.user_choretype}}</td>
+                </tr>
+              {% endfor %}
+        </tbody>
+      </table>
+      
+</div>
+<div>
+  <a href="/{{coop}}/profile" role="button" class="btn btn-primary">
+    Edit My Info
+  </a>
+</div>
+
+{% endblock %}

@@ -124,12 +124,14 @@ def list(coop):
     if flask.request.method == 'POST':
         data = json.loads(flask.request.form.to_dict()['event_data'])
 
+        # What to display for "For Shift" - Yes/No
+
         new_item = models.ShoppingList(
             item_type=data['item_type'],
             item_name=data['item_name'],
             item_quantity=data['item_quantity'],
             item_ordered=False,
-            for_shift=['for_shift'],
+            for_shift=data['for_shift'],
             item_reason=data['item_reason'],
             requesting_user=data['requesting_user'],
             food_type=data['food_type'],
