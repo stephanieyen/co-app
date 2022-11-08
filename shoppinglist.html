@@ -6,8 +6,13 @@
 
 {% extends "base.html" %}
 {% block content %}
+<div class="row">
+  <div class="col-sm-8">
+    <br>
+    <h2>Shopping Requests</h2><br>
+  </div>
+</div>
 
-<h2>Shopping Requests</h2><br>
 <div class="btn-group btn-group-toggle" data-toggle="buttons">
   <label class="btn btn-secondary active">
     <input type="radio" name="options" id="food-btn" autocomplete="off" checked> Food
@@ -39,7 +44,13 @@
                     <td>{{item.item_quantity}}</td>
                     <td>{{item.item_reason}}</td>
                     <td>{{item.alt_request}}</td>
-                    <td>{{item.for_shift}}</td>
+                    {% set shift = 'No' %}
+                    {% if item.for_shift is sameas true %}
+                      <td>Yes</td>
+                    {% else %}
+                      <td>No</td>
+                    {% endif %}
+                    <!-- <td>{{item.for_shift}}</td> -->
                     <td>
                       <div class="form-check">
                         <input class="form-check-input" type="checkbox" value="" id="order-check">
@@ -85,7 +96,7 @@
 
       <!-- submit button -->
       <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" id="add_submit">Submit Request</button>
+        <button type="submit" class="btn btn-secondary" id="add_submit">Submit Request</button>
       </div>
     </div>
   </div>
@@ -93,23 +104,39 @@
 
 <script>
 
+  // show food type option if applicable in modal
+  $('#item_type').on('change', function () {
+        console.log($('#item_type').val());
+        if ($('#item_type').val() == "Food") {
+          $('#food_type_visible').show();
+        } else {
+          $('#food_type_visible').hide();
+        }
+      });
+
   // add item to shopping list if submitted 
   $("#createItemModal").on( "click", "#add_submit", function() {
     $('#add_submit').unbind('click');
 
+    console.log("hello");
+    // display food type option if "food" chosen
+   
+
     // extract input from modal
     let item_type = $('#item_type').val();
-    let food_type = $('#food_type').val();
+    let food_type = ""
+    if ($('#food_type') != null) {
+      food_type = $('#food_type').val();
+    }
     let item_name = $('#item_name').val();
     let item_quantity = $('#item_quantity').val();
     let item_reason = $('#item_reason').val();
     let alt_request = $('#alt_request').val();
     if ($('#for_shift').is(':checked')) {
-      console.log('in if')
-      var for_shift = true;
+      var for_shift = True;
     }
     else {
-      for_shift = false;
+      for_shift = False;
     }
 
     // AJAX update database
@@ -137,6 +164,10 @@
 
     // Add new item to HTML table
     function refreshList() {
+
+      // $.get("/{{coop}}/list", {
+
+      // })
       item_ordered = 'False'; // UPDATE
       htmlString = '<tr>'
         + '<th scope="row">' + item_name + '</th>'
@@ -157,6 +188,11 @@
 
     $('#createItemModal').modal('hide');
   });
+
+  // handle event when remove button clicked
+
+  // when ordered checkbox clicked, update in database, change words to "true"
+
 
 </script>
 
