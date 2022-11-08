@@ -118,11 +118,54 @@
         $('#update_submit').unbind('click');
         $('#updateEventModal').modal('hide');
 
+        // extract input from modal
+        let shift_meal_input = ""
+        let shift_members_input = ""
+        let shift_title_input = $('#update_title').val();
+        let shift_type_input = $('#update_type option:selected').text();
+        let shift_time_input = $('#update_date').val();
+        if ($('#update_meal') != null) {
+          shift_meal_input = $('#update_meal').val();
+        }
+        if ($('#update_members') != null) {
+          shift_members_input = $('#update_members').val();
+        }
+
+        const date = new Date(info.startStr + "T00:00:00");
+        
+        // Have to do stuff with days for recurring
+        var days = [];
+        // // if event is recurring
+        // if (isRecur) {
+        //   // get all checked days
+        //   $.each($("input[name='dayofweek']:checked"), function () {
+        //     days.push($(this).val());
+        //   });
+        // }
+
+        // Have to do stuff with recurring
+
         // EDIT ajax post request -- send all event fields?
-        // easier to remove and re-add? or no?
-        $.post("/{{coop}}", {
-          event_id: info.event.id
+        // easier to remove and re-add? or no? NAH just add all event fields again
+        // AJAX update database
+        var json_event = {
+          "shift_name": shift_title_input,
+          "shift_type": shift_type_input,
+          "shift_item": shift_meal_input,
+          "shift_time": shift_time_input,
+          "shift_recurring": "",
+          "shift_day": days.toString(),
+          "shift_creator": "{{user.user_netid}}",
+          "shift_members": shift_members_input
+        };
+        $.post("/{{coop}}/calendar/update?id=" + info.event.id, {
+          event_data: json_event,
+          async: false,
+          success: refreshCal()
         });
+        function refreshCal() {
+          calendar.refetchEvents()
+        }
 
         // refresh event after update in db 
         calendar.refetchEvents()

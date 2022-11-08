@@ -45,8 +45,6 @@ def calendar(coop):
             [data['event_data[shift_members]']],
             coop
         ]
-        # jsdata = request.form['event_data']
-        # print(json.loads(jsdata[0]))
         new_shift = models.Shifts(
             shift_name=new_shift_vals[0],
             shift_type=new_shift_vals[1],
@@ -72,6 +70,43 @@ def calendar(coop):
 def calendar_delete(coop):
     shift_id = flask.request.args.get('id')
     database.delete_shift(shift_id)
+    return ''
+
+# Co-op Calendar Update
+@app.route('/<coop>/calendar/update', methods=['POST'])
+def calendar_update(coop):
+    shift_id = flask.request.args.get('id')
+    old_shift = database.get_shift(shift_id)
+    data = flask.request.form
+    # Once recurring done, do this
+    # shift_recurring = True
+    # if data['event_data[shift_recurring]'] == 'false':
+    #     shift_recurring = False
+    new_shift_vals = [
+        data['event_data[shift_name]'],
+        data['event_data[shift_type]'],
+        data['event_data[shift_item]'],
+        data['event_data[shift_time]'],
+        old_shift.shift_day,
+        old_shift.shift_recurring,
+        old_shift.shift_creator,
+        [data['event_data[shift_members]']],
+        old_shift.coop_name
+    ]
+    # jsdata = request.form['event_data']
+    # print(json.loads(jsdata[0]))
+    new_shift = models.Shifts(
+        shift_name=new_shift_vals[0],
+        shift_type=new_shift_vals[1],
+        shift_item=new_shift_vals[2],
+        shift_time=new_shift_vals[3],
+        shift_day=new_shift_vals[4],
+        shift_recurring=new_shift_vals[5],
+        shift_creator=new_shift_vals[6],
+        shift_members=new_shift_vals[7],
+        coop_name=new_shift_vals[8]
+    )
+    database.update_shift(shift_id, new_shift)
     return ''
 
 @app.route('/<coop>/events', methods=['GET'])
@@ -105,7 +140,6 @@ def events(coop):
         else:
             data['color'] = "#f1d5f2" # pink
         event_json.append(data)
-    print(jsonify(event_json))
     return jsonify(event_json)
 
 # Co-op Roster
@@ -153,7 +187,6 @@ def profile(coop):
     netid = auth.authenticate()
     user = database.get_user(netid)
     coop_upper = database.get_upper_coop(coop)
-    print(user.user_choreday)
     html = flask.render_template('profile.html',
             coop=coop, coop_upper=coop_upper, user=user)
     response = flask.make_response(html)
@@ -184,7 +217,6 @@ def update_profile(coop):
     )
     database.update_user(netid, new_user)
     return ''
-    
 
 #----------------------------------------------------------------------
 # CAS Login Route
