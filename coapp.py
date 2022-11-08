@@ -32,7 +32,6 @@ def calendar(coop):
     if flask.request.method == 'POST':
         data = flask.request.form
         shift_recurring = True
-        print(data)
         if data['event_data[shift_recurring]'] == 'false':
             shift_recurring = False
         new_shift_vals = [
@@ -48,16 +47,17 @@ def calendar(coop):
         ]
         # jsdata = request.form['event_data']
         # print(json.loads(jsdata[0]))
-        new_shift = models.Shifts(shift_name=new_shift_vals[0],
-                                shift_type=new_shift_vals[1],
-                                shift_item=new_shift_vals[2],
-                                shift_time=new_shift_vals[3],
-                                shift_day=new_shift_vals[4],
-                                shift_recurring=new_shift_vals[5],
-                                shift_creator=new_shift_vals[6],
-                                shift_members=new_shift_vals[7],
-                                coop_name=new_shift_vals[8]
-                                )
+        new_shift = models.Shifts(
+            shift_name=new_shift_vals[0],
+            shift_type=new_shift_vals[1],
+            shift_item=new_shift_vals[2],
+            shift_time=new_shift_vals[3],
+            shift_day=new_shift_vals[4],
+            shift_recurring=new_shift_vals[5],
+            shift_creator=new_shift_vals[6],
+            shift_members=new_shift_vals[7],
+            coop_name=new_shift_vals[8]
+        )
         database.add_shift(new_shift)
     netid = auth.authenticate()
     user = database.get_user(netid)
@@ -118,35 +118,24 @@ def roster(coop):
     response = flask.make_response(html)
     return response
 
-# Co-op Roster Update
-@app.route('/<coop>/roster/info', methods=['GET'])
-def roster_info(coop):
-    netid = auth.authenticate()
-    user = database.get_user(netid)
-    coop_upper = database.get_upper_coop(coop)
-    html = flask.render_template('profile.html',
-            user=user, coop_upper=coop_upper)
-    response = flask.make_response(html)
-    return response
-
 # Co-op Shopping List
 @app.route('/<coop>/list', methods=['GET', 'POST'])
 def list(coop):
     if flask.request.method == 'POST':
         data = json.loads(flask.request.form.to_dict()['event_data'])
 
-        new_item = models.ShoppingList(item_type=data['item_type'],
-                                    item_name=data['item_name'],
-                                    item_quantity=data['item_quantity'],
-                                    item_ordered=False,
-                                    for_shift=['for_shift'],
-                                    item_reason=data['item_reason'],
-                                    requesting_user=data['requesting_user'],
-                                    food_type=data['food_type'],
-                                    alt_request=data['alt_request'],
-                                    coop_name=coop
-                                    )
-        print(new_item)
+        new_item = models.ShoppingList(
+            item_type=data['item_type'],
+            item_name=data['item_name'],
+            item_quantity=data['item_quantity'],
+            item_ordered=False,
+            for_shift=['for_shift'],
+            item_reason=data['item_reason'],
+            requesting_user=data['requesting_user'],
+            food_type=data['food_type'],
+            alt_request=data['alt_request'],
+            coop_name=coop
+        )
         database.add_item(new_item)
 
     items = database.get_shopping_for_coop(coop)
@@ -167,6 +156,33 @@ def profile(coop):
             coop=coop, coop_upper=coop_upper, user=user)
     response = flask.make_response(html)
     return response
+
+# Co-op Update Profile
+@app.route('/<coop>/profile/update', methods=['POST'])
+def update_profile(coop):
+    netid = auth.authenticate()
+    old_user = database.get_user(netid)
+    data = json.loads(flask.request.form.to_dict()['event_data'])
+    cookday = ''
+    for day in data['user_cookday']:
+        cookday += day + ' '
+    cookday.strip()
+    choreday = ''
+    for day in data['user_choreday']:
+        choreday += day + ' '
+    choreday.strip()
+    new_user = models.Roster(
+        user_netid=netid,
+        user_name=data['user_name'],
+        user_allergies=data['user_allergies'],
+        user_admin=old_user.user_admin,
+        user_cookday=cookday,
+        user_choreday=choreday,
+        coop_name=old_user.coop_name
+    )
+    database.update_user(netid, new_user)
+    return ''
+    
 
 #----------------------------------------------------------------------
 # CAS Login Route
