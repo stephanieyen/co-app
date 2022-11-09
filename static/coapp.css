@@ -1,0 +1,8 @@
+    /* override bootsrap button color */
+    .btn-primary,
+    .btn-primary:hover,
+    .btn-primary:active,
+    .btn-primary:visited {
+      background-color: #07a299 !important;
+      border-color: #07a299 !important;
+    }

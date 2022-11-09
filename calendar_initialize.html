@@ -15,6 +15,7 @@
 
   <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='calendar.css') }}" />
   <script type='text/javascript' src="{{ url_for('static',filename='calendar.js') }}"></script>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='coapp.css') }}" />
 
   <!------------------------CALENDAR SCRIPT ------------------------------------>
   <script>
@@ -44,209 +45,210 @@
           {
             url: '/{{coop}}/events',
             method: 'GET',
-            failure: function() {
-            alert('there was an error while fetching events!');
-          }}
-        ,
+            failure: function () {
+              alert('there was an error while fetching events!');
+            }
+          }
+          ,
 
-    // hovering over event provides more information 
-    eventDidMount: function(info) {
-      titleStr = "<b>Shift Type: " + info.event.extendedProps.type + "</b><br>" +
-      "Creator: " + info.event.extendedProps.creator + "<br>" +
-      "Members: " + info.event.extendedProps.members + "<br>"
-      if (info.event.extendedProps.type === 'Cooking') {
-        if (info.event.extendedProps.meal === null || info.event.extendedProps.meal === "") {
-          titleStr = titleStr + "Planned meal: N/A"
-        } else {
-          titleStr = titleStr + "Planned meal: " +
-            info.event.extendedProps.meal
-        }
-      };
-      $(info.el).tooltip({
-        title: titleStr,
-        html: true,
-        container: 'body',
-        delay: { "show": 50, "hide": 50 }
-      });
-    },
+          // hovering over event provides more information 
+          eventDidMount: function (info) {
+            titleStr = "<b>Shift Type: " + info.event.extendedProps.type + "</b><br>" +
+              "Creator: " + info.event.extendedProps.creator + "<br>" +
+              "Members: " + info.event.extendedProps.members + "<br>"
+            if (info.event.extendedProps.type === 'Cooking') {
+              if (info.event.extendedProps.meal === null || info.event.extendedProps.meal === "") {
+                titleStr = titleStr + "Planned meal: N/A"
+              } else {
+                titleStr = titleStr + "Planned meal: " +
+                  info.event.extendedProps.meal
+              }
+            };
+            $(info.el).tooltip({
+              title: titleStr,
+              html: true,
+              container: 'body',
+              delay: { "show": 50, "hide": 50 }
+            });
+          },
 
-    // when user clicks on an event --> modal with options to delete or edit event
-    eventClick: function(info) {
-      $("#update_submit").unbind('click');
+          // when user clicks on an event --> modal with options to delete or edit event
+          eventClick: function (info) {
+            $("#update_submit").unbind('click');
 
-      // autofill event information
-      $('#updateEventModal').modal('show');
-      $('#update_title').val(info.event.title);
-      $('#update_date').val(info.event.startStr);
-      $('#update_meal').val(info.event.extendedProps.meal);
-      $('#update_members').val(info.event.extendedProps.members);
-      if (info.event.extendedProps.type === "Cooking") {
-        $('#add_type').val(1);
-        $('#update_meal_visible').show();
-      } else if (info.event.extendedProps.type === "Shopping") {
-        $('#add_type').val(2);
-        $('#update_meal_visible').hide();
-      } else if (info.event.extendedProps.type === "Clean-up") {
-        $('#add_type').val(3);
-        $('#update_meal_visible').hide();
-      } else {
-        $('#add_type').val(4);
-        $('#update_meal_visible').hide();
-      }
-      $('#update_type').on('change', function () {
-        if ($('#update_type').val() == 1) {
-          $('#update_meal_visible').show();
-        } else {
-          $('#update_meal_visible').hide();
-        }
-      });
+            // autofill event information
+            $('#updateEventModal').modal('show');
+            $('#update_title').val(info.event.title);
+            $('#update_date').val(info.event.startStr);
+            $('#update_meal').val(info.event.extendedProps.meal);
+            $('#update_members').val(info.event.extendedProps.members);
+            if (info.event.extendedProps.type === "Cooking") {
+              $('#add_type').val(1);
+              $('#update_meal_visible').show();
+            } else if (info.event.extendedProps.type === "Shopping") {
+              $('#add_type').val(2);
+              $('#update_meal_visible').hide();
+            } else if (info.event.extendedProps.type === "Clean-up") {
+              $('#add_type').val(3);
+              $('#update_meal_visible').hide();
+            } else {
+              $('#add_type').val(4);
+              $('#update_meal_visible').hide();
+            }
+            $('#update_type').on('change', function () {
+              if ($('#update_type').val() == 1) {
+                $('#update_meal_visible').show();
+              } else {
+                $('#update_meal_visible').hide();
+              }
+            });
 
-      // DELETE event from calendar/db if button clicked
-      $('#update_delete').on('click', function () {
-        $('#update_delete').unbind('click');
-        $('#updateEventModal').modal('hide');
+            // DELETE event from calendar/db if button clicked
+            $('#update_delete').on('click', function () {
+              $('#update_delete').unbind('click');
+              $('#updateEventModal').modal('hide');
 
-        // EDIT ajax post request -- need anything other than id?
-        $.post("/{{coop}}/calendar/delete?id=" + info.event.id, {});
-        
-        // refresh events after deleting from db
-        calendar.refetchEvents()
-      });
+              // EDIT ajax post request -- need anything other than id?
+              $.post("/{{coop}}/calendar/delete?id=" + info.event.id, {});
 
-      // UPDATE event on calendar/db if button clicked 
-      $('#update_submit').on('click', function () {
-        $('#update_submit').unbind('click');
-        $('#updateEventModal').modal('hide');
+              // refresh events after deleting from db
+              calendar.refetchEvents()
+            });
 
-        // extract input from modal
-        let shift_meal_input = ""
-        let shift_members_input = ""
-        let shift_title_input = $('#update_title').val();
-        let shift_type_input = $('#update_type option:selected').text();
-        let shift_time_input = $('#update_date').val();
-        if ($('#update_meal') != null) {
-          shift_meal_input = $('#update_meal').val();
-        }
-        if ($('#update_members') != null) {
-          shift_members_input = $('#update_members').val();
-        }
+            // UPDATE event on calendar/db if button clicked 
+            $('#update_submit').on('click', function () {
+              $('#update_submit').unbind('click');
+              $('#updateEventModal').modal('hide');
 
-        const date = new Date(info.startStr + "T00:00:00");
-        
-        // Have to do stuff with days for recurring
-        var days = [];
-        // // if event is recurring
-        // if (isRecur) {
-        //   // get all checked days
-        //   $.each($("input[name='dayofweek']:checked"), function () {
-        //     days.push($(this).val());
-        //   });
-        // }
+              // extract input from modal
+              let shift_meal_input = ""
+              let shift_members_input = ""
+              let shift_title_input = $('#update_title').val();
+              let shift_type_input = $('#update_type option:selected').text();
+              let shift_time_input = $('#update_date').val();
+              if ($('#update_meal') != null) {
+                shift_meal_input = $('#update_meal').val();
+              }
+              if ($('#update_members') != null) {
+                shift_members_input = $('#update_members').val();
+              }
 
-        // Have to do stuff with recurring
+              const date = new Date(info.startStr + "T00:00:00");
 
-        // EDIT ajax post request -- send all event fields?
-        // easier to remove and re-add? or no? NAH just add all event fields again
-        // AJAX update database
-        var json_event = {
-          "shift_name": shift_title_input,
-          "shift_type": shift_type_input,
-          "shift_item": shift_meal_input,
-          "shift_time": shift_time_input,
-          "shift_recurring": "",
-          "shift_day": days.toString(),
-          "shift_creator": "{{user.user_netid}}",
-          "shift_members": shift_members_input
-        };
-        $.post("/{{coop}}/calendar/update?id=" + info.event.id, {
-          event_data: json_event,
-          async: false,
-          success: refreshCal()
+              // Have to do stuff with days for recurring
+              var days = [];
+              // // if event is recurring
+              // if (isRecur) {
+              //   // get all checked days
+              //   $.each($("input[name='dayofweek']:checked"), function () {
+              //     days.push($(this).val());
+              //   });
+              // }
+
+              // Have to do stuff with recurring
+
+              // EDIT ajax post request -- send all event fields?
+              // easier to remove and re-add? or no? NAH just add all event fields again
+              // AJAX update database
+              var json_event = {
+                "shift_name": shift_title_input,
+                "shift_type": shift_type_input,
+                "shift_item": shift_meal_input,
+                "shift_time": shift_time_input,
+                "shift_recurring": "",
+                "shift_day": days.toString(),
+                "shift_creator": "{{user.user_netid}}",
+                "shift_members": shift_members_input
+              };
+              $.post("/{{coop}}/calendar/update?id=" + info.event.id, {
+                event_data: json_event,
+                async: false,
+                success: refreshCal()
+              });
+              function refreshCal() {
+                calendar.refetchEvents()
+              }
+
+              // refresh event after update in db 
+              calendar.refetchEvents()
+            });
+          },
+
+          // selecting area on the calendar that does NOT already have an event
+          select: function (info) {
+            $("#add_submit").unbind('click');
+
+            // show event modal (autofill with selected time)
+            $('#createEventModal').modal('show');
+            $('#add_date').val(info.startStr);
+
+            $('#add_type').on('change', function () {
+              if ($('#add_type').val() == 1) {
+                $('#add_meal_visible').show();
+              } else {
+                $('#add_meal_visible').hide();
+              }
+            });
+
+            // add event to calendar if submitted & hide modal
+            $('#add_submit').on('click', function () {
+              var isRecur = $("#add_recurring_group").is(":visible")
+              var days = [];
+              // if event is recurring
+              if (isRecur) {
+                // get all checked days
+                $.each($("input[name='dayofweek']:checked"), function () {
+                  days.push($(this).val());
+                });
+              }
+
+              // calendar.addEvent(event);
+              $('#add_submit').unbind('click');
+
+              // extract input from modal
+              let shift_meal_input = ""
+              let shift_members_input = ""
+              let shift_title_input = $('#add_title').val();
+              let shift_type_input = $('#add_type option:selected').text();
+              let shift_time_input = $('#add_date').val();
+              if ($('#add_meal') != null) {
+                shift_meal_input = $('#add_meal').val();
+              }
+              if ($('#add_members') != null) {
+                shift_members_input = $('#add_members').val();
+              }
+
+              const date = new Date(info.startStr + "T00:00:00");
+
+              // AJAX update database
+              var json_event = {
+                "shift_name": shift_title_input,
+                "shift_type": shift_type_input,
+                "shift_item": shift_meal_input,
+                "shift_time": shift_time_input,
+                "shift_recurring": isRecur,
+                "shift_day": days.toString(),
+                "shift_creator": "{{user.user_netid}}", // REPLACE W FLASK CURRENT USER NETID
+                "shift_members": shift_members_input
+              };
+
+              // AJAX post request
+              $.post("/{{coop}}", {
+                event_data: json_event,
+                async: false,
+                success: refreshCal()
+              });
+
+              function refreshCal() {
+                calendar.refetchEvents()
+              }
+
+              $('#createEventModal').modal('hide');
+            });
+
+          },
         });
-        function refreshCal() {
-          calendar.refetchEvents()
-        }
-
-        // refresh event after update in db 
-        calendar.refetchEvents()
-      });
-    },
-
-    // selecting area on the calendar that does NOT already have an event
-    select: function (info) {
-      $("#add_submit").unbind('click');
-
-      // show event modal (autofill with selected time)
-      $('#createEventModal').modal('show');
-      $('#add_date').val(info.startStr);
-
-      $('#add_type').on('change', function () {
-        if ($('#add_type').val() == 1) {
-          $('#add_meal_visible').show();
-        } else {
-          $('#add_meal_visible').hide();
-        }
-      });
-
-      // add event to calendar if submitted & hide modal
-      $('#add_submit').on('click', function () {
-        var isRecur = $("#add_recurring_group").is(":visible")
-        var days = [];
-        // if event is recurring
-        if (isRecur) {
-          // get all checked days
-          $.each($("input[name='dayofweek']:checked"), function () {
-            days.push($(this).val());
-          });
-        }
-
-        // calendar.addEvent(event);
-        $('#add_submit').unbind('click');
-
-        // extract input from modal
-        let shift_meal_input = ""
-        let shift_members_input = ""
-        let shift_title_input = $('#add_title').val();
-        let shift_type_input = $('#add_type option:selected').text();
-        let shift_time_input = $('#add_date').val();
-        if ($('#add_meal') != null) {
-          shift_meal_input = $('#add_meal').val();
-        }
-        if ($('#add_members') != null) {
-          shift_members_input = $('#add_members').val();
-        }
-
-        const date = new Date(info.startStr + "T00:00:00");
-
-        // AJAX update database
-        var json_event = {
-          "shift_name": shift_title_input,
-          "shift_type": shift_type_input,
-          "shift_item": shift_meal_input,
-          "shift_time": shift_time_input,
-          "shift_recurring": isRecur,
-          "shift_day": days.toString(),
-          "shift_creator": "{{user.user_netid}}", // REPLACE W FLASK CURRENT USER NETID
-          "shift_members": shift_members_input
-        };
-
-        // AJAX post request
-        $.post("/{{coop}}", {
-          event_data: json_event,
-          async: false,
-          success: refreshCal()
-        });
-
-        function refreshCal() {
-          calendar.refetchEvents()
-        }
-
-        $('#createEventModal').modal('hide');
-      });
-
-    },     
-    });
-    calendar.render();
+      calendar.render();
     };
 
   </script>
@@ -256,6 +258,7 @@
 
 <body>
   {% include 'navbar.html' %}
+  <br>
   <div id='calendar'></div>
 
   <!--------------------------CURRENT EVENT MODAL------------------------------->
