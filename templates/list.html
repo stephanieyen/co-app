@@ -186,15 +186,37 @@
     console.log("made request")
   }
 
-  // show food type option if applicable in modal
-  $('#item_type').on('change', function () {
-        console.log($('#item_type').val());
-        if ($('#item_type').val() == "Food") {
-          $('#food_type_visible').show();
-        } else {
-          $('#food_type_visible').hide();
+  // show all items whose item type is food
+  function toggleFood() 
+  {
+    request = $.ajax(
+        {
+            type:'GET',
+            url: '/{{coop}}/items/food',
+            success: handleResponse,
+            failure: function () {
+              alert('there was an error while fetching items!');
+            }
         }
-      });
+    );
+  }
+
+  // show all items whose item type is equipment
+  function toggleEquipment()
+  {
+
+  }
+
+  // show food type option if applicable in modal
+  function toggleFoodType() 
+  {
+    console.log($('#item_type').val());
+    if ($('#item_type').val() == "Food") {
+      $('#food_type_visible').show();
+    } else {
+      $('#food_type_visible').hide();
+    }
+  }
   
   // add item to shopping list if submitted 
   function addItem() 
@@ -288,10 +310,14 @@
   function setup() 
   {
     refreshList();
-    // event handling
-    $("#createItemModal").on( "click", "#add_submit", addItem);
+    
+    // LIST event handling
+    // $("#food-btn").on("click", toggleFood)
     $('#rm-btn').on('click', removeItem);
-    //  $("#myTable").on("click", console.log("TEST"))
+    
+    // MODAL event handling
+    $('#item_type').on('change', toggleFoodType)
+    $("#createItemModal").on( "click", "#add_submit", addItem);
   }
 
   $('document').ready(setup);

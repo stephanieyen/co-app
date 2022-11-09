@@ -31,7 +31,24 @@ def get_shopping_for_coop(coop) -> List[models.ShoppingList]:
         coop_shopping = session.query(models.ShoppingList).filter(
             models.ShoppingList.coop_name==coop).all()
     return coop_shopping
-    
+
+# Get the current shopping list for a co-op
+def get_food_list_for_coop(coop) -> List[models.ShoppingList]:
+    coop_shopping = []
+    with sqlalchemy.orm.Session(engine) as session:
+        coop_shopping = session.query(models.ShoppingList).filter(
+            models.ShoppingList.coop_name==coop,
+            models.ShoppingList.item_type=="Food").all()
+    return coop_shopping
+
+# # Get the current shopping list for a co-op
+# def get_equipment_list_for_coop(coop) -> List[models.ShoppingList]:
+#     coop_shopping = []
+#     with sqlalchemy.orm.Session(engine) as session:
+#         coop_shopping = session.query(models.ShoppingList).filter(
+#             models.ShoppingList.coop_name==coop,
+#             models.ShoppingList.item_type=="Equipment").all()
+#     return coop_shopping
 
 # Get the current shifts for a co-op
 def get_shifts_for_coop(coop) -> List[models.Shifts]:

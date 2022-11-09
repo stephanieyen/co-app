@@ -87,7 +87,7 @@ def calendar(coop):
 #----------------------------------------------------------------------
 
 @app.route('/<coop>/calendar/delete', methods=['POST'])
-def calendar_delete():
+def calendar_delete(coop):
     ''' 
         Deletes a shift from the calendar of the co-op 
         in the specified route.                     
@@ -227,7 +227,7 @@ def list(coop):
 #----------------------------------------------------------------------
 
 @app.route('/<coop>/list/delete', methods=['POST'])
-def list_delete():
+def list_delete(coop):
     ''' 
         Deletes a shift from the shopping list of the co-op 
         in the specified route.                     
@@ -238,18 +238,10 @@ def list_delete():
 
 #----------------------------------------------------------------------
 
-@app.route('/<coop>/items', methods=['GET'])
-def items(coop):
-    print("GET request for items")
-    items = database.get_shopping_for_coop(coop)
-    for item in items:
-            print(item.item_name)
-
-    # with open("templates/list_table.html") as f:
-    #     raw_lines = f.readlines()
-    # html_code = ''.join(raw_lines) # str
-
-    # create HTML code
+def genItemTableHTML(items):
+    '''
+        Create HTML code 
+    '''
     html_code = (
         '<table class="table" id="myTable" style="margin: 0;">'
         )
@@ -260,9 +252,10 @@ def items(coop):
                 '<th scope="col">Alt Item</th><th scope="col">For Shift?</th>'
                 '<th scope="col">Ordered?</th><th scope="col"> </th></tr>')
     html_code += ('</thead><tbody id="tbody">')
-    
+
     for item in items:
         html_code += '<tr>'
+
         html_code += ('<th scope="row">{0}</th>'
                     '<td>{1}</td>'
                     '<td>{2}</td>'
@@ -287,46 +280,53 @@ def items(coop):
         html_code += ('<label class="form-check-label" for="order-check">{0}</label>').format(ordered)
         html_code += ('</div></td>')
         html_code += ('<td><button type="button" class="btn btn-primary btn-sm" id="rm-btn">Remove</button></td>')
-        # '<label class="form-check-label" for="order-check">{1}</label>'
-        # '</div></td>').format(item.item_ordered)
 
-                        # <td>
-                        #   <div class="form-check">
-                        #     <input class="form-check-input" type="checkbox" value="" id="order-check">
-                        #     <label class="form-check-label" for="order-check">
-                        #       {{item.item_ordered}}
-                        #     </label>
-                        #   </div>
-                        # </td>
-                        # <td>
-                        #   <button type="button" class="btn btn-secondary btn-sm" id="rm-btn">Remove</button>
-                        # </td>
         html_code += '</tr>'
-
-        # if item.for_shift == True:
-        #     for_shift = True
     
-    # html_code += '</table>'
-
-    # item_json = []
-    # for item in items: 
-        # data = {}
-        # data['item_id'] = item.item_id
-        # data['item_name'] = item.item_name
-
-        # extendedProps = {}
-        # extendedProps['item_type'] = item.item_type
-        # extendedProps['item_quanitty'] = item.item_quantity
-        # extendedProps['for_shift'] = item.for_shift
-        # extendedProps['item_reason'] = item.item_reason
-        # extendedProps['requesting_user'] = item.requesting_user
-        # extendedProps['food_type'] = item.food_type
-        # extendedProps['alt_request'] = item.alt_request
-        # data['extendedProps'] = extendedProps
-
-        # item_json.append(data)
-    # return jsonify(item_json)
     html_code += ('</tbody></table>')
+
+    return html_code
+
+#----------------------------------------------------------------------
+
+@app.route('/<coop>/items/food', methods=['GET'])
+def foodItems(coop):
+    print("GET request for food items")
+    items = database.get_food_list_for_coop(coop)
+    for item in items:
+            print(item.item_name)
+
+    html_code = genItemTableHTML(items)
+    
+    response = flask.make_response(html_code)
+    return response
+
+#----------------------------------------------------------------------
+
+@app.route('/<coop>/items/equipment', methods=['GET'])
+def equipmentItems(coop):
+    print("GET request for equipment items")
+    items = database.get_equipment_list_for_coop(coop)
+    for item in items:
+            print(item.item_name)
+
+    html_code = genItemTableHTML(items)
+    
+    response = flask.make_response(html_code)
+    return response
+
+#----------------------------------------------------------------------
+
+@app.route('/<coop>/items', methods=['GET'])
+def items(coop):
+    print("GET request for items")
+    items = database.get_shopping_for_coop(coop)
+    for item in items:
+            print(item.item_name)
+
+    html_code = genItemTableHTML(items)
+    
+    
     response = flask.make_response(html_code)
     return response
 
