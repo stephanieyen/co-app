@@ -30,19 +30,19 @@
 
     .navbar
     {
-    background-color: #023226 !important;
+    background-color: #07a299 !important;
     }
 
     .nav-link
     {
-      color: #07a299 !important;
+      color: white !important;
       font-weight: bold !important;
     }
 
     .navbar-brand
     {
       
-      color: #07a299 !important;
+      color: white !important;
       font-weight: bold !important;
     }
 
