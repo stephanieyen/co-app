@@ -243,10 +243,16 @@ def items(coop):
     # html_code = ''.join(raw_lines) # str
 
     # create HTML code
-    html_code = ''
-    # html_code = (
-    #     '<table class="table" id="myTable" style="margin: 0;">'
-    #     )
+    html_code = (
+        '<table class="table" id="myTable" style="margin: 0;">'
+        )
+    
+    html_code += ('<thead id="theader">')
+    html_code += ('<tr><th scope="col">Item</th><th scope="col">Type</th>'
+                '<th scope="col">Qty</th><th scope="col">Comments</th>'
+                '<th scope="col">Alt Item</th><th scope="col">For Shift?</th>'
+                '<th scope="col">Ordered?</th><th scope="col"> </th></tr>')
+    html_code += ('</thead><tbody id="tbody">')
     
     for item in items:
         html_code += '<tr>'
@@ -265,6 +271,17 @@ def items(coop):
         else:
             for_shift = "No"
         html_code += ('<td>{0}</td>').format(for_shift)
+        html_code += ('<td><div class="form-check">'
+        '<input class="form-check-input" type="checkbox" value="" id="order-check">')
+        if item.item_ordered is True:
+            ordered = "Yes"
+        else:
+            ordered = "No"
+        html_code += ('<label class="form-check-label" for="order-check">{0}</label>').format(ordered)
+        html_code += ('</div></td>')
+        html_code += ('<td><button type="button" class="btn btn-secondary btn-sm" id="rm-btn">Remove</button></td>')
+        # '<label class="form-check-label" for="order-check">{1}</label>'
+        # '</div></td>').format(item.item_ordered)
 
                         # <td>
                         #   <div class="form-check">
@@ -302,7 +319,7 @@ def items(coop):
 
         # item_json.append(data)
     # return jsonify(item_json)
-
+    html_code += ('</tbody></table>')
     response = flask.make_response(html_code)
     return response
 

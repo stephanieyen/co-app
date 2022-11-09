@@ -25,8 +25,8 @@
 <div class="container-fluid">
   <div class="col-sm-11">
     <div class="container border border-dark rounded" style="background-color: #07a29930;">
-      <div class="table-responsive">
-        <table class="table" id="myTable" style="margin: 0;">
+      <div class="table-responsive" id="shoppingList">
+        <!-- <table class="table" id="myTable" style="margin: 0;">
             <thead id="theader">
                 <tr>
                     <th scope="col">Item</th>
@@ -41,8 +41,8 @@
             </thead>
             <tbody id="tbody">
               <div id="shoppingList">
-                <!-- insert shopping list here -->
-              </div>
+
+              </div> -->
                   <!-- {% for item in items: %}
                     <tr>
                         <th scope="row">{{item.item_name}}</th>
@@ -70,8 +70,8 @@
                         </td>
                     </tr>
                   {% endfor %} -->
-            </tbody>
-          </table> 
+            <!-- </tbody>
+          </table>  -->
       </div>
     </div>
   </div>
@@ -117,8 +117,8 @@
   function handleResponse(response) 
   {
     console.log(response)
-    $(response).insertAfter("#theader")
-    // $('#shoppingList').html(response);
+    // $(response).insertAfter("#theader")
+    $('#shoppingList').html(response);
   }
 
   let request = null;
@@ -153,8 +153,6 @@
     $('#add_submit').unbind('click');
 
     console.log("hello");
-    // display food type option if "food" chosen
-   
 
     // extract input from modal
     let item_type = $('#item_type').val();
@@ -193,7 +191,7 @@
       dataType: 'json',
       contentType: 'application/json',
       event_data: JSON.stringify(json_event),
-      success: refreshList()
+      success: getInitialList()
     });
 
 
@@ -241,7 +239,7 @@
     // refresh list from deleting from db
 });
 
-  // when ordered checkbox clicked, update in database, change words to "true"
+  // TODO: when ordered checkbox clicked, update in database, change words to "true"
 
 
   function setup() 
@@ -249,7 +247,7 @@
     getInitialList();
     // event handling
     $("#createItemModal").on( "click", "#add_submit", addItem)
-    $("#myTable").on("click", console.log("TEST"))
+    //  $("#myTable").on("click", console.log("TEST"))
   }
 
   $('document').ready(setup);
