@@ -2,6 +2,7 @@ import flask
 import database
 import json
 import models
+import helper
 from flask import jsonify
 #----------------------------------------------------------------------
 
@@ -38,6 +39,86 @@ def netID():
         return flask.redirect('/2d')
     elif coop == 'realfood':
         return flask.redirect('/realfood')
+
+#----------------------------------------------------------------------
+# Co-Op Profile
+#----------------------------------------------------------------------
+
+@app.route('/<coop>/profile', methods=['GET'])
+def profile(coop):
+    netid = auth.authenticate()
+    user = database.get_user(netid)
+    coop_upper = database.get_upper_coop(coop)
+    html = flask.render_template('templates/profile.html',
+            coop=coop, coop_upper=coop_upper, user=user)
+    response = flask.make_response(html)
+    return response
+
+#----------------------------------------------------------------------
+
+@app.route('/<coop>/profile/update', methods=['POST'])
+def update_profile(coop):
+    netid = auth.authenticate()
+    old_user = database.get_user(netid)
+    data = json.loads(flask.request.form.to_dict()['event_data'])
+    cookday = ''
+    for day in data['user_cookday']:
+        cookday += day + ' '
+    cookday.strip()
+    choreday = ''
+    for day in data['user_choreday']:
+        choreday += day + ' '
+    choreday.strip()
+    new_user = models.Roster(
+        user_netid=netid,
+        user_name=data['user_name'],
+        user_allergies=data['user_allergies'],
+        user_admin=old_user.user_admin,
+        user_cookday=cookday,
+        user_choreday=choreday,
+        coop_name=old_user.coop_name
+    )
+    database.update_user(netid, new_user)
+    return ''
+
+#----------------------------------------------------------------------
+# Co-Op Roster
+#----------------------------------------------------------------------
+
+@app.route('/<coop>/roster', methods=['GET'])
+def roster(coop):
+    members = database.get_roster_for_coop(coop)
+    coop_upper = database.get_upper_coop(coop)
+    html = flask.render_template('templates/roster.html',
+            members=members, coop=coop, coop_upper=coop_upper)
+    response = flask.make_response(html)
+    return response
+
+#----------------------------------------------------------------------
+
+@app.route('/<coop>/roster/delete', methods=['POST'])
+def roster_delete(coop):
+    ''' 
+        Deletes a member from the roster of the co-op 
+        in the specified route.                     
+    '''
+    user_id = flask.request.args.get('id') # make sure it's netid
+    database.delete_item(user)
+    return ''
+
+#----------------------------------------------------------------------
+
+@app.route('/<coop>/members', methods=['GET'])
+def roster_members(coop):
+    print("GET request for members")
+    members = database.get_roster_for_coop(coop)
+    for member in members:
+        print(member.user_name)
+    
+    html_code = helper.genRosterHTML(members)
+
+    response = flask.make_response(html_code)
+    return response
 
 #----------------------------------------------------------------------
 # Co-Op Calendar
@@ -174,19 +255,6 @@ def events(coop):
     return jsonify(event_json)
 
 #----------------------------------------------------------------------
-# Co-Op Roster
-#----------------------------------------------------------------------
-
-@app.route('/<coop>/roster', methods=['GET'])
-def roster(coop):
-    members = database.get_roster_for_coop(coop)
-    coop_upper = database.get_upper_coop(coop)
-    html = flask.render_template('templates/roster.html',
-            members=members, coop=coop, coop_upper=coop_upper)
-    response = flask.make_response(html)
-    return response
-
-#----------------------------------------------------------------------
 # Co-Op Shopping List
 #----------------------------------------------------------------------
 
@@ -214,13 +282,18 @@ def list(coop):
         # items = database.get_shopping_for_coop(coop)
         # for item in items:
         #     print(item.item_name)
-        
+
+    # get user info
+    netid = auth.authenticate()
+    user = database.get_user(netid)
 
     # items = database.get_shopping_for_coop(coop)
     coop_upper = database.get_upper_coop(coop)
     # html = flask.render_template('templates/list.html',
     #         items=items, coop=coop, coop_upper=coop_upper)
-    html_code = flask.render_template('templates/list.html', coop=coop, coop_upper=coop_upper)
+    html_code = flask.render_template('templates/list.html', 
+                        coop=coop, coop_upper=coop_upper, user=user)
+        
     response = flask.make_response(html_code)
     return response
 
@@ -238,59 +311,22 @@ def list_delete(coop):
 
 #----------------------------------------------------------------------
 
-def genItemTableHTML(items):
-    '''
-        Create HTML code 
-    '''
-    html_code = (
-        '<table class="table" id="myTable" style="margin: 0;">'
-        )
-    
-    html_code += ('<thead id="theader">')
-    html_code += ('<tr><th scope="col">Item</th><th scope="col">Type</th>'
-                '<th scope="col">Qty</th><th scope="col">Comments</th>'
-                '<th scope="col">Alt Item</th><th scope="col">For Shift?</th>'
-                '<th scope="col">Ordered?</th><th scope="col"> </th></tr>')
-    html_code += ('</thead><tbody id="tbody">')
-
+@app.route('/<coop>/items', methods=['GET'])
+def list_items(coop):
+    print("GET request for items")
+    items = database.get_shopping_for_coop(coop)
     for item in items:
-        html_code += '<tr>'
+        print(item.item_name)
 
-        html_code += ('<th scope="row">{0}</th>'
-                    '<td>{1}</td>'
-                    '<td>{2}</td>'
-                    '<td>{3}</td>'
-                    '<td>{4}</td>').format(item.item_name,
-                                        item.item_type,
-                                        item.item_quantity,
-                                        item.item_reason,
-                                        item.alt_request
-                                        )
-        if item.for_shift is True:
-            for_shift = "Yes"
-        else:
-            for_shift = "No"
-        html_code += ('<td>{0}</td>').format(for_shift)
-        html_code += ('<td><div class="form-check">'
-        '<input class="form-check-input" type="checkbox" value="" id="order-check">')
-        if item.item_ordered is True:
-            ordered = "Yes"
-        else:
-            ordered = "No"
-        html_code += ('<label class="form-check-label" for="order-check">{0}</label>').format(ordered)
-        html_code += ('</div></td>')
-        html_code += ('<td><button type="button" class="btn btn-primary btn-sm" id="rm-btn">Remove</button></td>')
-
-        html_code += '</tr>'
+    html_code = helper.genItemTableHTML(items)
     
-    html_code += ('</tbody></table>')
-
-    return html_code
+    response = flask.make_response(html_code)
+    return response
 
 #----------------------------------------------------------------------
 
 @app.route('/<coop>/items/food', methods=['GET'])
-def foodItems(coop):
+def list_food_items(coop):
     print("GET request for food items")
     items = database.get_food_list_for_coop(coop)
     for item in items:
@@ -304,69 +340,13 @@ def foodItems(coop):
 #----------------------------------------------------------------------
 
 @app.route('/<coop>/items/equipment', methods=['GET'])
-def equipmentItems(coop):
+def list_equipment_items(coop):
     print("GET request for equipment items")
     items = database.get_equipment_list_for_coop(coop)
     for item in items:
             print(item.item_name)
 
-    html_code = genItemTableHTML(items)
+    html_code = helper.genItemTableHTML(items)
     
     response = flask.make_response(html_code)
     return response
-
-#----------------------------------------------------------------------
-
-@app.route('/<coop>/items', methods=['GET'])
-def items(coop):
-    print("GET request for items")
-    items = database.get_shopping_for_coop(coop)
-    for item in items:
-            print(item.item_name)
-
-    html_code = genItemTableHTML(items)
-    
-    
-    response = flask.make_response(html_code)
-    return response
-
-#----------------------------------------------------------------------
-# Co-Op Profile
-#----------------------------------------------------------------------
-
-@app.route('/<coop>/profile', methods=['GET'])
-def profile(coop):
-    netid = auth.authenticate()
-    user = database.get_user(netid)
-    coop_upper = database.get_upper_coop(coop)
-    html = flask.render_template('templates/profile.html',
-            coop=coop, coop_upper=coop_upper, user=user)
-    response = flask.make_response(html)
-    return response
-
-#----------------------------------------------------------------------
-
-@app.route('/<coop>/profile/update', methods=['POST'])
-def update_profile(coop):
-    netid = auth.authenticate()
-    old_user = database.get_user(netid)
-    data = json.loads(flask.request.form.to_dict()['event_data'])
-    cookday = ''
-    for day in data['user_cookday']:
-        cookday += day + ' '
-    cookday.strip()
-    choreday = ''
-    for day in data['user_choreday']:
-        choreday += day + ' '
-    choreday.strip()
-    new_user = models.Roster(
-        user_netid=netid,
-        user_name=data['user_name'],
-        user_allergies=data['user_allergies'],
-        user_admin=old_user.user_admin,
-        user_cookday=cookday,
-        user_choreday=choreday,
-        coop_name=old_user.coop_name
-    )
-    database.update_user(netid, new_user)
-    return ''

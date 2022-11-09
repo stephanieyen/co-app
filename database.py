@@ -3,7 +3,7 @@ from typing import List
 import sqlalchemy
 import sqlalchemy.orm
 import models
-import coops
+import helper
 
 # How to use env var for this???
 db_url = 'postgresql://qqoyksvp:4DE2MIUDdxlcY8L66A5aMLj5ze4zaNbF@peanut.db.elephantsql.com/qqoyksvp'
@@ -14,7 +14,7 @@ engine =  sqlalchemy.create_engine(db_url)
 #----------------------------------------------------------------------
 def get_upper_coop(coop):
     ''' returns the correctly-cased string of the input co-op name'''
-    return coops.get_coop_names()[coop]
+    return helper.get_coop_names()[coop]
 
 # Get the entire roster for a given coop
 def get_roster_for_coop(coop) -> List[models.Roster]:
@@ -32,7 +32,6 @@ def get_shopping_for_coop(coop) -> List[models.ShoppingList]:
             models.ShoppingList.coop_name==coop).all()
     return coop_shopping
 
-# Get the current shopping list for a co-op
 def get_food_list_for_coop(coop) -> List[models.ShoppingList]:
     coop_shopping = []
     with sqlalchemy.orm.Session(engine) as session:
@@ -41,14 +40,13 @@ def get_food_list_for_coop(coop) -> List[models.ShoppingList]:
             models.ShoppingList.item_type=="Food").all()
     return coop_shopping
 
-# # Get the current shopping list for a co-op
-# def get_equipment_list_for_coop(coop) -> List[models.ShoppingList]:
-#     coop_shopping = []
-#     with sqlalchemy.orm.Session(engine) as session:
-#         coop_shopping = session.query(models.ShoppingList).filter(
-#             models.ShoppingList.coop_name==coop,
-#             models.ShoppingList.item_type=="Equipment").all()
-#     return coop_shopping
+def get_equipment_list_for_coop(coop) -> List[models.ShoppingList]:
+    coop_shopping = []
+    with sqlalchemy.orm.Session(engine) as session:
+        coop_shopping = session.query(models.ShoppingList).filter(
+            models.ShoppingList.coop_name==coop,
+            models.ShoppingList.item_type=="Equipment").all()
+    return coop_shopping
 
 # Get the current shifts for a co-op
 def get_shifts_for_coop(coop) -> List[models.Shifts]:

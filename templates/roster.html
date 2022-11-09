@@ -17,7 +17,7 @@
 
 <div class="row justify-content-md-center">
   <div class="container border border-dark rounded" style="background-color: #07a29930;">
-    <div class="table-responsive" id="shoppingList">
+    <div class="table-responsive" id="roster">
       <!-- <table class="table" id="myTable" style="margin: 0;">
           <thead id="theader">
               <tr>
@@ -59,5 +59,39 @@
   </a>
 </div>
 
+<script>
+  'use strict';
+
+  function handleResponse(response) 
+  {
+    $('#roster').html(response);
+  }
+
+  let request = null;
+
+  // refresh page with get request 
+  function refreshRoster() {
+    console.log("fetching refreshed roster");
+    request = $.ajax(
+        {
+            type:'GET',
+            url: '/{{coop}}/members',
+            success: handleResponse,
+            failure: function () {
+              alert('there was an error while fetching members!');
+            }
+        }
+    );
+    console.log("made request")
+  }
+
+  function setup() 
+  {
+    refreshRoster();
+  }
+
+  $('document').ready(setup);
+
+</script>
 
 {% endblock %}

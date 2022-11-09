@@ -84,12 +84,19 @@
     </div>
   </div>
 
-<!-- Add Item Button -->
+<!-- Buttons -->
 <br>
 <div class="container">
   <div class="row">
       <div class="col-sm-12 text-right">
-        <!-- Button trigger modal -->
+        <!-- Edit Button -- ONLY VISIBLE TO ADMIN -->
+        {% if user.user_admin == True %}
+          <button type="button" class="btn btn-primary">
+            Edit List
+          </button>
+        {% endif %}
+
+        <!-- Add Button to trigger modal -->
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createItemModal">
           Add Item
         </button>
@@ -100,7 +107,8 @@
 </div>
 
 
-<!-- Modal -->
+<!-- Modal --> 
+<!-- #createItemModal -->
 <div class="modal fade" id="createItemModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
