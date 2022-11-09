@@ -25,10 +25,24 @@
       font-family: inherit !important;
     }
     
-/* override navbar styling */
+
+    /* override navbar styling */
+
     .navbar
     {
-    background-color: #F4A364 !important;
-    color: #023226 !important
+    background-color: #023226 !important;
+    }
+
+    .nav-link
+    {
+      color: #07a299 !important;
+      font-weight: bold !important;
+    }
+
+    .navbar-brand
+    {
+      
+      color: #07a299 !important;
+      font-weight: bold !important;
     }
 
