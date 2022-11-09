@@ -179,25 +179,12 @@
   let request = null;
 
   // refresh page with another get request 
-  function refreshList() {
+  function refreshList(item_type) {
     console.log("fetching refreshed list");
-    request = $.ajax(
-        {
-            type:'GET',
-            url: '/{{coop}}/items',
-            success: handleResponse,
-            failure: function () {
-              alert('there was an error while fetching items!');
-            }
-        }
-    );
-    console.log("made request")
-  }
 
-  // show all items whose item type is food
-  function toggleFood() 
-  {
-    request = $.ajax(
+    if (item_type == "Food") {
+      console.log("Getting Food")
+      request = $.ajax(
         {
             type:'GET',
             url: '/{{coop}}/items/food',
@@ -206,13 +193,12 @@
               alert('there was an error while fetching items!');
             }
         }
-    );
-  }
+      );
+    }
 
-  // show all items whose item type is equipment
-  function toggleEquipment()
-  {
-    request = $.ajax(
+    else if (item_type == "Equipment") {
+      console.log("Getting Equip")
+      request = $.ajax(
         {
             type:'GET',
             url: '/{{coop}}/items/equipment',
@@ -221,7 +207,67 @@
               alert('there was an error while fetching items!');
             }
         }
+      );
+    }
+
+    else {
+       request = $.ajax(
+          {
+            type:'GET',
+            url: '/{{coop}}/items',
+            success: handleResponse,
+            failure: function () {
+              alert('there was an error while fetching items!');
+            }
+        }
     );
+
+    }
+
+   
+    console.log("made request")
+  }
+
+  // show all items whose item type is food
+  function toggleFood() 
+  {
+    refreshList("Food")
+    // request = $.ajax(
+    //     {
+    //         type:'GET',
+    //         url: '/{{coop}}/items/food',
+    //         // success: handleResponse,
+    //         // failure: function () {
+    //         //   alert('there was an error while fetching items!');
+    //         // }
+    //     }).done(function () 
+    // { 
+    //   handleResponse
+    // }).fail(function () { 
+    //   alert("there was an error while fetching items!")
+    // });;
+  }
+
+  // show all items whose item type is equipment
+  function toggleEquipment()
+  {
+    refreshList("Equipment")
+    // console.log("trying to get equipment!")
+    // request = $.ajax(
+    //     {
+    //         type:'GET',
+    //         url: '/{{coop}}/items/equipment',
+            
+    //         // success: handleResponse,
+    //         // failure: function () {
+    //         //   alert('there was an error while fetching items!');
+    //         // }
+    //     }).done(function () 
+    // { 
+    //   handleResponse
+    // }).fail(function () { 
+    //   alert("there was an error while fetching items!")
+    // });;
 
   }
 
@@ -283,9 +329,9 @@
       // success: refreshList
     }).done(function (data) 
     { 
-      refreshList()
+      refreshList("")
     }).fail(function (jqXHR, textStatus, errorThrown) { 
-      alert("Error updating profile. Try again!")
+      alert("Error updating shopping list. Try again!")
     });;
 
     // refreshList()
@@ -319,7 +365,7 @@
         url: url, 
         success: handleResponse,
         failure: function () {
-          alert('there was an error while fetching items!');
+          alert('Error updating shopping list. Try again!');
         }
       }
     );
@@ -332,11 +378,11 @@
 
   function setup() 
   {
-    refreshList();
+    refreshList("");
     
     // LIST event handling
-    // $("#food-btn").on("click", toggleFood)
-    // $("#equip-btn").on("click", toggleEquipment)
+    $("#food-btn").on("click", toggleFood)
+    $("#equip-btn").on("click", toggleEquipment)
     $('#rm-btn').on('click', removeItem);
     
     // MODAL event handling
