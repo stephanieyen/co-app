@@ -99,8 +99,45 @@
             class="sr-only">close</span></button>
       </div>
 
-      <div class="modal-body">
-        {% include 'templates/shoppingform.html' %}
+      <!-- SHOPPING LIST FORM -->
+      <div class="modal-body"> 
+
+        <div class="form-group">
+            <label for="item_type">Item Type:</label><br>
+            <select class="form-select" id="item_type" aria-label="Select item type">
+                <option selected>Choose...</option>
+                <option value="Food">Food</option>
+                <option value="Equipment">Equipment</option>
+            </select>
+        </div>
+        
+        <!-- Only if food, show food type option -->
+        <div class="form-group" id="food_type_visible" style="display: none">
+            <label for="foodtype">Food Type:</label>
+            <input type="text" class="form-control" id="food_type">
+        </div>
+
+        <div class="form-group">
+            <label for="item">Requested Item:</label>
+            <input type="text" class="form-control" id="item_name">
+        </div>
+        <div class="form-group">
+            <label for="quantity">Quantity</label>
+            <input type="text" class="form-control" id="item_quantity">
+        </div>
+        <div class="form-group">
+            <label for="comments">Reason</label>
+            <input type="text" class="form-control" id="item_reason">
+        </div>
+        <div class="form-group">
+            <label for="alt_item">Alternate Request</label>
+            <input type="text" class="form-control" id="alt_request">
+        </div>
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="for_shift" name="for_shift">
+            <label class="form-check-label" for="for_shift">For Shift?</label>
+        </div>
+
       </div>
 
       <!-- submit button -->
@@ -116,15 +153,14 @@
 
   function handleResponse(response) 
   {
-    console.log(response)
-    // $(response).insertAfter("#theader")
     $('#shoppingList').html(response);
   }
 
   let request = null;
 
-  function getInitialList() 
-  {
+  // refresh page with another get request 
+  function refreshList() {
+    console.log("fetching refreshed list");
     request = $.ajax(
         {
             type:'GET',
@@ -135,6 +171,7 @@
             }
         }
     );
+    console.log("made request")
   }
 
   // show food type option if applicable in modal
@@ -191,62 +228,57 @@
       dataType: 'json',
       contentType: 'application/json',
       event_data: JSON.stringify(json_event),
-      success: getInitialList()
+      success: refreshList
     });
 
+    refreshList()
 
+    // hide modal
     $('#createItemModal').modal('hide');
-  }
 
-  // refresh page with another get request 
-  function refreshList() {
+    // reset all fields in modal
+    // ITEM TYPE -> FOOD
+    $('#food_type').val('');
+    $('#item_name').val('');
+    $('#item_quantity').val('');
+    $('#item_reason').val('');
+    $('#alt_request').val('');
+    // FOR SHIFT CHECKBOX
 
-    request = $.ajax(
-        {
-            type:'GET',
-            url: '/{{coop}}/items',
-            success: handleResponse,
-            failure: function () {
-              alert('there was an error while fetching items!');
-            }
-        }
-    );
-
-    // let item_ordered = 'False'; // UPDATE
-    // let htmlString = '<tr>'
-    //   + '<th scope="row">' + item_name + '</th>'
-    //   + '<td>' + item_type + '</td>'
-    //   + '<td>' + item_quantity + '</td>'
-    //   + '<td>' + item_reason + '</td>'
-    //   + '<td>' + alt_request + '</td>'
-    //   + '<td>' + for_shift + '</td>'
-    //   + `<td> <div class="form-check"> 
-    //           <input class="form-check-input" type="checkbox" value="" id="order-check">
-    //           <label class="form-check-label" for="order-check">`
-    //           + item_ordered + `</label></div></td>`
-    //   + `<td> <button type="button" class="btn btn-secondary btn-sm" id="rm-btn">
-    //             Remove </button></td>`
-
-    // $('#myTable').append(htmlString);
+    
   }
 
   // handle event when remove button clicked
-  $('#rm-btn').on('click', function () {
+  function removeItem() {
+    console.log('clicked')
+    console.log(info)
 
     // EDIT ajax post request -- need anything other than id?
-    $.post("/{{coop}}/list/delete?id=" + info.event.id, {});
+    url = "/{{coop}}/list/delete?id=" + info.event.id;
+
+    request = $.ajax(
+      {
+        type: 'POST',
+        url: url, 
+        success: handleResponse,
+        failure: function () {
+          alert('there was an error while fetching items!');
+        }
+      }
+    );
 
     // refresh list from deleting from db
-});
+  }
 
   // TODO: when ordered checkbox clicked, update in database, change words to "true"
 
 
   function setup() 
   {
-    getInitialList();
+    refreshList();
     // event handling
-    $("#createItemModal").on( "click", "#add_submit", addItem)
+    $("#createItemModal").on( "click", "#add_submit", addItem);
+    $('#rm-btn').on('click', removeItem);
     //  $("#myTable").on("click", console.log("TEST"))
   }
 

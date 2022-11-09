@@ -210,6 +210,10 @@ def list(coop):
             coop_name=coop
         )
         database.add_item(new_item)
+        # print("checking if it actually added")
+        # items = database.get_shopping_for_coop(coop)
+        # for item in items:
+        #     print(item.item_name)
         
 
     # items = database.get_shopping_for_coop(coop)
@@ -236,7 +240,10 @@ def list_delete():
 
 @app.route('/<coop>/items', methods=['GET'])
 def items(coop):
+    print("GET request for items")
     items = database.get_shopping_for_coop(coop)
+    for item in items:
+            print(item.item_name)
 
     # with open("templates/list_table.html") as f:
     #     raw_lines = f.readlines()
