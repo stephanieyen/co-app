@@ -76,11 +76,12 @@
         request = $.post("/{{coop}}/profile/update", {
             dataType:'json',
             contentType: 'application/json',
-            event_data: JSON.stringify(json_event),
-            success: function() {
-                $('#name').html(profile_name);
-            }
-        });
+            event_data: JSON.stringify(json_event)
+        }).done(function (data) { 
+            $('#name').html(JSON.parse(data))
+        }).fail(function (jqXHR, textStatus, errorThrown) { 
+            alert("Error updating profile. Try again!")
+        });;
     }
 
     function setup() {

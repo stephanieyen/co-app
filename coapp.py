@@ -79,7 +79,7 @@ def update_profile(coop):
         coop_name=old_user.coop_name
     )
     database.update_user(netid, new_user)
-    return ''
+    return json.dumps(new_user.user_name)
 
 #----------------------------------------------------------------------
 # Co-Op Roster
