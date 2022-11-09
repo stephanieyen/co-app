@@ -26,12 +26,8 @@
   <div class="col-sm-11">
     <div class="container border border-dark rounded" style="background-color: #07a29930;">
       <div class="table-responsive">
-        <div id="shoppingList">
-          <!-- insert shopping list here -->
-        </div>
-
-        <!-- <table class="table" id="myTable" style="margin: 0;">
-            <thead class="table-light">
+        <table class="table" id="myTable" style="margin: 0;">
+            <thead id="theader">
                 <tr>
                     <th scope="col">Item</th>
                     <th scope="col">Type</th>
@@ -44,7 +40,10 @@
                   </tr>
             </thead>
             <tbody id="tbody">
-                  {% for item in items: %}
+              <div id="shoppingList">
+                <!-- insert shopping list here -->
+              </div>
+                  <!-- {% for item in items: %}
                     <tr>
                         <th scope="row">{{item.item_name}}</th>
                         <td>{{item.item_type}}</td>
@@ -70,9 +69,9 @@
                           <button type="button" class="btn btn-secondary btn-sm" id="rm-btn">Remove</button>
                         </td>
                     </tr>
-                  {% endfor %}
+                  {% endfor %} -->
             </tbody>
-          </table> -->
+          </table> 
       </div>
     </div>
   </div>
@@ -118,7 +117,8 @@
   function handleResponse(response) 
   {
     console.log(response)
-    $('#shoppingList').html(response);
+    $(response).insertAfter("#theader")
+    // $('#shoppingList').html(response);
   }
 
   let request = null;
@@ -196,35 +196,44 @@
       success: refreshList()
     });
 
-    // Add new item to HTML table
-    function refreshList() {
-
-      // $.get("/{{coop}}/list", {
-
-      // })
-      let item_ordered = 'False'; // UPDATE
-      let htmlString = '<tr>'
-        + '<th scope="row">' + item_name + '</th>'
-        + '<td>' + item_type + '</td>'
-        + '<td>' + item_quantity + '</td>'
-        + '<td>' + item_reason + '</td>'
-        + '<td>' + alt_request + '</td>'
-        + '<td>' + for_shift + '</td>'
-        + `<td> <div class="form-check"> 
-                <input class="form-check-input" type="checkbox" value="" id="order-check">
-                <label class="form-check-label" for="order-check">`
-                 + item_ordered + `</label></div></td>`
-        + `<td> <button type="button" class="btn btn-secondary btn-sm" id="rm-btn">
-                  Remove </button></td>`
-
-      $('#myTable').append(htmlString);
-    }
 
     $('#createItemModal').modal('hide');
   }
 
+  // refresh page with another get request 
+  function refreshList() {
+
+    request = $.ajax(
+        {
+            type:'GET',
+            url: '/{{coop}}/items',
+            success: handleResponse,
+            failure: function () {
+              alert('there was an error while fetching items!');
+            }
+        }
+    );
+
+    // let item_ordered = 'False'; // UPDATE
+    // let htmlString = '<tr>'
+    //   + '<th scope="row">' + item_name + '</th>'
+    //   + '<td>' + item_type + '</td>'
+    //   + '<td>' + item_quantity + '</td>'
+    //   + '<td>' + item_reason + '</td>'
+    //   + '<td>' + alt_request + '</td>'
+    //   + '<td>' + for_shift + '</td>'
+    //   + `<td> <div class="form-check"> 
+    //           <input class="form-check-input" type="checkbox" value="" id="order-check">
+    //           <label class="form-check-label" for="order-check">`
+    //           + item_ordered + `</label></div></td>`
+    //   + `<td> <button type="button" class="btn btn-secondary btn-sm" id="rm-btn">
+    //             Remove </button></td>`
+
+    // $('#myTable').append(htmlString);
+  }
+
   // handle event when remove button clicked
-  $('#rm_item').on('click', function () {
+  $('#rm-btn').on('click', function () {
 
     // EDIT ajax post request -- need anything other than id?
     $.post("/{{coop}}/list/delete?id=" + info.event.id, {});

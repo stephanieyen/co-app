@@ -243,9 +243,10 @@ def items(coop):
     # html_code = ''.join(raw_lines) # str
 
     # create HTML code
-    html_code = (
-        '<table class="table" id="myTable" style="margin: 0;">'
-        )
+    html_code = ''
+    # html_code = (
+    #     '<table class="table" id="myTable" style="margin: 0;">'
+    #     )
     
     for item in items:
         html_code += '<tr>'
@@ -259,12 +260,29 @@ def items(coop):
                                         item.item_reason,
                                         item.alt_request
                                         )
+        if item.for_shift is True:
+            for_shift = "Yes"
+        else:
+            for_shift = "No"
+        html_code += ('<td>{0}</td>').format(for_shift)
+
+                        # <td>
+                        #   <div class="form-check">
+                        #     <input class="form-check-input" type="checkbox" value="" id="order-check">
+                        #     <label class="form-check-label" for="order-check">
+                        #       {{item.item_ordered}}
+                        #     </label>
+                        #   </div>
+                        # </td>
+                        # <td>
+                        #   <button type="button" class="btn btn-secondary btn-sm" id="rm-btn">Remove</button>
+                        # </td>
         html_code += '</tr>'
 
         # if item.for_shift == True:
         #     for_shift = True
     
-    html_code += '</table>'
+    # html_code += '</table>'
 
     # item_json = []
     # for item in items: 
