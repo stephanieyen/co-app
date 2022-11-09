@@ -181,7 +181,7 @@ def events(coop):
 def roster(coop):
     members = database.get_roster_for_coop(coop)
     coop_upper = database.get_upper_coop(coop)
-    html = flask.render_template('roster.html',
+    html = flask.render_template('templates/roster.html',
             members=members, coop=coop, coop_upper=coop_upper)
     response = flask.make_response(html)
     return response
@@ -237,6 +237,10 @@ def list_delete():
 def items(coop):
     items = database.get_shopping_for_coop(coop)
 
+    # with open("templates/list_table.html") as f:
+    #     raw_lines = f.readlines()
+    # html_code = ''.join(raw_lines) # str
+
     # create HTML code
     html_code = (
         '<table class="table" id="myTable" style="margin: 0;">'
@@ -244,8 +248,20 @@ def items(coop):
     
     for item in items:
         html_code += '<tr>'
-        html_code += ('{}').format(item.item_name)
+        html_code += ('<th scope="row">{0}</th>'
+                    '<td>{1}</td>'
+                    '<td>{2}</td>'
+                    '<td>{3}</td>'
+                    '<td>{4}</td>').format(item.item_name,
+                                        item.item_type,
+                                        item.item_quantity,
+                                        item.item_reason,
+                                        item.alt_request
+                                        )
         html_code += '</tr>'
+
+        # if item.for_shift == True:
+        #     for_shift = True
     
     html_code += '</table>'
 
