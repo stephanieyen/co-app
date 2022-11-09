@@ -210,12 +210,13 @@ def list(coop):
             coop_name=coop
         )
         database.add_item(new_item)
+        
 
     # items = database.get_shopping_for_coop(coop)
-    # coop_upper = database.get_upper_coop(coop)
+    coop_upper = database.get_upper_coop(coop)
     # html = flask.render_template('templates/list.html',
     #         items=items, coop=coop, coop_upper=coop_upper)
-    html_code = flask.render_template('templates/list.html', coop=coop)
+    html_code = flask.render_template('templates/list.html', coop=coop, coop_upper=coop_upper)
     response = flask.make_response(html_code)
     return response
 
