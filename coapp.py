@@ -138,7 +138,7 @@ def events(coop):
         elif type == "Cooking":
             data['color'] = "#c4f5d3" # green
         else:
-            data['color'] = "#f1d5f2" # pink
+            data['color'] = "#FFDBE9" # light pink
         event_json.append(data)
     return jsonify(event_json)
 

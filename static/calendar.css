@@ -456,6 +456,7 @@ When it's NOT activated, the fc-button classes won't even be in the DOM.
     opacity: var(--fc-bg-event-opacity, 0.3)
   }
 .fc .fc-bg-event .fc-event-title {
+  font-weight: bold;
       margin: .5em;
       font-size: .85em;
       font-size: var(--fc-small-font-size, .85em);
@@ -605,8 +606,9 @@ A HORIZONTAL event
     min-width: 0; /* important for allowing to shrink all the way */
   }
 .fc-h-event .fc-event-title {
-  color: #023226;
-    font-size: 1.25em;
+    font-weight: bold;
+    color: #023226;
+    font-size: 1.1em;
     display: inline-block; /* need this to be sticky cross-browser */
     vertical-align: top; /* for not messing up line-height */
     left: 0;  /* for sticky */
@@ -720,8 +722,8 @@ A HORIZONTAL event
     z-index: 1; /* container inner z-index's because <tr>s can't do it */
   }
 .fc .fc-daygrid-day.fc-day-today {
-      background-color: #F4A36450;
-      background-color: var(--fc-today-bg-color, #F4A36450);
+      background-color: lightgray;
+      background-color: var(--fc-today-bg-color, lightgray);
     }
 .fc .fc-daygrid-day-frame {
     position: relative;
