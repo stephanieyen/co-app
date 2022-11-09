@@ -284,7 +284,8 @@ When it's NOT activated, the fc-button classes won't even be in the DOM.
     border-bottom-left-radius: 0;
   }
 .fc .fc-toolbar {
-  background-color: #D3F2E9;
+    background-color: #D3F2E9;
+    color: #023226;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -604,6 +605,8 @@ A HORIZONTAL event
     min-width: 0; /* important for allowing to shrink all the way */
   }
 .fc-h-event .fc-event-title {
+  color: #023226;
+    font-size: 1.25em;
     display: inline-block; /* need this to be sticky cross-browser */
     vertical-align: top; /* for not messing up line-height */
     left: 0;  /* for sticky */
