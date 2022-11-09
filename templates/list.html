@@ -270,10 +270,15 @@
       dataType: 'json',
       contentType: 'application/json',
       event_data: JSON.stringify(json_event),
-      success: refreshList
-    });
+      // success: refreshList
+    }).done(function (data) 
+    { 
+      refreshList()
+    }).fail(function (jqXHR, textStatus, errorThrown) { 
+      alert("Error updating profile. Try again!")
+    });;
 
-    refreshList()
+    // refreshList()
 
     // hide modal
     $('#createItemModal').modal('hide');

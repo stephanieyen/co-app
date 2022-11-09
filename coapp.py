@@ -313,10 +313,10 @@ def list_delete(coop):
 
 @app.route('/<coop>/items', methods=['GET'])
 def list_items(coop):
-    print("GET request for items")
+    # print("GET request for items")
     items = database.get_shopping_for_coop(coop)
-    for item in items:
-        print(item.item_name)
+    # for item in items:
+    #     print(item.item_name)
 
     html_code = helper.genItemTableHTML(items)
     
@@ -327,10 +327,10 @@ def list_items(coop):
 
 @app.route('/<coop>/items/food', methods=['GET'])
 def list_food_items(coop):
-    print("GET request for food items")
+    # print("GET request for food items")
     items = database.get_food_list_for_coop(coop)
-    for item in items:
-            print(item.item_name)
+    # for item in items:
+    #         print(item.item_name)
 
     html_code = genItemTableHTML(items)
     
@@ -341,10 +341,10 @@ def list_food_items(coop):
 
 @app.route('/<coop>/items/equipment', methods=['GET'])
 def list_equipment_items(coop):
-    print("GET request for equipment items")
+    # print("GET request for equipment items")
     items = database.get_equipment_list_for_coop(coop)
-    for item in items:
-            print(item.item_name)
+    # for item in items:
+    #         print(item.item_name)
 
     html_code = helper.genItemTableHTML(items)
     
