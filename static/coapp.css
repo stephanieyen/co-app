@@ -23,4 +23,11 @@
     button, input, optgroup, select, textarea {
       font-family: "Montserrat" !important;
     }
+/* override navbar styling */
+    .navbar
+{
+    background-color: #F4A364 !important;
+    color: #023226 !important
+    
+}
 
