@@ -99,7 +99,7 @@ def calendar_delete():
 #----------------------------------------------------------------------
 
 @app.route('/<coop>/calendar/update', methods=['POST'])
-def calendar_update():
+def calendar_update(coop):
     ''' 
         Updates a shift in the calendar of the co-op 
         in the specified route. 
