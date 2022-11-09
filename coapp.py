@@ -286,7 +286,7 @@ def items(coop):
             ordered = "No"
         html_code += ('<label class="form-check-label" for="order-check">{0}</label>').format(ordered)
         html_code += ('</div></td>')
-        html_code += ('<td><button type="button" class="btn btn-secondary btn-sm" id="rm-btn">Remove</button></td>')
+        html_code += ('<td><button type="button" class="btn btn-primary btn-sm" id="rm-btn">Remove</button></td>')
         # '<label class="form-check-label" for="order-check">{1}</label>'
         # '</div></td>').format(item.item_ordered)
 
