@@ -292,6 +292,7 @@ When it's NOT activated, the fc-button classes won't even be in the DOM.
   }
 .fc .fc-toolbar.fc-header-toolbar {
     margin-bottom: 1.5em;
+    margin-right: 10px;
   }
 .fc .fc-toolbar.fc-footer-toolbar {
     margin-top: 1.5em;
@@ -299,6 +300,7 @@ When it's NOT activated, the fc-button classes won't even be in the DOM.
 .fc .fc-toolbar-title {
     font-size: 1.75em;
     margin: 0;
+    padding-left: 10px;
   }
 .fc-direction-ltr .fc-toolbar > * > :not(:first-child) {
     margin-left: .75em; /* space between */
@@ -722,8 +724,8 @@ A HORIZONTAL event
     z-index: 1; /* container inner z-index's because <tr>s can't do it */
   }
 .fc .fc-daygrid-day.fc-day-today {
-      background-color: lightgray;
-      background-color: var(--fc-today-bg-color, lightgray);
+      background-color: #77889970;
+      background-color: var(--fc-today-bg-color, #77889970);
     }
 .fc .fc-daygrid-day-frame {
     position: relative;
