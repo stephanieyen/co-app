@@ -12,15 +12,15 @@
     .h1, .h2, .h3, .h4, .h5, .h6,
     .display-1, .display-2, .display-3,
     .display-4, .display-5, .display-6 {
-      font-family: "Montserrat"; font-weight: bold
+      font-family: "Montserrat"; font-weight: bold !important;
     }
     html, body, .tooltip, .popover {
-      font-family: "Montserrat"
+      font-family: "Montserrat" !important;
     }
     code, kbd, pre, samp, .text-monospace {
-      font-family: "Montserrat"
+      font-family: "Montserrat" !important;
     }
     button, input, optgroup, select, textarea {
-      font-family: "Montserrat"
+      font-family: "Montserrat" !important;
     }
 
