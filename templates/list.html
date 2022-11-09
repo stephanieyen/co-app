@@ -6,24 +6,32 @@
 
 {% extends "templates/base.html" %}
 {% block content %}
+<div class="container-fluid">
+  <!-- Title Row - "Shopping List" -->
 <div class="row">
-  <div class="col-sm-8">
+  <div class="col-sm-4 text-center">
     <br>
     <h2>Shopping Requests</h2><br>
   </div>
 </div>
 
-<div class="btn-group btn-group-toggle" data-toggle="buttons">
-  <label class="btn btn-secondary active">
-    <input type="radio" name="options" id="food-btn" autocomplete="off" checked> Food
-  </label>
-  <label class="btn btn-secondary">
-    <input type="radio" name="options" id="equip-btn" autocomplete="off"> Equipment
-  </label>
+<!-- Toggle Button Row -->
+<div class="row">
+  <div class="col-sm-3 text-center">
+    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+      <label class="btn btn-secondary active">
+        <input type="radio" name="options" id="food-btn" autocomplete="off" checked> Food
+      </label>
+      <label class="btn btn-secondary">
+        <input type="radio" name="options" id="equip-btn" autocomplete="off"> Equipment
+      </label>
+    </div>
+  </div> 
 </div>
+<br>
 
-<div class="container-fluid">
-  <div class="col-sm-11">
+
+  <div class="row justify-content-md-center">
     <div class="container border border-dark rounded" style="background-color: #07a29930;">
       <div class="table-responsive" id="shoppingList">
         <!-- <table class="table" id="myTable" style="margin: 0;">
@@ -75,11 +83,12 @@
       </div>
     </div>
   </div>
-</div>
 
+<!-- Add Item Button -->
+<br>
 <div class="container">
   <div class="row">
-      <div class="col-md-12 text-right">
+      <div class="col-sm-12 text-right">
         <!-- Button trigger modal -->
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createItemModal">
           Add Item
@@ -87,6 +96,9 @@
       </div>
   </div>
 </div>
+
+</div>
+
 
 <!-- Modal -->
 <div class="modal fade" id="createItemModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
