@@ -109,10 +109,10 @@
               $('#updateEventModal').modal('hide');
 
               // EDIT ajax post request -- need anything other than id?
-              $.post("/{{coop}}/calendar/delete?id=" + info.event.id, {});
-
-              // refresh events after deleting from db
-              calendar.refetchEvents()
+              $.post("/{{coop}}/calendar/delete?id=" + info.event.id, {}).done(function() {
+                // refresh events after deleting from db
+                calendar.refetchEvents()
+              })
             });
 
             // UPDATE event on calendar/db if button clicked 
@@ -163,16 +163,12 @@
               $.post("/{{coop}}/calendar/update?id=" + info.event.id, {
                 event_data: json_event,
                 async: false,
-                success: refreshCal()
-              });
-              function refreshCal() {
+              }).done(function() {
+                // refresh events after deleting from db
                 calendar.refetchEvents()
-              }
-
-              // refresh event after update in db 
-              calendar.refetchEvents()
-            });
-          },
+              });
+          })
+        },
 
           // selecting area on the calendar that does NOT already have an event
           select: function (info) {
@@ -236,12 +232,10 @@
               $.post("/{{coop}}", {
                 event_data: json_event,
                 async: false,
-                success: refreshCal()
-              });
-
-              function refreshCal() {
+              }).done(function() {
+                // refresh events after deleting from db
                 calendar.refetchEvents()
-              }
+              })
 
               $('#createEventModal').modal('hide');
             });
