@@ -3,6 +3,7 @@
 
 <head>
     <meta charset='utf-8' />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Co-App User Profile</title>
     <!------------------------Bootstrap src for header ---------------------------->
     <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css' rel='stylesheet'>
@@ -13,6 +14,7 @@
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='coapp.css') }}" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css"/>
 </head>
 
 <script>
@@ -136,7 +138,7 @@
                 <div class="row">
                     <h3 id="name" class="text-center">
                         </h2>
-                        <p class="text-center">Co-Op: {{coop}}</p>
+                        <p class="text-center">Co-Op: {{coop_upper}}</p>
                         <p class="text-center" id="member_status"></p>
                 </div>
                 <div class="w-100 p-3">
@@ -174,41 +176,74 @@
                         <div class="form-cook" id="cook_day">
                             <div class="row">
                                 <div class="col-md-1">
-                                    <label class="form-cook-label" for="monday">M</label>
-                                    <div class="pretty p-default p-curve p-fill">
-                                    <input name="cook_days" type="checkbox" value="M" class="form-cook-input"
+                                    <div class="pretty p-image p-plain p-bigger p-tada">
+                                        <input name="cook_days" type="checkbox" value="M" class="form-cook-input"
                                         id="monday">
+                                            <div class="state">
+                                                <img class="image" src="{{ url_for('static',filename='cutlery.png') }}">
+                                                <label class="form-cook-label" for="monday">M</label>
+                                            </div>                                      
                                         </div>
                                 </div>
                                 <div class="col-md-1">
-                                    <label class="form-cook-label" for="tuesday">T</label>
-                                    <input name="cook_days" type="checkbox" value="T" class="form-cook-input"
+                                    <div class="pretty p-image p-plain p-bigger p-tada">
+                                        <input name="cook_days" type="checkbox" value="T" class="form-cook-input"
                                         id="tuesday">
+                                            <div class="state">
+                                                <img class="image" src="{{ url_for('static',filename='cutlery.png') }}">
+                                                <label class="form-cook-label" for="tuesday">T</label>
+                                            </div>                                      
+                                        </div>
                                 </div>
                                 <div class="col-md-1">
-                                    <label class="form-cook-label" for="wednesday">W</label>
+                                    <div class="pretty p-image p-plain p-bigger p-tada">
                                     <input name="cook_days" type="checkbox" value="W" class="form-cook-input"
                                         id="wednesday">
+                                        <div class="state">
+                                            <img class="image" src="{{ url_for('static',filename='cutlery.png') }}">
+                                            <label class="form-cook-label" for="wednesday">W</label>
+                                          </div>                                      
+                                    </div>
                                 </div>
                                 <div class="col-md-1">
-                                    <label class="form-cook-label" for="thursday">Th</label>
-                                    <input name="cook_days" type="checkbox" value="Th" class="form-cook-input"
+                                    <div class="pretty p-image p-plain p-bigger p-tada">
+                                        <input name="cook_days" type="checkbox" value="Th" class="form-cook-input"
                                         id="thursday">
+                                            <div class="state">
+                                                <img class="image" src="{{ url_for('static',filename='cutlery.png') }}">
+                                                <label class="form-cook-label" for="thursday">Th</label>
+                                            </div>                                      
+                                        </div>
                                 </div>
                                 <div class="col-md-1">
-                                    <label class="form-cook-label" for="friday">F</label>
-                                    <input name="cook_days" type="checkbox" value="F" class="form-cook-input"
+                                    <div class="pretty p-image p-plain p-bigger p-tada">
+                                        <input name="cook_days" type="checkbox" value="F" class="form-cook-input"
                                         id="friday">
+                                            <div class="state">
+                                                <img class="image" src="{{ url_for('static',filename='cutlery.png') }}">
+                                                <label class="form-cook-label" for="friday">F</label>
+                                            </div>                                      
+                                        </div>
                                 </div>
                                 <div class="col-md-1">
-                                    <label class="form-cook-label" for="saturday">Sat</label>
-                                    <input name="cook_days" type="checkbox" value="Sat" class="form-cook-input"
+                                    <div class="pretty p-image p-plain p-bigger p-tada">
+                                        <input name="cook_days" type="checkbox" value="Sat" class="form-cook-input"
                                         id="saturday">
+                                            <div class="state">
+                                                <img class="image" src="{{ url_for('static',filename='cutlery.png') }}">
+                                                <label class="form-cook-label" for="saturday">Sat</label>
+                                            </div>                                      
+                                        </div>
                                 </div>
                                 <div class="col-md-1">
-                                    <label class="form-cook-label" for="sunday">Sun</label>
-                                    <input name="cook_days" type="checkbox" value="Sun" class="form-cook-input"
+                                    <div class="pretty p-image p-plain p-bigger p-tada">
+                                        <input name="cook_days" type="checkbox" value="Sun" class="form-cook-input"
                                         id="sunday">
+                                            <div class="state">
+                                                <img class="image" src="{{ url_for('static',filename='cutlery.png') }}">
+                                                <label class="form-cook-label" for="sunday">Sun</label>
+                                            </div>                                      
+                                        </div>
                                 </div>
                             </div>
                         </div>
@@ -217,39 +252,74 @@
                         <div class="form-chore" id="chore_day">
                             <div class="row">
                                 <div class="col-md-1">
-                                    <label class="form-chore-label" for="monday">M</label>
-                                    <input name="chore_days" type="checkbox" value="M" class="form-chore-input"
+                                    <div class="pretty p-image p-plain p-bigger p-tada">
+                                        <input name="chore_days" type="checkbox" value="M" class="form-chore-input"
                                         id="monday">
+                                            <div class="state">
+                                                <img class="image" src="{{ url_for('static',filename='broom.png') }}">
+                                                <label class="form-chore-label" for="monday">M</label>
+                                            </div>                                      
+                                        </div>
                                 </div>
                                 <div class="col-md-1">
-                                    <label class="form-chore-label" for="tuesday">T</label>
-                                    <input name="chore_days" type="checkbox" value="T" class="form-chore-input"
+                                    <div class="pretty p-image p-plain p-bigger p-tada">
+                                        <input name="chore_days" type="checkbox" value="T" class="form-chore-input"
                                         id="tuesday">
+                                            <div class="state">
+                                                <img class="image" src="{{ url_for('static',filename='broom.png') }}">
+                                                <label class="form-chore-label" for="tuesday">T</label>
+                                            </div>                                      
+                                        </div>
                                 </div>
                                 <div class="col-md-1">
-                                    <label class="form-chore-label" for="wednesday">W</label>
-                                    <input name="chore_days" type="checkbox" value="W" class="form-chore-input"
+                                    <div class="pretty p-image p-plain p-bigger p-tada">
+                                        <input name="chore_days" type="checkbox" value="W" class="form-chore-input"
                                         id="wednesday">
+                                            <div class="state">
+                                                <img class="image" src="{{ url_for('static',filename='broom.png') }}">
+                                                <label class="form-chore-label" for="wednesday">W</label>
+                                            </div>                                      
+                                        </div>
                                 </div>
                                 <div class="col-md-1">
-                                    <label class="form-chore-label" for="thursday">Th</label>
-                                    <input name="chore_days" type="checkbox" value="Th" class="form-chore-input"
+                                    <div class="pretty p-image p-plain p-bigger p-tada">
+                                        <input name="chore_days" type="checkbox" value="Th" class="form-chore-input"
                                         id="thursday">
+                                            <div class="state">
+                                                <img class="image" src="{{ url_for('static',filename='broom.png') }}">
+                                                <label class="form-chore-label" for="thursday">Th</label>
+                                            </div>                                      
+                                        </div>
                                 </div>
                                 <div class="col-md-1">
-                                    <label class="form-chore-label" for="friday">F</label>
-                                    <input name="chore_days" type="checkbox" value="F" class="form-chore-input"
+                                    <div class="pretty p-image p-plain p-bigger p-tada">
+                                        <input name="chore_days" type="checkbox" value="F" class="form-chore-input"
                                         id="friday">
+                                            <div class="state">
+                                                <img class="image" src="{{ url_for('static',filename='broom.png') }}">
+                                                <label class="form-chore-label" for="friday">F</label>
+                                            </div>                                      
+                                        </div>
                                 </div>
                                 <div class="col-md-1">
-                                    <label class="form-chore-label" for="saturday">Sat</label>
-                                    <input name="chore_days" type="checkbox" value="Sat" class="form-chore-input"
+                                    <div class="pretty p-image p-plain p-bigger p-tada">
+                                        <input name="chore_days" type="checkbox" value="Sat" class="form-chore-input"
                                         id="saturday">
+                                            <div class="state">
+                                                <img class="image" src="{{ url_for('static',filename='broom.png') }}">
+                                                <label class="form-chore-label" for="saturday">Sat</label>
+                                            </div>                                      
+                                        </div>
                                 </div>
                                 <div class="col-md-1">
-                                    <label class="form-chore-label" for="sunday">Sun</label>
-                                    <input name="chore_days" type="checkbox" value="Sun" class="form-chore-input"
+                                    <div class="pretty p-image p-plain p-bigger p-tada">
+                                        <input name="chore_days" type="checkbox" value="Sun" class="form-chore-input"
                                         id="sunday">
+                                            <div class="state">
+                                                <img class="image" src="{{ url_for('static',filename='broom.png') }}">
+                                                <label class="form-chore-label" for="sunday">Sun</label>
+                                            </div>                                      
+                                        </div>
                                 </div>
                             </div>
                         </div>
