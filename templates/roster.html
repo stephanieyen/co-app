@@ -25,6 +25,7 @@
                   <th scope="col">Dietary Restrictions</th>
                   <th scope="col">Cook Shift</th>
                   <th scope="col">Chore Shift</th>
+                  <th scope="col"> </th>
                 </tr>
           </thead>
           <tbody id="tbody">
@@ -37,7 +38,8 @@
                       <td>{{member.user_allergies}}</td>
                       <td>{{member.user_cookday}}</td>
                       <td>{{member.user_choreday}}</td>
-                    </tr>
+                      <td><input type="button" value="Delete" onclick="deleteRow(this)"></td>
+                  </tr>
                 {% endfor %} -->
           <!-- </tbody>
         </table>  -->
