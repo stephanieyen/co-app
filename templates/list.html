@@ -182,21 +182,21 @@
   function refreshList(item_type) {
     console.log("fetching refreshed list");
 
-    if (item_type == "Food") {
-      console.log("Getting Food")
-      request = $.ajax(
-        {
-            type:'GET',
-            url: '/{{coop}}/items/food',
-            success: handleResponse,
-            failure: function () {
-              alert('there was an error while fetching items!');
-            }
-        }
-      );
-    }
+    // if (item_type == "Food") {
+    //   console.log("Getting Food")
+    //   request = $.ajax(
+    //     {
+    //         type:'GET',
+    //         url: '/{{coop}}/items/food',
+    //         success: handleResponse,
+    //         failure: function () {
+    //           alert('there was an error while fetching items!');
+    //         }
+    //     }
+    //   );
+    // }
 
-    else if (item_type == "Equipment") {
+    if (item_type == "Equipment") {
       console.log("Getting Equip")
       request = $.ajax(
         {
@@ -214,7 +214,7 @@
        request = $.ajax(
           {
             type:'GET',
-            url: '/{{coop}}/items',
+            url: '/{{coop}}/items/food',
             success: handleResponse,
             failure: function () {
               alert('there was an error while fetching items!');
@@ -329,7 +329,12 @@
       // success: refreshList
     }).done(function (data) 
     { 
-      refreshList("")
+      if (item_type=="Equipment") {
+        refreshList("Equipment")
+      }
+      else {
+        refreshList("Food")
+      }
     }).fail(function (jqXHR, textStatus, errorThrown) { 
       alert("Error updating shopping list. Try again!")
     });;
