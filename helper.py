@@ -51,8 +51,8 @@ def genItemTableHTML(items):
         )
     
     html_code += ('<thead id="theader">')
-    html_code += ('<tr><th scope="col">Item</th><th scope="col">Type</th>'
-                '<th scope="col">Qty</th><th scope="col">Comments</th>'
+    html_code += ('<tr><th scope="col">Item</th><th scope="col">Type</th>')
+    html_code += ('<th scope="col">Qty</th><th scope="col">Comments</th>'
                 '<th scope="col">Alt Item</th><th scope="col">For Shift?</th>'
                 '<th scope="col">Ordered?</th><th scope="col"> </th></tr>')
     html_code += ('</thead><tbody id="tbody">')
