@@ -91,6 +91,18 @@
         });;
     }
 
+    function deleteProfile() {
+        // show confirmation to delete in alert box        
+        if (confirm("Are you sure you want to delete your account?") == true) {
+            // ajax post request by netid
+            $.post("/{{coop}}/roster/delete?id=" + "{{user.user_netid}}", {}).done(function () {
+                // redirect to homepage after deletion
+                location.href = '/';
+                redirect();
+            })
+        } 
+    }
+
     function setup() {
         // fill in info from database
         $('#name').html("{{user.user_name}}");
@@ -130,6 +142,9 @@
         $("#profile-form").submit(function (e) {
             e.preventDefault();
         });
+        // delete profile when clicked (show alert first)
+        $('#delete_profile').on('click', deleteProfile);
+
     }
     $('document').ready(setup);
 
@@ -161,7 +176,7 @@
                     </div>
                     <br>
                     <div class="row">
-                        <button type="button" class="btn btn-primary">Delete Account</button>
+                        <button type="button" id="delete_profile" class="btn btn-primary">Delete Account</button>
                     </div>
                 </div>
             </div>

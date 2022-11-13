@@ -103,7 +103,7 @@ def roster_delete(coop):
         in the specified route.                     
     '''
     user_id = flask.request.args.get('id') # make sure it's netid
-    database.delete_item(user)
+    database.delete_item(user_id)
     return ''
 
 #----------------------------------------------------------------------
