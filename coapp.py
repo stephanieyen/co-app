@@ -332,7 +332,7 @@ def list_food_items(coop):
     # for item in items:
     #         print(item.item_name)
 
-    html_code = genItemTableHTML(items)
+    html_code = helper.genItemTableHTML(items)
     
     response = flask.make_response(html_code)
     return response
