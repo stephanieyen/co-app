@@ -130,6 +130,13 @@ def edit_roster(coop):
 @app.route('/<coop>/roster/add', methods=['POST'])
 def add_user(coop):
     # data = json.loads(flask.request.form.to_dict()['event_data'])
+    # user = models.Roster(user_netid=data['netid'],
+    #                     user_name='',
+    #                     user_allergies='',
+    #                     user_admin=False,
+    #                     user_cookday='',
+    #                     user_choreday='',
+    #                     coop_name=coop)
     # database.add_user(user)
     return ''
 

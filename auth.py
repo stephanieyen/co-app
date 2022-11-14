@@ -90,9 +90,7 @@ def authenticate():
         login_url = (_CAS_URL + 'login?service='
                      + quote(strip_ticket(request.url)))
         abort(redirect(login_url))
-        
     user = get_user(username)
-    print(user is None)
     if user is None:
         return None
     coop = user.coop_name
