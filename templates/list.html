@@ -383,7 +383,12 @@
     // LIST event handling
     $("#food-btn").on("click", toggleFood)
     $("#equip-btn").on("click", toggleEquipment)
-    $('#rm-btn').on('click', removeItem);
+    $('#rm-btn-id').on('click', removeItem);
+
+    // $("#itemTable").on('click','.rm-btn', function() {
+    //     //  $(this).closest('tr').remove();
+    //      console.log('attempting remove')
+    //   });
     
     // MODAL event handling
     $('#item_type').on('change', showFoodType)

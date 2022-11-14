@@ -47,7 +47,7 @@ def genItemTableHTML(items, is_food):
         Create HTML code 
     '''
     html_code = (
-        '<table class="table" id="myTable" style="margin: 0;">'
+        '<table class="table" id="itemTable" style="margin: 0;">'
         )
     
     html_code += ('<thead id="theader">')
@@ -86,7 +86,7 @@ def genItemTableHTML(items, is_food):
             ordered = "No"
         html_code += ('<label class="form-check-label" for="order-check">{0}</label>').format(ordered)
         html_code += ('</div></td>')
-        html_code += ('<td><button type="button" class="btn btn-primary btn-sm" id="rm-btn">Remove</button></td>')
+        html_code += ('<td><button type="button" class="btn btn-primary btn-sm" id="rm-btn-id">Remove</button></td>')
 
         html_code += '</tr>'
     
