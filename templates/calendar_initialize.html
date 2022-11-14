@@ -20,7 +20,6 @@
 
   <!------------------------CALENDAR SCRIPT ------------------------------------>
   <script>
-    document.addEventListener('DOMContentLoaded', generate_calendar)
     // CALENDAR GENERATION FUNCTION
     function generate_calendar() {
       var calendarEl = document.getElementById('calendar');
@@ -84,16 +83,16 @@
             $('#update_meal').val(info.event.extendedProps.meal);
             $('#update_members').val(info.event.extendedProps.members);
             if (info.event.extendedProps.type === "Cooking") {
-              $('#add_type').val(1);
+              $('#update_type').val(1);
               $('#update_meal_visible').show();
             } else if (info.event.extendedProps.type === "Shopping") {
-              $('#add_type').val(2);
+              $('#update_type').val(2);
               $('#update_meal_visible').hide();
             } else if (info.event.extendedProps.type === "Clean-up") {
-              $('#add_type').val(3);
+              $('#update_type').val(3);
               $('#update_meal_visible').hide();
             } else {
-              $('#add_type').val(4);
+              $('#update_type').val(4);
               $('#update_meal_visible').hide();
             }
             $('#update_type').on('change', function () {
@@ -109,8 +108,8 @@
               $('#update_delete').unbind('click');
               $('#updateEventModal').modal('hide');
 
-              // EDIT ajax post request -- need anything other than id?
-              $.post("/{{coop}}/calendar/delete?id=" + info.event.id, {}).done(function() {
+              // ajax post request by event id
+              $.post("/{{coop}}/calendar/delete?id=" + info.event.id, {}).done(function () {
                 // refresh events after deleting from db
                 calendar.refetchEvents()
               })
@@ -149,7 +148,6 @@
               // Have to do stuff with recurring
 
               // EDIT ajax post request -- send all event fields?
-              // easier to remove and re-add? or no? NAH just add all event fields again
               // AJAX update database
               var json_event = {
                 "shift_name": shift_title_input,
@@ -164,12 +162,12 @@
               $.post("/{{coop}}/calendar/update?id=" + info.event.id, {
                 event_data: json_event,
                 async: false,
-              }).done(function() {
+              }).done(function () {
                 // refresh events after deleting from db
                 calendar.refetchEvents()
               });
-          })
-        },
+            })
+          },
 
           // selecting area on the calendar that does NOT already have an event
           select: function (info) {
@@ -233,7 +231,7 @@
               $.post("/{{coop}}", {
                 event_data: json_event,
                 async: false,
-              }).done(function() {
+              }).done(function () {
                 // refresh events after deleting from db
                 calendar.refetchEvents()
               })
@@ -245,6 +243,37 @@
         });
       calendar.render();
     };
+
+    function setup() {
+      generate_calendar()
+
+      // hide recurring in add event when one-time clicked
+      $('#one-time').on('click', function () {
+          $('#add_recurring_group').collapse('hide')
+      });
+
+      // hide one-time in add event when recurring clicked
+      $('#recurring').on('click', function () {
+          $('#add_date_group').collapse('hide')
+      });
+
+      // reset modal data upon close
+      $("#createEventModal").on("hidden.bs.modal", function(){
+        $('#add_recurring_group').collapse('hide');
+        $('#add_date_group').collapse('hide');
+        $('#add_meal_visible').hide();
+
+        $('#add_title').val("");
+        $('#add_type').val(0);
+        $('#add_meal').val("");
+        $('#add_members').val("");
+        $('#add_members').val("");
+        $("input[name='dayofweek']").prop('checked', false);
+      });
+
+    }
+
+    $('document').ready(setup);
 
   </script>
 </head>
@@ -341,7 +370,7 @@
           <div class="form-group">
             <br><label for="add_type">Shift Type:</label>
             <select class="form-select" id="add_type" aria-label="Select shift type">
-              <option selected>Select a type</option>
+              <option value="0" selected>Select a type</option>
               <option value="1">Cooking</option>
               <option value="2">Shopping</option>
               <option value="3">Clean-up</option>
@@ -380,6 +409,7 @@
 
           <!-- recurrings shift checkbox -->
           <div id="add_recurring_group" class="collapse">
+            <br>
             <ul class="list-group">
               <li class="list-group-item">
                 <input class="form-check-input me-1" name="dayofweek" type="checkbox" value="0" aria-label="Sunday">
