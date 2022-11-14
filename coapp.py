@@ -346,7 +346,8 @@ def events(coop):
         # account for recurring events
         if shift.shift_recurring:
             data['daysOfWeek'] = shift.shift_day
-            data['startRecur'] = shift.shift_time
+            data['startRecur'] = shift.shift_time[0:10]
+            data['startTime'] = shift.shift_time[11:]
         else:
             data['start'] = shift.shift_time
 
