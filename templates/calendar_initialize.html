@@ -75,11 +75,11 @@
           // when user clicks on an event --> modal with options to delete or edit event
           eventClick: function (info) {
             $("#update_submit").unbind('click');
-
             // autofill event information
             $('#updateEventModal').modal('show');
             $('#update_title').val(info.event.title);
-            $('#update_date').val(info.event.startStr);
+            $('#update_date').val(info.event.startStr.substring(0,10));
+            $('#update_start_time').val(info.event.startStr.substring(11,19));
             $('#update_meal').val(info.event.extendedProps.meal);
             $('#update_members').val(info.event.extendedProps.members);
             if (info.event.extendedProps.type === "Cooking") {
@@ -95,6 +95,9 @@
               $('#update_type').val(4);
               $('#update_meal_visible').hide();
             }
+
+
+            // when "cooking" selected, show meal option
             $('#update_type').on('change', function () {
               if ($('#update_type').val() == 1) {
                 $('#update_meal_visible').show();
@@ -125,7 +128,7 @@
               let shift_members_input = ""
               let shift_title_input = $('#update_title').val();
               let shift_type_input = $('#update_type option:selected').text();
-              let shift_time_input = $('#update_date').val();
+              let shift_time_input = $('#update_date').val() + "T" + $("#update_start_time").val();
               if ($('#update_meal') != null) {
                 shift_meal_input = $('#update_meal').val();
               }
@@ -133,9 +136,7 @@
                 shift_members_input = $('#update_members').val();
               }
 
-              const date = new Date(info.startStr + "T00:00:00");
-
-              // Have to do stuff with days for recurring
+              // update recurring events
               var days = [];
               // // if event is recurring
               // if (isRecur) {
@@ -205,15 +206,13 @@
               let shift_members_input = ""
               let shift_title_input = $('#add_title').val();
               let shift_type_input = $('#add_type option:selected').text();
-              let shift_time_input = $('#add_date').val();
+              let shift_time_input = $('#add_date').val() + "T" + $("#add_start_time").val();
               if ($('#add_meal') != null) {
                 shift_meal_input = $('#add_meal').val();
               }
               if ($('#add_members') != null) {
                 shift_members_input = $('#add_members').val();
               }
-
-              const date = new Date(info.startStr + "T00:00:00");
 
               // AJAX update database
               var json_event = {
@@ -249,18 +248,19 @@
 
       // hide recurring in add event when one-time clicked
       $('#one-time').on('click', function () {
-          $('#add_recurring_group').collapse('hide')
+        $('#add_recurring_group').collapse('hide')
       });
 
       // hide one-time in add event when recurring clicked
       $('#recurring').on('click', function () {
-          $('#add_date_group').collapse('hide')
+        $('#add_date_group').collapse('hide')
       });
 
       // reset modal data upon close
-      $("#createEventModal").on("hidden.bs.modal", function(){
+      $("#createEventModal").on("hidden.bs.modal", function () {
         $('#add_recurring_group').collapse('hide');
         $('#add_date_group').collapse('hide');
+        $('#add_time_group').collapse('hide');
         $('#add_meal_visible').hide();
 
         $('#add_title').val("");
@@ -318,16 +318,22 @@
           <!-- planned meal only shown if "cooking" shift -->
           <div class="form-group" id="update_meal_visible" style="display: none">
             <br>
-            <p>Planned Meal:</p><textarea class="form-control" type="text" rows="4" placeholder="Planned meal:"
+            <p>Planned Meal:</p><textarea class="form-control" type="text" rows="2" placeholder="Planned meal:"
               id="update_meal"></textarea>
           </div>
-
-
 
           <!-- shift date (autofilled from select) -->
           <div class="form-group form-inline">
             <label for="update_date" class="form-label"><br>Shift Date:</label>
             <input type="text" class="form-control" id="update_date" placeholder="Date yyyy/mm/dd" required>
+          </div>
+
+          <!-- shift start time -->
+          <div id="update_start_group" class="form-group form-inline">
+            <div class="mb-3">
+              <label for="add_start_time" class="form-label"><br>Shift Time:</label>
+              <input type="time" class="form-control" id="update_start_time">
+            </div>
           </div>
 
           <!-- shift members -->
@@ -381,7 +387,7 @@
           <!-- planned meal only shown if "cooking" shift -->
           <div class="form-group" id="add_meal_visible" style="display: none">
             <br>
-            <p>Planned Meal:</p><textarea class="form-control" type="text" rows="4" placeholder="Planned meal:"
+            <p>Planned Meal:</p><textarea class="form-control" type="text" rows="2" placeholder="Planned meal:"
               id="add_meal"></textarea>
           </div>
 
@@ -397,11 +403,26 @@
             Recurring Shift
           </button>
 
+          <!-- shift start time -->
+          <div id="add_start_group" class="form-group form-inline">
+            <div class="mb-3">
+              <label for="add_start_time" class="form-label"><br>Shift Time:</label>
+              <input type="time" class="form-control" id="add_start_time">
+            </div>
+          </div>
+          <!-- shift end time
+          <div id="add_end_group" class="form-group form-inline">
+            <div class="mb-3">
+              <label for="add_end_time" class="form-label"><br>Shift End:</label>
+              <input type="time" class="form-control" id="add_end_time">
+            </div>
+          </div> -->
+
           <!-- shift date (autofilled from select) -->
           <div id="add_date_group" class="collapse">
             <div class="form-group form-inline">
               <div class="mb-3">
-                <label for="add_date" class="form-label"><br>Shift Date:</label>
+                <label for="add_date" class="form-label">Shift Date:</label>
                 <input type="email" class="form-control" id="add_date" placeholder="Date yyyy/mm/dd">
               </div>
             </div>
@@ -409,7 +430,6 @@
 
           <!-- recurrings shift checkbox -->
           <div id="add_recurring_group" class="collapse">
-            <br>
             <ul class="list-group">
               <li class="list-group-item">
                 <input class="form-check-input me-1" name="dayofweek" type="checkbox" value="0" aria-label="Sunday">
