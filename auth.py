@@ -92,6 +92,9 @@ def authenticate():
         abort(redirect(login_url))
         
     user = get_user(username)
+    print(user is None)
+    if user is None:
+        return None
     coop = user.coop_name
 
     # The user is authenticated, so store the username in

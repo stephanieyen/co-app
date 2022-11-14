@@ -27,18 +27,28 @@ def index():
 # CAS Login Route
 @app.route('/netID', methods=['GET'])
 def netID():
+    netid = auth.authenticate()
+    if netid is None:
+        return flask.redirect('/error')
+    coop = flask.session.get('coop')
+    newPage = '/' + coop
+    return flask.redirect(newPage)
+
+def check_coop(current_coop):
     _ = auth.authenticate()
     coop = flask.session.get('coop')
-    if coop == 'brown':
-        return flask.redirect('/brown')
-    elif coop == 'scully':
-        return flask.redirect('/scully')
-    elif coop == 'ifc':
-        return flask.redirect('/ifc')
-    elif coop == '2d':
-        return flask.redirect('/2d')
-    elif coop == 'realfood':
-        return flask.redirect('/realfood')
+    if coop != current_coop:
+        newPage = '/' + coop
+        return (False, flask.redirect(newPage))
+    else:
+        return (True, "")
+
+# Error page
+@app.route('/error', methods=['GET'])
+def error_page():
+    html = flask.render_template('templates/profile_error.html')
+    response = flask.make_response(html)
+    return response
 
 #----------------------------------------------------------------------
 # Co-Op Profile
