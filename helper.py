@@ -19,7 +19,7 @@ def genRosterHTML(members):
     
     html_code += ('<thead id="theader">')
     html_code += ('<tr><th scope="col">Member Name</th><th scope="col">Dietary Restrictions</th>'
-                '<th scope="col">Cook Shift</th><th scope="col">Chore Shift</th>')
+                '<th scope="col">Cook Shift</th><th scope="col">Chore Shift</th><th scope="col"> </th></tr>')
     html_code += ('</thead><tbody id="tbody">')
 
     for member in members:
@@ -33,7 +33,7 @@ def genRosterHTML(members):
                                         member.user_cookday,
                                         member.user_choreday,
                                         )
-        
+        html_code += ('<td><button type="button" class="btn btn-primary btn-sm" id="rm-btn">Remove</button></td>')
         html_code += '</tr>'
     
     html_code += ('</tbody></table>')
