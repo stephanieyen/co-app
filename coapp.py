@@ -102,7 +102,7 @@ def roster_delete(coop):
         Deletes a member from the roster of the co-op 
         in the specified route.                     
     '''
-    user_netid = flask.request.args.get('netid') # make sure it's netid
+    user_id = flask.request.args.get('id') # make sure it's netid
     database.delete_user(user_id)
     return ''
 
