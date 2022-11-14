@@ -57,7 +57,7 @@ def profile(coop):
 #----------------------------------------------------------------------
 
 @app.route('/<coop>/profile/update', methods=['POST'])
-def update_profile(coop):
+def profile_update(coop):
     netid = auth.authenticate()
     old_user = database.get_user(netid)
     data = json.loads(flask.request.form.to_dict()['event_data'])
@@ -102,8 +102,50 @@ def roster_delete(coop):
         Deletes a member from the roster of the co-op 
         in the specified route.                     
     '''
-    user_id = flask.request.args.get('id') # make sure it's netid
-    database.delete_item(user)
+    user_netid = flask.request.args.get('netid') # make sure it's netid
+    database.delete_user(user_id)
+    return ''
+
+#----------------------------------------------------------------------
+
+@app.route('/<coop>/roster/update', methods=['POST'])
+def roster_update(coop):
+    ''' 
+        Updates a member in the roster of the co-op 
+        in the specified route. 
+    '''
+    user_netid = flask.request.args.get('id')
+    old_user = database.get_user(user_netid)
+    data = flask.request.form
+    # # Once recurring done, do this
+    # # shift_recurring = True
+    # # if data['event_data[shift_recurring]'] == 'false':
+    # #     shift_recurring = False
+    # new_shift_vals = [
+    #     data['event_data[user_name]'],
+    #     data['event_data[user_allergies]'],
+    #     data['event_data[user_admin]'],
+    #     data['event_data[user_cookday]'],
+    #     old_shift.shift_day,
+    #     old_shift.shift_recurring,
+    #     old_shift.shift_creator,
+    #     [data['event_data[shift_members]']],
+    #     old_shift.coop_name
+    # ]
+    # # jsdata = request.form['event_data']
+    # # print(json.loads(jsdata[0]))
+    # new_shift = models.Shifts(
+    #     shift_name=new_shift_vals[0],
+    #     shift_type=new_shift_vals[1],
+    #     shift_item=new_shift_vals[2],
+    #     shift_time=new_shift_vals[3],
+    #     shift_day=new_shift_vals[4],
+    #     shift_recurring=new_shift_vals[5],
+    #     shift_creator=new_shift_vals[6],
+    #     shift_members=new_shift_vals[7],
+    #     coop_name=new_shift_vals[8]
+    # )
+    database.update_user(user_netid, new_user)
     return ''
 
 #----------------------------------------------------------------------

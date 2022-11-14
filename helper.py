@@ -18,7 +18,7 @@ def genRosterHTML(members):
         )
     
     html_code += ('<thead id="theader">')
-    html_code += ('<tr><th scope="col">Member Name</th><th scope="col">Dietary Restrictions</th>'
+    html_code += ('<tr><th scope="col">Member Name</th><th scope="col">Allergies/Dietary Restrictions</th>'
                 '<th scope="col">Cook Shift</th><th scope="col">Chore Shift</th>')
     html_code += ('</thead><tbody id="tbody">')
 
@@ -54,7 +54,7 @@ def genItemTableHTML(items):
     html_code += ('<tr><th scope="col">Item</th><th scope="col">Type</th>'
                 '<th scope="col">Qty</th><th scope="col">Comments</th>'
                 '<th scope="col">Alt Item</th><th scope="col">For Shift?</th>'
-                '<th scope="col">Ordered?</th><th scope="col"> </th></tr>')
+                '<th scope="col">Fulfilled?</th><th scope="col"> </th></tr>')
     html_code += ('</thead><tbody id="tbody">')
 
     for item in items:
