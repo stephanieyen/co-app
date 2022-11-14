@@ -1,16 +1,95 @@
-<!DOCTYPE html>
-<html lang='en'>
-
 <head>
-    <meta charset='utf-8' />
-    <title>Update Roster</title>
-    <!------------------------Bootstrap src for header ---------------------------->
-    <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css' rel='stylesheet'>
-    <link href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css' rel='stylesheet'>
-    <!------------------------JS/CSS/JQuery/Bootstrap src ------------>
+    <title>Co-App Edit Roster (Admin Only)</title>
     <script type='text/javascript' src="{{ url_for('static',filename='jquery-3.6.1.min.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='coapp.css') }}" />
-</head>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+  </head>
+  
+  {% extends "templates/base.html" %}
+  {% block content %}
+  <div class="container-fluid">
+    <!-- Title Row - "Edit Roster" -->
+  <div class="row">
+    <div class="col-sm-4 text-center">
+      <br>
+      <h2>Roster</h2><br>
+    </div>
+  </div>
+  
+  <div class="row justify-content-md-center">
+    <div class="container border border-dark rounded" style="background-color: #07a29930;">
+      <div class="table-responsive" id="roster">
+        <!-- <table class="table" id="myTable" style="margin: 0;">
+            <thead id="theader">
+                <tr>
+                    <th scope="col">Member Name</th>
+                    <th scope="col">Dietary Restrictions</th>
+                    <th scope="col">Cook Shift</th>
+                    <th scope="col">Chore Shift</th>
+                    <th scope="col"> </th>
+                  </tr>
+            </thead>
+            <tbody id="tbody">
+              <div id="roster">
+  
+              </div> -->
+                  <!-- {% for member in members: %}
+                    <tr>
+                        <th scope="row">{{member.user_name}}</th>
+                        <td>{{member.user_allergies}}</td>
+                        <td>{{member.user_cookday}}</td>
+                        <td>{{member.user_choreday}}</td>
+                        <td>
+                            <button type="button" class="btn btn-secondary btn-sm" id="rm-btn">Remove</button>
+                        </td>
+                    </tr>
+                  {% endfor %} -->
+            <!-- </tbody>
+          </table>  -->
+      </div>
+    </div>
+  </div>
+  <br>
+  
+  <script>
+    'use strict';
+  
+    
+    function deleteRow(r) {
+      var i = r.parentNode.parentNode.rowIndex;
+      document.getElementById("myTable").deleteRow(i);
+    }
+  
+  
+    function handleResponse(response) 
+    {
+      $('#roster').html(response);
+    }
+  
+    let request = null;
+  
+    // refresh page with get request 
+    function refreshRoster() {
+      console.log("fetching refreshed roster");
+      request = $.ajax(
+          {
+              type:'GET',
+              url: '/{{coop}}/members',
+              success: handleResponse,
+              failure: function () {
+                alert('there was an error while fetching members!');
+              }
+          }
+      );
+      console.log("made request")
+    }
+  
+    function setup() 
+    {
+      refreshRoster();
+    }
+  
+    $('document').ready(setup);
+  
+  </script>
+  
+  {% endblock %}
