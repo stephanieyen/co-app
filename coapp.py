@@ -311,17 +311,17 @@ def list_delete(coop):
 
 #----------------------------------------------------------------------
 
-@app.route('/<coop>/items', methods=['GET'])
-def list_items(coop):
-    # print("GET request for items")
-    items = database.get_shopping_for_coop(coop)
-    # for item in items:
-    #     print(item.item_name)
+# @app.route('/<coop>/items', methods=['GET'])
+# def list_items(coop):
+#     # print("GET request for items")
+#     items = database.get_shopping_for_coop(coop)
+#     # for item in items:
+#     #     print(item.item_name)
 
-    html_code = helper.genItemTableHTML(items)
+#     html_code = helper.genItemTableHTML(items)
     
-    response = flask.make_response(html_code)
-    return response
+#     response = flask.make_response(html_code)
+#     return response
 
 #----------------------------------------------------------------------
 
@@ -332,7 +332,7 @@ def list_food_items(coop):
     # for item in items:
     #         print(item.item_name)
 
-    html_code = helper.genItemTableHTML(items)
+    html_code = helper.genItemTableHTML(items, True)
     
     response = flask.make_response(html_code)
     return response
@@ -346,7 +346,7 @@ def list_equipment_items(coop):
     # for item in items:
     #         print(item.item_name)
 
-    html_code = helper.genItemTableHTML(items)
+    html_code = helper.genItemTableHTML(items, False)
     
     response = flask.make_response(html_code)
     return response
