@@ -34,6 +34,7 @@
           eventDisplay: 'block',
           eventTextColor: 'black',
           titleFormat: { year: 'numeric', month: 'short', day: 'numeric' },
+          eventTimeFormat: { hour: 'numeric', minute: '2-digit', meridiem: 'short' },
           initialView: 'dayGridWeek',
           initialDate: new Date().toISOString().slice(0, 10), // today's date
           selectable: true,
@@ -78,8 +79,8 @@
             // autofill event information
             $('#updateEventModal').modal('show');
             $('#update_title').val(info.event.title);
-            $('#update_date').val(info.event.startStr.substring(0,10));
-            $('#update_start_time').val(info.event.startStr.substring(11,19));
+            $('#update_date').val(info.event.startStr.substring(0, 10));
+            $('#update_start_time').val(info.event.startStr.substring(11, 19));
             $('#update_meal').val(info.event.extendedProps.meal);
             $('#update_members').val(info.event.extendedProps.members);
             if (info.event.extendedProps.type === "Cooking") {
@@ -95,7 +96,6 @@
               $('#update_type').val(4);
               $('#update_meal_visible').hide();
             }
-
 
             // when "cooking" selected, show meal option
             $('#update_type').on('change', function () {
@@ -206,7 +206,10 @@
               let shift_members_input = ""
               let shift_title_input = $('#add_title').val();
               let shift_type_input = $('#add_type option:selected').text();
-              let shift_time_input = $('#add_date').val() + "T" + $("#add_start_time").val();
+              let shift_time_input = $('#add_date').val();
+              if ($("#add_start_time").val() != "") {
+                shift_time_input = shift_time_input + "T" + $("#add_start_time").val();
+              }
               if ($('#add_meal') != null) {
                 shift_meal_input = $('#add_meal').val();
               }
@@ -265,6 +268,7 @@
 
         $('#add_title').val("");
         $('#add_type').val(0);
+        $('#add_start_time').val("");
         $('#add_meal').val("");
         $('#add_members').val("");
         $('#add_members').val("");
@@ -403,33 +407,18 @@
             Recurring Shift
           </button>
 
-          <!-- shift start time -->
-          <div id="add_start_group" class="form-group form-inline">
-            <div class="mb-3">
-              <label for="add_start_time" class="form-label"><br>Shift Time:</label>
-              <input type="time" class="form-control" id="add_start_time">
-            </div>
-          </div>
-          <!-- shift end time
-          <div id="add_end_group" class="form-group form-inline">
-            <div class="mb-3">
-              <label for="add_end_time" class="form-label"><br>Shift End:</label>
-              <input type="time" class="form-control" id="add_end_time">
-            </div>
-          </div> -->
-
           <!-- shift date (autofilled from select) -->
           <div id="add_date_group" class="collapse">
             <div class="form-group form-inline">
               <div class="mb-3">
-                <label for="add_date" class="form-label">Shift Date:</label>
+                <label for="add_date" class="form-label"><br>Shift Date:</label>
                 <input type="email" class="form-control" id="add_date" placeholder="Date yyyy/mm/dd">
               </div>
             </div>
           </div>
 
           <!-- recurrings shift checkbox -->
-          <div id="add_recurring_group" class="collapse">
+          <div id="add_recurring_group" class="collapse"><br>
             <ul class="list-group">
               <li class="list-group-item">
                 <input class="form-check-input me-1" name="dayofweek" type="checkbox" value="0" aria-label="Sunday">
@@ -461,6 +450,21 @@
               </li>
             </ul>
           </div>
+
+          <!-- shift start time -->
+          <div id="add_start_group" class="form-group form-inline">
+            <div class="mb-3">
+              <label for="add_start_time" class="form-label"><br>Shift Time:</label>
+              <input type="time" class="form-control" id="add_start_time">
+            </div>
+          </div>
+          <!-- shift end time
+          <div id="add_end_group" class="form-group form-inline">
+            <div class="mb-3">
+              <label for="add_end_time" class="form-label"><br>Shift End:</label>
+              <input type="time" class="form-control" id="add_end_time">
+            </div>
+          </div> -->
 
           <!-- shift members -->
           <div class="form-group form-inline">
