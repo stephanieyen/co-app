@@ -34,6 +34,7 @@ def genRosterHTML(members):
                                         member.user_choreday,
                                         )
         html_code += ('<td><input type="button" class="btn btn-primary btn-sm" value="Remove" onclick="deleteRow(this)"></td>')
+        html_code += ('<td hidden>{0}</td>').format(member.user_netid)
         html_code += '</tr>'
     
     html_code += ('</tbody></table>')

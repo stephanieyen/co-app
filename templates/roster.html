@@ -64,8 +64,21 @@
 
   
   function deleteRow(r) {
-    var i = r.parentNode.parentNode.rowIndex;
-    document.getElementById("myTable").deleteRow(i);
+    // var i = r.parentNode.parentNode.rowIndex;
+    let user_netid = r.parentNode.parentNode.lastChild.innerHTML;
+    let url = "/{{coop}}/roster/delete?id=" + user_netid;
+    // document.getElementById("myTable").deleteRow(i);
+    request = $.ajax(
+      {
+        type: 'POST',
+        url: url, 
+      }
+    ).done(function (data) 
+    { 
+      refreshRoster()
+    }).fail(function (jqXHR, textStatus, errorThrown) { 
+      alert("Error updating shopping list. Try again!")
+    });
   }
 
 

@@ -35,7 +35,9 @@ def netID():
     return flask.redirect(newPage)
 
 def check_coop(current_coop):
-    _ = auth.authenticate()
+    netid = auth.authenticate()
+    if netid is None:
+        return ('Nonexistent', flask.redirect('/error'))
     coop = flask.session.get('coop')
     if coop != current_coop:
         newPage = '/' + coop
@@ -46,6 +48,10 @@ def check_coop(current_coop):
 # Error page
 @app.route('/error', methods=['GET'])
 def error_page():
+    _ = auth.authenticate()
+    status, redirect = check_coop('')
+    if status == False:
+        return redirect
     html = flask.render_template('templates/profile_error.html')
     response = flask.make_response(html)
     return response
@@ -58,7 +64,7 @@ def error_page():
 def profile(coop):
     netid = auth.authenticate()
     status, redirect = check_coop(coop)
-    if status == False:
+    if status == False or status == "Nonexistent":
         return redirect
     user = database.get_user(netid)
     coop_upper = database.get_upper_coop(coop)
@@ -102,7 +108,7 @@ def profile_update(coop):
 def roster(coop):
     _ = auth.authenticate()
     status, redirect = check_coop(coop)
-    if status == False:
+    if status == False or status == "Nonexistent":
         return redirect
     members = database.get_roster_for_coop(coop)
     coop_upper = database.get_upper_coop(coop)
@@ -117,7 +123,7 @@ def roster(coop):
 def edit_roster(coop):
     _ = auth.authenticate()
     status, redirect = check_coop(coop)
-    if status == False:
+    if status == False or status == "Nonexistent":
         return redirect
     members = database.get_roster_for_coop(coop)
     coop_upper = database.get_upper_coop(coop)
@@ -137,7 +143,14 @@ def add_user(coop):
     #                     user_cookday='',
     #                     user_choreday='',
     #                     coop_name=coop)
-    # database.add_user(user)
+    user = models.Roster(user_netid='sy7',
+                        user_name='Stephanie Yen',
+                        user_allergies='N/A',
+                        user_admin=True,
+                        user_cookday='T W F',
+                        user_choreday='T',
+                        coop_name='2d')
+    database.add_user(user)
     return ''
 
 #----------------------------------------------------------------------
@@ -200,7 +213,7 @@ def roster_update(coop):
 def roster_members(coop):
     # print("GET request for members")
     status, redirect = check_coop(coop)
-    if status == False:
+    if status == False or status == "Nonexistent":
         return redirect
     members = database.get_roster_for_coop(coop)
     # for member in members:
@@ -250,7 +263,7 @@ def calendar(coop):
         database.add_shift(new_shift)
     netid = auth.authenticate()
     status, redirect = check_coop(coop)
-    if status == False:
+    if status == False or status == "Nonexistent":
         return redirect
     user = database.get_user(netid)
     coop_upper = database.get_upper_coop(coop)
@@ -376,7 +389,7 @@ def list(coop):
     # get user info
     netid = auth.authenticate()
     status, redirect = check_coop(coop)
-    if status == False:
+    if status == False or status == "Nonexistent":
         return redirect
     user = database.get_user(netid)
 

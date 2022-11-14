@@ -349,7 +349,7 @@
       }
     }).fail(function (jqXHR, textStatus, errorThrown) { 
       alert("Error updating shopping list. Try again!")
-    });;
+    });
 
     // refreshList()
 
@@ -370,7 +370,6 @@
 
   // handle event when remove button clicked
   function removeItem(i) {
-    console.log('clicked')
     let item_id = i.parentNode.parentNode.lastChild.innerHTML;
 
     let url = "/{{coop}}/list/delete?id=" + item_id;
@@ -391,8 +390,7 @@
       refreshList("");
     }).fail(function (jqXHR, textStatus, errorThrown) { 
       alert("Error updating shopping list. Try again!")
-    });;
-
+    });
     // refresh list from deleting from db
 
   }

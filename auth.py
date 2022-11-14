@@ -73,6 +73,8 @@ def authenticate():
     if 'username' in session:
         username = session.get('username').strip()
         user = get_user(username)
+        if user is None:
+            return None
         coop = user.coop_name
         session['coop'] = coop
         return username
