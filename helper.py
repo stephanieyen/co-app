@@ -78,12 +78,14 @@ def genItemTableHTML(items, is_food):
         else:
             for_shift = "No"
         html_code += ('<td>{0}</td>').format(for_shift)
-        html_code += ('<td><div class="form-check">'
-        '<input class="form-check-input" type="checkbox" value="" id="order-check">')
         if item.item_ordered is True:
             ordered = "Yes"
+            html_code += ('<td><div class="form-check">'
+            '<input name="order-box" class="form-check-input" type="checkbox" value="" id="order-check" onclick="updateOrdered(this)" checked>')
         else:
             ordered = "No"
+            html_code += ('<td><div class="form-check">'
+            '<input name="order-box" class="form-check-input" type="checkbox" value="" id="order-check" onclick="updateOrdered(this)">')
         html_code += ('<label class="form-check-label" for="order-check">{0}</label>').format(ordered)
         html_code += ('</div></td>')
         html_code += ('<td><button type="button" class="btn btn-primary btn-sm" onclick="removeItem(this)">Remove</button></td>')
