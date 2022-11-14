@@ -62,14 +62,6 @@
   function deleteRow(r) {
     var i = r.parentNode.parentNode.rowIndex;
     document.getElementById("myTable").deleteRow(i);
-    if (confirm("Are you sure you want to delete your account?") == true) {
-            // ajax post request by netid
-            $.post("/{{coop}}/roster/delete?id=" + "{{user.user_netid}}", {}).done(function () {
-                // redirect to homepage after deletion
-                location.href = '/';
-                redirect();
-            })
-    }
   }
 
 
