@@ -34,52 +34,7 @@
   <div class="row justify-content-md-center">
     <div class="container border border-dark rounded" style="background-color: #07a29930;">
       <div class="table-responsive" id="shoppingList">
-        <!-- <table class="table" id="myTable" style="margin: 0;">
-            <thead id="theader">
-                <tr>
-                    <th scope="col">Item</th>
-                    <th scope="col">Type</th>
-                    <th scope="col">Qty</th>
-                    <th scope="col">Comments</th>
-                    <th scope="col">Alt Item</th>
-                    <th scope="col">For Shift?</th>
-                    <th scope="col">Ordered?</th>
-                    <th scope="col"> </th>
-                  </tr>
-            </thead>
-            <tbody id="tbody">
-              <div id="shoppingList">
-
-              </div> -->
-                  <!-- {% for item in items: %}
-                    <tr>
-                        <th scope="row">{{item.item_name}}</th>
-                        <td>{{item.item_type}}</td>
-                        <td>{{item.item_quantity}}</td>
-                        <td>{{item.item_reason}}</td>
-                        <td>{{item.alt_request}}</td>
-                        {% set shift = 'No' %}
-                        {% if item.for_shift is sameas true %}
-                          <td>Yes</td>
-                        {% else %}
-                          <td>No</td>
-                        {% endif %}
-                        <td>{{item.for_shift}}</td>
-                        <td>
-                          <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="order-check">
-                            <label class="form-check-label" for="order-check">
-                              {{item.item_ordered}}
-                            </label>
-                          </div>
-                        </td>
-                        <td>
-                          <button type="button" class="btn btn-secondary btn-sm" id="rm-btn">Remove</button>
-                        </td>
-                    </tr>
-                  {% endfor %} -->
-            <!-- </tbody>
-          </table>  -->
+        <!-- DYNAMICALLY UPDATE SHOPPING LIST HERE -->
       </div>
     </div>
   </div>
@@ -89,16 +44,9 @@
 <div class="container">
   <div class="row">
       <div class="col-sm-12 text-right">
-        <!-- Edit Button -- ONLY VISIBLE TO ADMIN -->
-        {% if user.user_admin == True %}
-          <button type="button" class="btn btn-primary">
-            Edit List
-          </button>
-        {% endif %}
-
         <!-- Add Button to trigger modal -->
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createItemModal">
-          Add Item
+          Request Item
         </button>
       </div>
   </div>
@@ -383,7 +331,12 @@
     // LIST event handling
     $("#food-btn").on("click", toggleFood)
     $("#equip-btn").on("click", toggleEquipment)
-    $('#rm-btn').on('click', removeItem);
+    $('#rm-btn-id').on('click', removeItem);
+
+    // $("#itemTable").on('click','.rm-btn', function() {
+    //     //  $(this).closest('tr').remove();
+    //      console.log('attempting remove')
+    //   });
     
     // MODAL event handling
     $('#item_type').on('change', showFoodType)

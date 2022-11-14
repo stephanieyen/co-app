@@ -18,8 +18,8 @@ def genRosterHTML(members):
         )
     
     html_code += ('<thead id="theader">')
-    html_code += ('<tr><th scope="col">Member Name</th><th scope="col">Dietary Restrictions</th>'
-                '<th scope="col">Cook Shift</th><th scope="col">Chore Shift</th><th scope="col"> </th></tr>')
+    html_code += ('<tr><th scope="col">Member Name</th><th scope="col">Allergies/Dietary Restrictions</th>'
+                '<th scope="col">Cook Shift</th><th scope="col">Chore Shift</th>')
     html_code += ('</thead><tbody id="tbody">')
 
     for member in members:
@@ -47,7 +47,7 @@ def genItemTableHTML(items, is_food):
         Create HTML code 
     '''
     html_code = (
-        '<table class="table" id="myTable" style="margin: 0;">'
+        '<table class="table" id="itemTable" style="margin: 0;">'
         )
     
     html_code += ('<thead id="theader">')
@@ -56,7 +56,7 @@ def genItemTableHTML(items, is_food):
         html_code += ('<th scope="col">Food Type</th>')
     html_code += ('<th scope="col">Qty</th><th scope="col">Comments</th>'
                 '<th scope="col">Alt Item</th><th scope="col">For Shift?</th>'
-                '<th scope="col">Ordered?</th><th scope="col"> </th></tr>')
+                '<th scope="col">Fulfilled?</th><th scope="col"> </th></tr>')
     html_code += ('</thead><tbody id="tbody">')
 
     for item in items:
@@ -86,7 +86,7 @@ def genItemTableHTML(items, is_food):
             ordered = "No"
         html_code += ('<label class="form-check-label" for="order-check">{0}</label>').format(ordered)
         html_code += ('</div></td>')
-        html_code += ('<td><button type="button" class="btn btn-primary btn-sm" id="rm-btn">Remove</button></td>')
+        html_code += ('<td><button type="button" class="btn btn-primary btn-sm" id="rm-btn-id">Remove</button></td>')
 
         html_code += '</tr>'
     
