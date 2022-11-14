@@ -11,100 +11,56 @@
 {% block content %}
 <div class="container-fluid">
   <!-- Title Row - "Shopping List" -->
-<div class="row">
-  <div class="col-sm-4 text-center">
-    <br>
-    <h2>Shopping Requests</h2><br>
-  </div>
-</div>
-
-<!-- Toggle Button Row -->
-<div class="row">
-  <div class="col-sm-3 text-center">
-    <div class="btn-group btn-group-toggle" data-toggle="buttons">
-      <label class="btn btn-secondary active">
-        <input type="radio" name="options" id="food-btn" autocomplete="off" checked> Food
-      </label>
-      <label class="btn btn-secondary">
-        <input type="radio" name="options" id="equip-btn" autocomplete="off"> Equipment
-      </label>
+  <div class="row">
+    <div class="col-sm-4 text-center">
+      <br>
+      <h2>Shopping Requests</h2><br>
     </div>
-  </div> 
-</div>
-<br>
+  </div>
 
+  <!-- Toggle Button Row -->
+  <div class="row">
+    <div class="col-sm-3 text-center">
+      <div class="btn-group btn-group-toggle" data-toggle="buttons">
+        <label class="btn btn-secondary active">
+          <input type="radio" name="options" id="food-btn" autocomplete="off" checked> Food
+        </label>
+        <label class="btn btn-secondary">
+          <input type="radio" name="options" id="equip-btn" autocomplete="off"> Equipment
+        </label>
+      </div>
+    </div> 
+  </div>
+
+  <br>
 
   <div class="row justify-content-md-center">
     <div class="container border border-dark rounded" style="background-color: #07a29930;">
       <div class="table-responsive" id="shoppingList">
-        <!-- <table class="table" id="myTable" style="margin: 0;">
-            <thead id="theader">
-                <tr>
-                    <th scope="col">Item</th>
-                    <th scope="col">Type</th>
-                    <th scope="col">Qty</th>
-                    <th scope="col">Comments</th>
-                    <th scope="col">Alt Item</th>
-                    <th scope="col">For Shift?</th>
-                    <th scope="col">Ordered?</th>
-                    <th scope="col"> </th>
-                  </tr>
-            </thead>
-            <tbody id="tbody">
-              <div id="shoppingList">
-              </div> -->
-                  <!-- {% for item in items: %}
-                    <tr>
-                        <th scope="row">{{item.item_name}}</th>
-                        <td>{{item.item_type}}</td>
-                        <td>{{item.item_quantity}}</td>
-                        <td>{{item.item_reason}}</td>
-                        <td>{{item.alt_request}}</td>
-                        {% set shift = 'No' %}
-                        {% if item.for_shift is sameas true %}
-                          <td>Yes</td>
-                        {% else %}
-                          <td>No</td>
-                        {% endif %}
-                        <td>{{item.for_shift}}</td>
-                        <td>
-                          <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="order-check">
-                            <label class="form-check-label" for="order-check">
-                              {{item.item_ordered}}
-                            </label>
-                          </div>
-                        </td>
-                        <td>
-                          <button type="button" class="btn btn-secondary btn-sm" id="rm-btn">Remove</button>
-                        </td>
-                    </tr>
-                  {% endfor %} -->
-            <!-- </tbody>
-          </table>  -->
+        <!-- SERVER-SIDE GENERATES SHOPPING LIST HERE -->
       </div>
     </div>
   </div>
 
-<!-- Buttons -->
-<br>
-<div class="container">
-  <div class="row">
-      <div class="col-sm-12 text-right">
-        <!-- Edit Button -- ONLY VISIBLE TO ADMIN -->
-        {% if user.user_admin == True %}
-          <button type="button" class="btn btn-primary">
-            Edit List
-          </button>
-        {% endif %}
+  <!-- Buttons -->
+  <br>
+  <div class="container">
+    <div class="row">
+        <div class="col-sm-12 text-right">
+          <!-- Edit Button -- ONLY VISIBLE TO ADMIN -->
+          {% if user.user_admin == True %}
+            <button type="button" class="btn btn-primary">
+              Edit List
+            </button>
+          {% endif %}
 
-        <!-- Add Button to trigger modal -->
-        <button type="button" class="btn btn-primary" id="add-item-btn" data-toggle="modal" data-target="#createItemModal">
-          Add Item
-        </button>
-      </div>
+          <!-- Add Button to trigger modal -->
+          <button type="button" class="btn btn-primary" id="add-item-btn" data-toggle="modal" data-target="#createItemModal">
+            Add Item
+          </button>
+        </div>
+    </div>
   </div>
-</div>
 
 </div>
 

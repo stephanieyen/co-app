@@ -11,53 +11,29 @@
 {% block content %}
 <div class="container-fluid">
   <!-- Title Row - "Roster" -->
-<div class="row">
-  <div class="col-sm-4 text-center">
-    <br>
-    <h2>Roster</h2><br>
-  </div>
-</div>
-
-<div class="row justify-content-md-center">
-  <div class="container border border-dark rounded" style="background-color: #07a29930;">
-    <div class="table-responsive" id="roster">
-      <!-- <table class="table" id="myTable" style="margin: 0;">
-          <thead id="theader">
-              <tr>
-                  <th scope="col">Member Name</th>
-                  <th scope="col">Dietary Restrictions</th>
-                  <th scope="col">Cook Shift</th>
-                  <th scope="col">Chore Shift</th>
-                  <th scope="col"> </th>
-                </tr>
-          </thead>
-          <tbody id="tbody">
-            <div id="roster">
-
-            </div> -->
-                <!-- {% for member in members: %}
-                  <tr>
-                      <th scope="row">{{member.user_name}}</th>
-                      <td>{{member.user_allergies}}</td>
-                      <td>{{member.user_cookday}}</td>
-                      <td>{{member.user_choreday}}</td>
-                      <td>
-                          <button type="button" class="btn btn-secondary btn-sm" id="rm-btn">Remove</button>
-                      </td>
-                  </tr>
-                {% endfor %} -->
-          <!-- </tbody>
-        </table>  -->
+  <div class="row">
+    <div class="col-sm-4 text-center">
+      <br>
+      <h2>Roster</h2><br>
     </div>
   </div>
-</div>
-<br>
 
-<div class="row">
-  <div class="col-sm-10 text-right">
-    <a href="/{{coop}}/roster/edit" role="button" class="btn btn-primary">
-      Edit Roster
-    </a>
+  <div class="row justify-content-md-center">
+    <div class="container border border-dark rounded" style="background-color: #07a29930;">
+      <div class="table-responsive" id="roster">
+        <!-- SERVER-SIDE GENERATES ROSTER TABLE HERE -->
+      </div>
+    </div>
+  </div>
+  
+  <br>
+
+  <div class="row">
+    <div class="col-sm-10 text-right">
+      <a href="/{{coop}}/roster/edit" role="button" class="btn btn-primary">
+        Edit Roster
+      </a>
+    </div>
   </div>
 </div>
 
@@ -66,23 +42,23 @@
   'use strict';
 
   
-  function deleteRow(r) {
-    // var i = r.parentNode.parentNode.rowIndex;
-    let user_netid = r.parentNode.parentNode.lastChild.innerHTML;
-    let url = "/{{coop}}/roster/delete?id=" + user_netid;
-    // document.getElementById("myTable").deleteRow(i);
-    request = $.ajax(
-      {
-        type: 'POST',
-        url: url, 
-      }
-    ).done(function (data) 
-    { 
-      refreshRoster()
-    }).fail(function (jqXHR, textStatus, errorThrown) { 
-      alert("Error updating roster. Try again!")
-    });
-  }
+  // function deleteRow(r) {
+  //   // var i = r.parentNode.parentNode.rowIndex;
+  //   let user_netid = r.parentNode.parentNode.lastChild.innerHTML;
+  //   let url = "/{{coop}}/roster/delete?id=" + user_netid;
+  //   // document.getElementById("myTable").deleteRow(i);
+  //   request = $.ajax(
+  //     {
+  //       type: 'POST',
+  //       url: url, 
+  //     }
+  //   ).done(function (data) 
+  //   { 
+  //     refreshRoster()
+  //   }).fail(function (jqXHR, textStatus, errorThrown) { 
+  //     alert("Error updating roster. Try again!")
+  //   });
+  // }
 
 
   function handleResponse(response) 

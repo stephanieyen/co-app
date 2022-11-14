@@ -118,7 +118,26 @@ def roster(coop):
     return response
 
 #----------------------------------------------------------------------
-# Edit roster
+
+@app.route('/<coop>/members', methods=['GET'])
+def roster_members(coop):
+    # print("GET request for members")
+    status, redirect = check_coop(coop)
+    if status == False or status == "Nonexistent":
+        return redirect
+    members = database.get_roster_for_coop(coop)
+    # for member in members:
+    #     print(member.user_name)
+    
+    html_code = helper.genRosterHTML(members)
+
+    response = flask.make_response(html_code)
+    return response
+
+#----------------------------------------------------------------------
+# Co-Op Edit Roster
+#----------------------------------------------------------------------
+
 @app.route('/<coop>/roster/edit', methods=['GET'])
 def edit_roster(coop):
     _ = auth.authenticate()
@@ -132,8 +151,10 @@ def edit_roster(coop):
     response = flask.make_response(html)
     return response
 
+#----------------------------------------------------------------------
+
 # Add user
-@app.route('/<coop>/roster/add', methods=['POST'])
+@app.route('/<coop>/roster/edit/add', methods=['POST'])
 def add_user(coop):
     # data = json.loads(flask.request.form.to_dict()['event_data'])
     # user = models.Roster(user_netid=data['netid'],
@@ -155,7 +176,7 @@ def add_user(coop):
 
 #----------------------------------------------------------------------
 
-@app.route('/<coop>/roster/delete', methods=['POST'])
+@app.route('/<coop>/roster/edit/delete', methods=['POST'])
 def roster_delete(coop):
     ''' 
         Deletes a member from the roster of the co-op 
@@ -167,50 +188,8 @@ def roster_delete(coop):
 
 #----------------------------------------------------------------------
 
-@app.route('/<coop>/roster/update', methods=['POST'])
-def roster_update(coop):
-    ''' 
-        Updates a member in the roster of the co-op 
-        in the specified route. 
-    '''
-    user_netid = flask.request.args.get('id')
-    old_user = database.get_user(user_netid)
-    data = flask.request.form
-    # # Once recurring done, do this
-    # # shift_recurring = True
-    # # if data['event_data[shift_recurring]'] == 'false':
-    # #     shift_recurring = False
-    # new_shift_vals = [
-    #     data['event_data[user_name]'],
-    #     data['event_data[user_allergies]'],
-    #     data['event_data[user_admin]'],
-    #     data['event_data[user_cookday]'],
-    #     old_shift.shift_day,
-    #     old_shift.shift_recurring,
-    #     old_shift.shift_creator,
-    #     [data['event_data[shift_members]']],
-    #     old_shift.coop_name
-    # ]
-    # # jsdata = request.form['event_data']
-    # # print(json.loads(jsdata[0]))
-    # new_shift = models.Shifts(
-    #     shift_name=new_shift_vals[0],
-    #     shift_type=new_shift_vals[1],
-    #     shift_item=new_shift_vals[2],
-    #     shift_time=new_shift_vals[3],
-    #     shift_day=new_shift_vals[4],
-    #     shift_recurring=new_shift_vals[5],
-    #     shift_creator=new_shift_vals[6],
-    #     shift_members=new_shift_vals[7],
-    #     coop_name=new_shift_vals[8]
-    # )
-    database.update_user(user_netid, new_user)
-    return ''
-
-#----------------------------------------------------------------------
-
-@app.route('/<coop>/members', methods=['GET'])
-def roster_members(coop):
+@app.route('/<coop>/members/overview', methods=['GET'])
+def roster_overview(coop):
     # print("GET request for members")
     status, redirect = check_coop(coop)
     if status == False or status == "Nonexistent":
@@ -219,7 +198,7 @@ def roster_members(coop):
     # for member in members:
     #     print(member.user_name)
     
-    html_code = helper.genRosterHTML(members)
+    html_code = helper.genRosterOverviewHTML(members)
 
     response = flask.make_response(html_code)
     return response

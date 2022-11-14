@@ -33,6 +33,35 @@ def genRosterHTML(members):
                                         member.user_cookday,
                                         member.user_choreday,
                                         )
+        # html_code += ('<td><input type="button" class="btn btn-primary btn-sm" value="Remove" onclick="deleteRow(this)"></td>')
+        # html_code += ('<td hidden>{0}</td>').format(member.user_netid)
+        html_code += '</tr>'
+    
+    html_code += ('</tbody></table>')
+
+    return html_code
+
+def genRosterOverviewHTML(members):
+
+    html_code = (
+        '<table class="table" id="myTable" style="margin: 0;">'
+        )
+    
+    html_code += ('<thead id="theader">')
+    html_code += ('<tr><th scope="col">Member Name</th><th scope="col">Admin Status</th>')
+    html_code += ('</thead><tbody id="tbody">')
+
+    for member in members:
+        html_code += '<tr>'
+
+        user_admin = 'Member'
+        if member.user_admin:
+            user_admin = 'Admin'
+
+        html_code += ('<th scope="row">{0}</th>'
+                    '<td>{1}</td>').format(member.user_name,
+                                        user_admin,
+                                        )
         html_code += ('<td><input type="button" class="btn btn-primary btn-sm" value="Remove" onclick="deleteRow(this)"></td>')
         html_code += ('<td hidden>{0}</td>').format(member.user_netid)
         html_code += '</tr>'
