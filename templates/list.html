@@ -34,7 +34,51 @@
   <div class="row justify-content-md-center">
     <div class="container border border-dark rounded" style="background-color: #07a29930;">
       <div class="table-responsive" id="shoppingList">
-        <!-- DYNAMICALLY UPDATE SHOPPING LIST HERE -->
+        <!-- <table class="table" id="myTable" style="margin: 0;">
+            <thead id="theader">
+                <tr>
+                    <th scope="col">Item</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Qty</th>
+                    <th scope="col">Comments</th>
+                    <th scope="col">Alt Item</th>
+                    <th scope="col">For Shift?</th>
+                    <th scope="col">Ordered?</th>
+                    <th scope="col"> </th>
+                  </tr>
+            </thead>
+            <tbody id="tbody">
+              <div id="shoppingList">
+              </div> -->
+                  <!-- {% for item in items: %}
+                    <tr>
+                        <th scope="row">{{item.item_name}}</th>
+                        <td>{{item.item_type}}</td>
+                        <td>{{item.item_quantity}}</td>
+                        <td>{{item.item_reason}}</td>
+                        <td>{{item.alt_request}}</td>
+                        {% set shift = 'No' %}
+                        {% if item.for_shift is sameas true %}
+                          <td>Yes</td>
+                        {% else %}
+                          <td>No</td>
+                        {% endif %}
+                        <td>{{item.for_shift}}</td>
+                        <td>
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="order-check">
+                            <label class="form-check-label" for="order-check">
+                              {{item.item_ordered}}
+                            </label>
+                          </div>
+                        </td>
+                        <td>
+                          <button type="button" class="btn btn-secondary btn-sm" id="rm-btn">Remove</button>
+                        </td>
+                    </tr>
+                  {% endfor %} -->
+            <!-- </tbody>
+          </table>  -->
       </div>
     </div>
   </div>
@@ -44,9 +88,16 @@
 <div class="container">
   <div class="row">
       <div class="col-sm-12 text-right">
+        <!-- Edit Button -- ONLY VISIBLE TO ADMIN -->
+        {% if user.user_admin == True %}
+          <button type="button" class="btn btn-primary">
+            Edit List
+          </button>
+        {% endif %}
+
         <!-- Add Button to trigger modal -->
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createItemModal">
-          Request Item
+          Add Item
         </button>
       </div>
   </div>
@@ -71,7 +122,7 @@
       <div class="modal-body"> 
 
         <div class="form-group">
-            <label for="item_type">Item Type:</label><br>
+            <label for="item_type">Item Type:</label>
             <select class="form-select" id="item_type" aria-label="Select item type">
                 <option selected>Choose...</option>
                 <option value="Food">Food</option>
@@ -80,9 +131,22 @@
         </div>
         
         <!-- Only if food, show food type option -->
-        <div class="form-group" id="food_type_visible" style="display: none">
+        <!-- <div class="form-group" id="food_type_visible" style="display: none">
             <label for="foodtype">Food Type:</label>
             <input type="text" class="form-control" id="food_type">
+        </div> -->
+        <div class="form-group" id="food_type_visible" style="display: none">
+            <label for="foodtype">Food Type:</label>
+            <select class="form-select" id="food_type" aria-label="Select food type">
+                <option selected>Choose...</option>
+                <option value="Produce">Fresh Produce</option>
+                <option value="Meat">Meat</option>
+                <option value="Seasoning">Seasoning/Spice</option>
+                <option value="Dry">Dry Good</option>
+                <option value="Canned">Canned Good</option>
+                <option value="Frozen">Frozen</option>
+                <option value="Other">Other</option>
+            </select>
         </div>
 
         <div class="form-group">
@@ -130,21 +194,21 @@
   function refreshList(item_type) {
     console.log("fetching refreshed list");
 
-    if (item_type == "Food") {
-      console.log("Getting Food")
-      request = $.ajax(
-        {
-            type:'GET',
-            url: '/{{coop}}/items/food',
-            success: handleResponse,
-            failure: function () {
-              alert('there was an error while fetching items!');
-            }
-        }
-      );
-    }
+    // if (item_type == "Food") {
+    //   console.log("Getting Food")
+    //   request = $.ajax(
+    //     {
+    //         type:'GET',
+    //         url: '/{{coop}}/items/food',
+    //         success: handleResponse,
+    //         failure: function () {
+    //           alert('there was an error while fetching items!');
+    //         }
+    //     }
+    //   );
+    // }
 
-    else if (item_type == "Equipment") {
+    if (item_type == "Equipment") {
       console.log("Getting Equip")
       request = $.ajax(
         {
@@ -162,7 +226,7 @@
        request = $.ajax(
           {
             type:'GET',
-            url: '/{{coop}}/items',
+            url: '/{{coop}}/items/food',
             success: handleResponse,
             failure: function () {
               alert('there was an error while fetching items!');
@@ -277,7 +341,12 @@
       // success: refreshList
     }).done(function (data) 
     { 
-      refreshList("")
+      if (item_type=="Equipment") {
+        refreshList("Equipment")
+      }
+      else {
+        refreshList("Food")
+      }
     }).fail(function (jqXHR, textStatus, errorThrown) { 
       alert("Error updating shopping list. Try again!")
     });;
@@ -331,12 +400,7 @@
     // LIST event handling
     $("#food-btn").on("click", toggleFood)
     $("#equip-btn").on("click", toggleEquipment)
-    $('#rm-btn-id').on('click', removeItem);
-
-    // $("#itemTable").on('click','.rm-btn', function() {
-    //     //  $(this).closest('tr').remove();
-    //      console.log('attempting remove')
-    //   });
+    $('#rm-btn').on('click', removeItem);
     
     // MODAL event handling
     $('#item_type').on('change', showFoodType)
