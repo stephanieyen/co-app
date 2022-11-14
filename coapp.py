@@ -47,6 +47,9 @@ def netID():
 @app.route('/<coop>/profile', methods=['GET'])
 def profile(coop):
     netid = auth.authenticate()
+    status, redirect = check_coop(coop)
+    if status == False:
+        return redirect
     user = database.get_user(netid)
     coop_upper = database.get_upper_coop(coop)
     html = flask.render_template('templates/profile.html',
@@ -87,12 +90,38 @@ def profile_update(coop):
 
 @app.route('/<coop>/roster', methods=['GET'])
 def roster(coop):
+    _ = auth.authenticate()
+    status, redirect = check_coop(coop)
+    if status == False:
+        return redirect
     members = database.get_roster_for_coop(coop)
     coop_upper = database.get_upper_coop(coop)
     html = flask.render_template('templates/roster.html',
             members=members, coop=coop, coop_upper=coop_upper)
     response = flask.make_response(html)
     return response
+
+#----------------------------------------------------------------------
+# Edit roster
+@app.route('/<coop>/roster/edit', methods=['GET'])
+def edit_roster(coop):
+    _ = auth.authenticate()
+    status, redirect = check_coop(coop)
+    if status == False:
+        return redirect
+    members = database.get_roster_for_coop(coop)
+    coop_upper = database.get_upper_coop(coop)
+    html = flask.render_template('templates/edit_roster.html',
+            members=members, coop=coop, coop_upper=coop_upper)
+    response = flask.make_response(html)
+    return response
+
+# Add user
+@app.route('/<coop>/roster/add', methods=['POST'])
+def add_user(coop):
+    # data = json.loads(flask.request.form.to_dict()['event_data'])
+    # database.add_user(user)
+    return ''
 
 #----------------------------------------------------------------------
 
@@ -152,10 +181,13 @@ def roster_update(coop):
 
 @app.route('/<coop>/members', methods=['GET'])
 def roster_members(coop):
-    print("GET request for members")
+    # print("GET request for members")
+    status, redirect = check_coop(coop)
+    if status == False:
+        return redirect
     members = database.get_roster_for_coop(coop)
-    for member in members:
-        print(member.user_name)
+    # for member in members:
+    #     print(member.user_name)
     
     html_code = helper.genRosterHTML(members)
 
@@ -200,6 +232,9 @@ def calendar(coop):
         )
         database.add_shift(new_shift)
     netid = auth.authenticate()
+    status, redirect = check_coop(coop)
+    if status == False:
+        return redirect
     user = database.get_user(netid)
     coop_upper = database.get_upper_coop(coop)
     html_code = flask.render_template('templates/calendar_initialize.html',
@@ -327,6 +362,9 @@ def list(coop):
 
     # get user info
     netid = auth.authenticate()
+    status, redirect = check_coop(coop)
+    if status == False:
+        return redirect
     user = database.get_user(netid)
 
     # items = database.get_shopping_for_coop(coop)
