@@ -399,7 +399,18 @@
   }
 
   // TODO: when ordered checkbox clicked, update in database, change words to "true"
+  function updateOrdered(i) {
+    console.log("detected a check/uncheck")
 
+    if ($(i).is(':checked')) {
+      console.log("updating check")
+
+    }
+    else {
+      console.log("updating uncheck")
+    }
+
+  }
 
   function setup() 
   {
