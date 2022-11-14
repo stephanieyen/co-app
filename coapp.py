@@ -372,10 +372,6 @@ def list(coop):
             coop_name=coop
         )
         database.add_item(new_item)
-        # print("checking if it actually added")
-        # items = database.get_shopping_for_coop(coop)
-        # for item in items:
-        #     print(item.item_name)
 
     # get user info
     netid = auth.authenticate()

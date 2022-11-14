@@ -369,12 +369,11 @@
   }
 
   // handle event when remove button clicked
-  function removeItem() {
+  function removeItem(i) {
     console.log('clicked')
-    console.log(info)
+    let item_id = i.parentNode.parentNode.lastChild.innerHTML;
 
-    // EDIT ajax post request -- need anything other than id?
-    url = "/{{coop}}/list/delete?id=" + info.event.id;
+    let url = "/{{coop}}/list/delete?id=" + item_id;
 
     request = $.ajax(
       {
