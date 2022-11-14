@@ -96,7 +96,7 @@
         {% endif %}
 
         <!-- Add Button to trigger modal -->
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createItemModal">
+        <button type="button" class="btn btn-primary" id="add-item-btn" data-toggle="modal" data-target="#createItemModal">
           Add Item
         </button>
       </div>
@@ -124,7 +124,7 @@
         <div class="form-group">
             <label for="item_type">Item Type:</label>
             <select class="form-select" id="item_type" aria-label="Select item type">
-                <option selected>Choose...</option>
+                <option value="0" selected>Choose...</option>
                 <option value="Food">Food</option>
                 <option value="Equipment">Equipment</option>
             </select>
@@ -138,7 +138,7 @@
         <div class="form-group" id="food_type_visible" style="display: none">
             <label for="foodtype">Food Type:</label>
             <select class="form-select" id="food_type" aria-label="Select food type">
-                <option selected>Choose...</option>
+                <option value="0" selected>Choose...</option>
                 <option value="Produce">Fresh Produce</option>
                 <option value="Meat">Meat</option>
                 <option value="Seasoning">Seasoning/Spice</option>
@@ -298,6 +298,7 @@
   function addItem() 
   {
     $('#add_submit').unbind('click');
+    $('#add-item-btn').unbind('click');
 
     console.log("hello");
 
@@ -357,13 +358,15 @@
     $('#createItemModal').modal('hide');
 
     // reset all fields in modal
-    // ITEM TYPE -> FOOD
-    $('#food_type').val('');
+    $('#item_type').val(0);
+    $('#food_type').val(0);
+    $('#food_type_visible').hide();
     $('#item_name').val('');
     $('#item_quantity').val('');
     $('#item_reason').val('');
     $('#alt_request').val('');
-    // FOR SHIFT CHECKBOX
+    // FOR SHIFT CHECKBOX - make sure it's unchecked
+    $('#for_shift').prop("checked", false );
 
     
   }
