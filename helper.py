@@ -42,7 +42,7 @@ def genRosterHTML(members):
 
 #----------------------------------------------------------------------
 
-def genItemTableHTML(items):
+def genItemTableHTML(items, is_food):
     '''
         Create HTML code 
     '''
@@ -51,8 +51,10 @@ def genItemTableHTML(items):
         )
     
     html_code += ('<thead id="theader">')
-    html_code += ('<tr><th scope="col">Item</th><th scope="col">Type</th>'
-                '<th scope="col">Qty</th><th scope="col">Comments</th>'
+    html_code += ('<tr><th scope="col">Item</th><th scope="col">Type</th>')
+    if is_food is True:
+        html_code += ('<th scope="col">Food Type</th>')
+    html_code += ('<th scope="col">Qty</th><th scope="col">Comments</th>'
                 '<th scope="col">Alt Item</th><th scope="col">For Shift?</th>'
                 '<th scope="col">Ordered?</th><th scope="col"> </th></tr>')
     html_code += ('</thead><tbody id="tbody">')
@@ -61,12 +63,13 @@ def genItemTableHTML(items):
         html_code += '<tr>'
 
         html_code += ('<th scope="row">{0}</th>'
+                        '<td>{1}</td>').format(item.item_name,
+                                                 item.item_type)
+        if is_food is True:
+            html_code += ('<td>{0}</td>').format(item.food_type)
+        html_code += ('<td>{0}</td>'
                     '<td>{1}</td>'
-                    '<td>{2}</td>'
-                    '<td>{3}</td>'
-                    '<td>{4}</td>').format(item.item_name,
-                                        item.item_type,
-                                        item.item_quantity,
+                    '<td>{2}</td>').format(item.item_quantity,
                                         item.item_reason,
                                         item.alt_request
                                         )
