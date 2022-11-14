@@ -33,7 +33,7 @@ def genRosterHTML(members):
                                         member.user_cookday,
                                         member.user_choreday,
                                         )
-        html_code += ('<td><input type="button" value="Delete" onclick="deleteRow(this)"></td>')
+        html_code += ('<td><button type="button" class="btn btn-primary btn-sm" id="rm-btn-id">Remove</button> onclick="deleteRow(this)"></td>')
         html_code += '</tr>'
     
     html_code += ('</tbody></table>')
