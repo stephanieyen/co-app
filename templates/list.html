@@ -379,14 +379,22 @@
       {
         type: 'POST',
         url: url, 
-        success: handleResponse,
-        failure: function () {
-          alert('Error updating shopping list. Try again!');
-        }
       }
-    );
+    ).done(function (data) 
+    { 
+      // if (item_type=="Equipment") {
+      //   refreshList("Equipment")
+      // }
+      // else {
+      //   refreshList("Food")
+      // }
+      refreshList("");
+    }).fail(function (jqXHR, textStatus, errorThrown) { 
+      alert("Error updating shopping list. Try again!")
+    });;
 
     // refresh list from deleting from db
+
   }
 
   // TODO: when ordered checkbox clicked, update in database, change words to "true"
