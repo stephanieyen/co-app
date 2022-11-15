@@ -23,7 +23,6 @@
       </div>
 
       <div class="row">
-        <!-- <div class="col-sm-1"></div> -->
         <div class="col-sm-11">
           <div class="container border border-dark rounded" style="background-color: #07a29930;">
             <div class="table-responsive" id="roster">
@@ -38,15 +37,16 @@
       <!-- Edit Button -- ONLY VISIBLE TO ADMIN -->
       {% if user.user_admin == True %}
       <div class="row">
-        <div class="col-sm-10 text-right">
-          <a href="/{{coop}}/roster/edit" role="button" class="btn btn-primary">
+        <div class="col-sm-11">
+          <a href="/{{coop}}/roster/edit" role="button" class="btn btn-primary float-end">
             Edit Roster
           </a>
         </div>
       </div>
-    </div>
-  </div>
-</div>
+
+    </div> <!-- col-sm-11 -->
+  </div> <!-- row -->
+</div> <!-- container-fluid -->
 {% endif %}
 
 <script>
