@@ -404,6 +404,34 @@ def list(coop):
 
 #----------------------------------------------------------------------
 
+@app.route('/<coop>/list/order', methods=['POST'])
+def change_ordered(coop):
+    ''' 
+        Updates a shift whether an item was ordered after
+        clicking checkbox                   
+    '''
+    item_id = flask.request.args.get('id')
+    old_item = database.get_item(item_id)
+    # Make new item with opposite ordered as old_item
+    new_item = models.ShoppingList(
+        item_id=item_id,
+        item_type=old_item.item_type,
+        item_name=old_item.item_name,
+        item_quantity=old_item.item_quantity,
+        item_ordered=not old_item.item_ordered,
+        for_shift = old_item.for_shift,
+        item_reason=old_item.item_reason,
+        requesting_user=old_item.requesting_user,
+        food_type=old_item.food_type,
+        alt_request=old_item.alt_request,
+        coop_name=coop
+    )
+    print(new_item.item_ordered)
+    database.update_item(item_id, new_item)
+    return ''
+
+#----------------------------------------------------------------------
+
 @app.route('/<coop>/list/delete', methods=['POST'])
 def list_delete(coop):
     ''' 

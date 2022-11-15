@@ -118,6 +118,7 @@ def update_item(id, new_item: models.ShoppingList):
                     'item_type': new_item.item_type,
                     'item_name': new_item.item_name,
                     'item_quantity': new_item.item_quantity,
+                    'item_ordered': new_item.item_ordered,
                     'for_shift': new_item.for_shift,
                     'item_reason': new_item.item_reason,
                     'requesting_user': new_item.requesting_user,
