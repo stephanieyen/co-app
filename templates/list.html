@@ -31,10 +31,10 @@
         <div class="col-sm-3">
           <div class="btn-group">
             <label class="btn btn-secondary active">
-              <input type="radio" class="btn-check" name="options" id="food-btn" autocomplete="off" checked> Food
+              <input type="radio" class="btn-check" name="options" id="food-btn" value="Food" autocomplete="off" checked> Food
             </label>
             <label class="btn btn-secondary">
-              <input type="radio" class="btn-check" name="options" id="equip-btn" autocomplete="off"> Equipment
+              <input type="radio" class="btn-check" name="options" id="equip-btn" value="Equip" autocomplete="off"> Equipment
             </label>
           </div>
         </div>
@@ -170,6 +170,8 @@
 
     if (item_type == "Equipment") {
       console.log("Getting Equip")
+      $('#equip-btn').prop("checked", true);
+      $('#food-btn').prop("checked", false);
       request = $.ajax(
         {
           type: 'GET',
@@ -183,6 +185,8 @@
     }
 
     else {
+      $('#equip-btn').prop("checked", false);
+      $('#food-btn').prop("checked", true);
       request = $.ajax(
         {
           type: 'GET',
@@ -366,7 +370,12 @@
         url: url,
       }
     ).done(function (data) {
-      refreshList("");
+      if ($('#equip-btn').is(':checked')) {
+      refreshList("Equipment");
+      }
+      else {
+        refreshList("");
+      }
     }).fail(function (jqXHR, textStatus, errorThrown) {
       alert("Error updating shopping list. Try again!")
     });
