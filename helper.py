@@ -19,7 +19,7 @@ def genRosterHTML(members):
     
     html_code += ('<thead id="theader">')
     html_code += ('<tr><th scope="col">Member Name</th><th scope="col">Dietary Restrictions</th>'
-                '<th scope="col">Cook Shift</th><th scope="col">Chore Shift</th><th scope="col"> </th></tr>')
+                '<th scope="col">Cook Shift</th><th scope="col">Chore Shift</th></tr>')
     html_code += ('</thead><tbody id="tbody">')
 
     for member in members:
