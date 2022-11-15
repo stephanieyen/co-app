@@ -21,7 +21,7 @@ def get_roster_for_coop(coop) -> List[models.Roster]:
     coop_roster = []
     with sqlalchemy.orm.Session(engine) as session:
         coop_roster = session.query(models.Roster).filter(
-            models.Roster.coop_name==coop).all()
+            models.Roster.coop_name==coop).order_by(models.Roster.user_name.desc()).all()
     return coop_roster
 
 # Get the current shopping list for a co-op
@@ -37,7 +37,10 @@ def get_food_list_for_coop(coop) -> List[models.ShoppingList]:
     with sqlalchemy.orm.Session(engine) as session:
         coop_shopping = session.query(models.ShoppingList).filter(
             models.ShoppingList.coop_name==coop,
-            models.ShoppingList.item_type=="Food").all()
+            models.ShoppingList.item_type=="Food").order_by(
+                models.ShoppingList.food_type.desc(),
+                models.ShoppingList.item_name
+            ).all()
     return coop_shopping
 
 def get_equipment_list_for_coop(coop) -> List[models.ShoppingList]:
@@ -45,7 +48,9 @@ def get_equipment_list_for_coop(coop) -> List[models.ShoppingList]:
     with sqlalchemy.orm.Session(engine) as session:
         coop_shopping = session.query(models.ShoppingList).filter(
             models.ShoppingList.coop_name==coop,
-            models.ShoppingList.item_type=="Equipment").all()
+            models.ShoppingList.item_type=="Equipment").order_by(
+                models.ShoppingList.item_name
+            ).all()
     return coop_shopping
 
 # Get the current shifts for a co-op
