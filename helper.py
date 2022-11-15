@@ -139,7 +139,7 @@ def genItemTableHTML(items, is_food, is_admin):
         html_code += ('<label class="form-check-label" for="order-check">{0}</label>').format(ordered)
         html_code += ('</div></td>')
         if is_admin:
-            html_code += ('<td><button type="button" class="btn btn-primary btn-sm" onclick="removeItem(this)">Remove</button></td>')
+            html_code += ('<td><button type="button" class="btn btn-danger btn-sm" onclick="removeItem(this)">Remove</button></td>')
         html_code += ('<td hidden>{0}</td>').format(item.item_id)
 
         html_code += '</tr>'
