@@ -45,7 +45,7 @@ def add_test_roster(session):
     user = models.Roster(user_netid='sarahep',
                         user_name='Sarah Pedersen',
                         user_allergies='Peanut Allergy',
-                        user_admin=False,
+                        user_admin=True,
                         user_cookday='M W F Sun',
                         user_choreday='M',
                         coop_name='realfood')

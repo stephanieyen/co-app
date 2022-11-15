@@ -2,57 +2,68 @@
     <title>Co-App Edit Roster (Admin Only)</title>
     <script type='text/javascript' src="{{ url_for('static',filename='jquery-3.6.1.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-    crossorigin="anonymous"></script>
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
     <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script> -->
 </head>
-  
+
 {% extends "templates/base.html" %}
 {% block content %}
 <div class="container-fluid">
     <!-- Back button to ROSTER page -->
-    <div class="row">
-        <div class="col-sm-10">
-          <a href="/{{coop}}/roster" role="button" class="btn btn-primary">
-            Back
-          </a>
+    <div class="col-sm-12">
+        <br>
+        <div class="row">
+            <a href="/{{coop}}/roster" role="button" class="btn btn-primary">
+                Back
+            </a>
         </div>
-      </div>
-    </div>
 
-    <!-- Title Row - "Edit Roster" -->
-    <div class="row">
-        <div class="col-sm-4 text-right">
-            <br>
-            <h2>Edit Roster</h2><br>
-        </div>
-    </div>
-
-    <div class="row justify-content-md-center">
-        <div class="container border border-dark rounded" style="background-color: #07a29930;">
-            <div class="table-responsive" id="roster">
-            <!-- SERVER-SIDE GENERATES ROSTER OVERVIEW TABLE HERE -->
+        <!-- Title Row - "Edit Roster" -->
+        <div class="row">
+            <div class="text-left">
+                <br>
+                <h2>Edit Roster</h2><br>
             </div>
         </div>
-    </div>
 
-    <!-- Title Row - "Edit Roster" -->
-    <div class="row">
-        <div class="col-sm-4 text-right">
-            <h3>Add New Members</h3><br>
-            <div class="input-group" id="add-members-group">
-                Type in netids separated by commas. Anyone added will be able to log in via CAS.
-                <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" id="add-members-txt">
+        <div class="row justify-content-md-center">
+            <div class="container border border-dark rounded" style="background-color: #07a29930;">
+                <div class="table-responsive" id="roster">
+                    <!-- SERVER-SIDE GENERATES ROSTER OVERVIEW TABLE HERE -->
+                </div>
             </div>
-            <button type="button" class="btn btn-primary" id="add-members-btn">
-                Add
-            </button>
         </div>
+
+        <!-- Title Row - "Edit Roster" -->
+        <div class="row">
+            <div class="text-left">
+                <br>
+                <h3>Add New Members</h3>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <p>Type in netids separated by commas. Anyone added will be able to log in via CAS.</p>
+        </div>
+
+        <div class="input-group" id="add-members-group">
+            <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
+                id="add-members-txt">
+        </div>
+        <br>
+        <div class="row justify-content-end">
+                <button type="button" class="btn btn-primary" id="add-members-btn">
+                    Add
+                </button>
+        </div>
+
+
     </div>
 </div>
 
 <script>
-'use strict';
+    'use strict';
 
     function deleteRow(r) {
         // show confirmation to delete in alert box        
@@ -63,66 +74,61 @@
             // document.getElementById("myTable").deleteRow(i);
             // ajax post request by netid
             request = $.ajax(
-            {
-                type: 'POST',
-                url: url, 
-            }
-            ).done(function (data) 
-            { 
+                {
+                    type: 'POST',
+                    url: url,
+                }
+            ).done(function (data) {
                 refreshRoster()
-            }).fail(function (jqXHR, textStatus, errorThrown) { 
-            alert("Error updating roster. Try again!")
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                alert("Error updating roster. Try again!")
             });
         }
     }
 
 
-    function handleResponse(response) 
-    {
+    function handleResponse(response) {
         $('#roster').html(response);
     }
 
     let request = null;
 
     // refresh page with get request 
-    function refreshRoster() 
-    {
+    function refreshRoster() {
         console.log("fetching refreshed roster");
         request = $.ajax(
             {
-                type:'GET',
+                type: 'GET',
                 url: '/{{coop}}/members/overview',
                 success: handleResponse,
                 failure: function () {
-                alert('there was an error while fetching members!');
+                    alert('there was an error while fetching members!');
                 }
             }
         );
         console.log("made request")
     }
 
-    function addMembers() 
-    {
+    function addMembers() {
         console.log("adding members")
 
         // TODO: error handling if input val is empty
 
         // parse string of new member netids separated by commas
         let newMembers = $('#add-members-txt').val()
-        newMembers = newMembers.split(",").map((member)=>member.trim());
+        newMembers = newMembers.split(",").map((member) => member.trim());
 
         console.log(newMembers)
 
         // AJAX post request
-        $.post( "/{{coop}}/roster/edit/add", {
+        $.post("/{{coop}}/roster/edit/add", {
             dataType: 'json',
             contentType: 'application/json',
             event_data: JSON.stringify(newMembers),
-        }).done(function (data) 
-        { 
+        }).done(function (data) {
             $('#add-members-group').html("Success!");
             refreshRoster();
-        }).fail(function (jqXHR, textStatus, errorThrown) { 
+        }).fail(function (jqXHR, textStatus, errorThrown) {
             alert("Error adding members. Try again!")
         });
     }
@@ -136,21 +142,19 @@
             // document.getElementById("myTable").deleteRow(i);
             // ajax post request by netid
             request = $.ajax(
-            {
-                type: 'POST',
-                url: url, 
-            }
-            ).done(function (data) 
-            { 
+                {
+                    type: 'POST',
+                    url: url,
+                }
+            ).done(function (data) {
                 refreshRoster()
-            }).fail(function (jqXHR, textStatus, errorThrown) { 
+            }).fail(function (jqXHR, textStatus, errorThrown) {
                 alert("Error updating admin status. Try again!")
             });
         }
     }
 
-    function setup() 
-    {
+    function setup() {
         refreshRoster();
 
         $('#add-members-btn').on('click', addMembers);
