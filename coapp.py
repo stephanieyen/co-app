@@ -4,9 +4,17 @@ import json
 import models
 import helper
 from flask import jsonify
+# from flask_mail import Mail, Message
 #----------------------------------------------------------------------
 
 app = flask.Flask(__name__, template_folder='.')
+# app.config['MAIL_SERVER']='smtp.gmail.com'
+# app.config['MAIL_PORT'] = 465
+# app.config['MAIL_USERNAME'] = 'coappemail@gmail.com'
+# app.config['MAIL_PASSWORD'] = 'zdymxwgrisdsftkv'
+# app.config['MAIL_USE_TLS'] = False
+# app.config['MAIL_USE_SSL'] = True
+# mail = Mail(app)
 
 # Import after making auth since auth uses app
 import auth
@@ -173,6 +181,13 @@ def add_user(coop):
                             user_choreday='',
                             coop_name=coop)
         database.add_user(user)
+        # email = netid + "@princeton.edu"
+        # msg = Message(
+        #     body="You've been added to a co-op on co-app! Go log in and update your profile!",
+        #     sender="from@example.com",
+        #     subject="Co-App Addition!",
+        #     recipients=["amkumar@princeton.edu", email])
+        # mail.send(msg)
     return ''
 
 #----------------------------------------------------------------------

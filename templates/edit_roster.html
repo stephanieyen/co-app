@@ -135,7 +135,7 @@
             contentType: 'application/json',
             event_data: JSON.stringify(newMembers),
         }).done(function (data) {
-            $('#add-members-group').html("Success!");
+            // $('#add-members-group').html("Success!");
             refreshRoster();
         }).fail(function (jqXHR, textStatus, errorThrown) {
             alert("Error adding members. Try again!")
