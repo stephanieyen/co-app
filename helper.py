@@ -45,6 +45,8 @@ def genRosterHTML(members):
 
     return html_code
 
+#----------------------------------------------------------------------
+
 def genRosterOverviewHTML(members):
 
     html_code = (
@@ -54,6 +56,8 @@ def genRosterOverviewHTML(members):
     html_code += ('<thead id="theader">')
     html_code += ('<tr><th scope="col">Member NetID</th><th scope="col">Member Name</th><th scope="col">Admin Status</th>')
     html_code += ('</thead><tbody id="tbody">')
+
+    # sort members
 
     for member in members:
         html_code += '<tr>'
@@ -82,7 +86,7 @@ def genRosterOverviewHTML(members):
 
 #----------------------------------------------------------------------
 
-def genItemTableHTML(items, is_food):
+def genItemTableHTML(items, is_food, is_admin):
     '''
         Create HTML code 
     '''
@@ -98,6 +102,9 @@ def genItemTableHTML(items, is_food):
                 '<th scope="col">Alt Item</th><th scope="col">For Shift?</th>'
                 '<th scope="col">Ordered?</th><th scope="col"> </th></tr>')
     html_code += ('</thead><tbody id="tbody">')
+
+    # sort items by food type
+    items.sort(key=lambda x: x.food_type)
 
     for item in items:
         html_code += '<tr>'
@@ -127,7 +134,8 @@ def genItemTableHTML(items, is_food):
             '<input name="order-box" class="form-check-input" type="checkbox" value="" id="order-check" onclick="updateOrdered(this)">')
         html_code += ('<label class="form-check-label" for="order-check">{0}</label>').format(ordered)
         html_code += ('</div></td>')
-        html_code += ('<td><button type="button" class="btn btn-primary btn-sm" onclick="removeItem(this)">Remove</button></td>')
+        if is_admin:
+            html_code += ('<td><button type="button" class="btn btn-primary btn-sm" onclick="removeItem(this)">Remove</button></td>')
         html_code += ('<td hidden>{0}</td>').format(item.item_id)
 
         html_code += '</tr>'

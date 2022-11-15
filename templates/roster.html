@@ -25,9 +25,11 @@
       </div>
     </div>
   </div>
-  
+
   <br>
 
+  <!-- Edit Button -- ONLY VISIBLE TO ADMIN -->
+  {% if user.user_admin == True %}
   <div class="row">
     <div class="col-sm-10 text-right">
       <a href="/{{coop}}/roster/edit" role="button" class="btn btn-primary">
@@ -36,7 +38,7 @@
     </div>
   </div>
 </div>
-
+{% endif %}
 
 <script>
   'use strict';

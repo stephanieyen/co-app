@@ -106,14 +106,16 @@ def profile_update(coop):
 
 @app.route('/<coop>/roster', methods=['GET'])
 def roster(coop):
-    _ = auth.authenticate()
+    netid = auth.authenticate()
     status, redirect = check_coop(coop)
     if status == False or status == "Nonexistent":
         return redirect
+    user = database.get_user(netid)
+
     members = database.get_roster_for_coop(coop)
     coop_upper = database.get_upper_coop(coop)
     html = flask.render_template('templates/roster.html',
-            members=members, coop=coop, coop_upper=coop_upper)
+            members=members, coop=coop, coop_upper=coop_upper, user=user)
     response = flask.make_response(html)
     return response
 
@@ -408,12 +410,19 @@ def list_delete(coop):
 
 @app.route('/<coop>/items/food', methods=['GET'])
 def list_food_items(coop):
+    # get user info
+    netid = auth.authenticate()
+    status, redirect = check_coop(coop)
+    if status == False or status == "Nonexistent":
+        return redirect
+    user = database.get_user(netid)
+
     # print("GET request for food items")
     items = database.get_food_list_for_coop(coop)
     # for item in items:
     #         print(item.item_name)
 
-    html_code = helper.genItemTableHTML(items, True)
+    html_code = helper.genItemTableHTML(items, True, user.user_admin)
     
     response = flask.make_response(html_code)
     return response
@@ -422,12 +431,19 @@ def list_food_items(coop):
 
 @app.route('/<coop>/items/equipment', methods=['GET'])
 def list_equipment_items(coop):
+    # get user info
+    netid = auth.authenticate()
+    status, redirect = check_coop(coop)
+    if status == False or status == "Nonexistent":
+        return redirect
+    user = database.get_user(netid)
+
     # print("GET request for equipment items")
     items = database.get_equipment_list_for_coop(coop)
     # for item in items:
     #         print(item.item_name)
 
-    html_code = helper.genItemTableHTML(items, False)
+    html_code = helper.genItemTableHTML(items, False, user.user_admin)
     
     response = flask.make_response(html_code)
     return response
