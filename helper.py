@@ -106,7 +106,10 @@ def genItemTableHTML(items, is_food, is_admin):
     html_code += ('</thead><tbody id="tbody">')
 
     # sort items by food type
-    items.sort(key=lambda x: x.food_type)
+    if is_food is True:
+        items.sort(key=lambda x: x.food_type)
+    else:
+        items.sort(key= lambda x: x.item_name)
 
     for item in items:
         html_code += '<tr>'
@@ -119,8 +122,7 @@ def genItemTableHTML(items, is_food, is_admin):
                     '<td>{1}</td>'
                     '<td>{2}</td>').format(item.item_quantity,
                                         item.item_reason,
-                                        item.alt_request
-                                        )
+                                        item.alt_request)
         if item.for_shift is True:
             for_shift = "Yes"
         else:
