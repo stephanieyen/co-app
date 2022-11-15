@@ -265,9 +265,13 @@
       food_type = $('#food_type').val();
     }
     let item_name = $('#item_name').val();
+    item_name = item_name.charAt(0).toUpperCase() + item_name.slice(1);
     let item_quantity = $('#item_quantity').val();
+    item_quantity = item_quantity.charAt(0).toUpperCase() + item_quantity.slice(1);
     let item_reason = $('#item_reason').val();
+    item_reason = item_reason.charAt(0).toUpperCase() + item_reason.slice(1);
     let alt_request = $('#alt_request').val();
+    alt_request = alt_request.charAt(0).toUpperCase() + alt_request.slice(1);
     if ($('#for_shift').is(':checked')) {
       var for_shift = true;
     }
