@@ -1,64 +1,71 @@
 <head>
   <title>Co-App Shopping List</title>
   
-  <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css' rel='stylesheet'>
-  <link href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css' rel='stylesheet'>
+  <!-- <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css' rel='stylesheet'> -->
+  <!-- <link href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css' rel='stylesheet'> -->
   <!------------------------JS/CSS/JQuery/Bootstrap src ------------>
-  <script type='text/javascript' src="{{ url_for('static',filename='jquery-3.6.1.min.js') }}"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-    crossorigin="anonymous"></script>
+  <!-- <script type='text/javascript' src="{{ url_for('static',filename='jquery-3.6.1.min.js') }}"></script> -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" -->
+    <!-- integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" -->
+    <!-- crossorigin="anonymous"></script> -->
   <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script> -->
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='coapp.css') }}" />
+  <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='coapp.css') }}" /> -->
 </head>
 
 {% extends "templates/base.html" %}
 {% block content %}
 <div class="container-fluid">
-  <!-- Title Row - "Shopping List" -->
   <div class="row">
-    <div class="col-sm-4 text-center">
+    <div class="col-sm-1"></div>
+
+    <div class="col-sm-11">
+      <!-- Title Row - "Shopping List" -->
+      <div class="row">
+        <div class="text-left">
+          <br>
+          <h2>Shopping Requests</h2><br>
+        </div>
+      </div>
+
+      <!-- Toggle Button Row -->
+      <div class="row">
+        <div class="col-sm-3">
+          <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            <label class="btn btn-secondary active">
+              <input type="radio" name="options" id="food-btn" autocomplete="off" checked> Food
+            </label>
+            <label class="btn btn-secondary">
+              <input type="radio" name="options" id="equip-btn" autocomplete="off"> Equipment
+            </label>
+          </div>
+        </div> 
+      </div>
+
       <br>
-      <h2>Shopping Requests</h2><br>
-    </div>
-  </div>
 
-  <!-- Toggle Button Row -->
-  <div class="row">
-    <div class="col-sm-3 text-center">
-      <div class="btn-group btn-group-toggle" data-toggle="buttons">
-        <label class="btn btn-secondary active">
-          <input type="radio" name="options" id="food-btn" autocomplete="off" checked> Food
-        </label>
-        <label class="btn btn-secondary">
-          <input type="radio" name="options" id="equip-btn" autocomplete="off"> Equipment
-        </label>
-      </div>
-    </div> 
-  </div>
-
-  <br>
-
-  <div class="row justify-content-md-center">
-    <div class="col">
-      <div class="container border border-dark rounded" style="background-color: #07a29930;">
-        <div class="table-responsive" id="shoppingList">
-          <!-- SERVER-SIDE GENERATES SHOPPING LIST HERE -->
+      <div class="row">
+        <div class="col-sm-11">
+          <div class="container border border-dark rounded" style="background-color: #07a29930;">
+            <div class="table-responsive" id="shoppingList">
+              <!-- SERVER-SIDE GENERATES SHOPPING LIST HERE -->
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
+      
 
-  <!-- Buttons -->
-  <br>
-  <div class="container">
-    <div class="row">
-        <div class="col-sm-12 text-right">
-          <!-- Add Button to trigger modal -->
-          <button type="button" class="btn btn-primary" id="add-item-btn" data-bs-toggle="modal" data-bs-target="#createItemModal">
-            Add Item
-          </button>
+      <!-- Buttons -->
+      <br>
+      <div class="container">
+        <div class="row">
+            <div class="col-sm-12 text-right">
+              <!-- Add Button to trigger modal -->
+              <button type="button" class="btn btn-primary" id="add-item-btn" data-bs-toggle="modal" data-bs-target="#createItemModal">
+                Add Item
+              </button>
+            </div>
         </div>
+      </div>
     </div>
   </div>
 
