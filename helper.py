@@ -23,6 +23,10 @@ def genRosterHTML(members):
     html_code += ('</thead><tbody id="tbody">')
 
     for member in members:
+        # don't display members that do not have names
+        if member.user_name == '':
+            break
+
         html_code += '<tr>'
 
         html_code += ('<th scope="row">{0}</th>'
@@ -48,18 +52,24 @@ def genRosterOverviewHTML(members):
         )
     
     html_code += ('<thead id="theader">')
-    html_code += ('<tr><th scope="col">Member Name</th><th scope="col">Admin Status</th>')
+    html_code += ('<tr><th scope="col">Member NetID</th><th scope="col">Member Name</th><th scope="col">Admin Status</th>')
     html_code += ('</thead><tbody id="tbody">')
 
     for member in members:
         html_code += '<tr>'
+        
+        user_name = member.user_name
+        if member.user_name == '':
+            user_name = "User needs to add their profile information"
 
         user_admin = 'Member'
         if member.user_admin:
             user_admin = 'Admin'
 
         html_code += ('<th scope="row">{0}</th>'
-                    '<td>{1}</td>').format(member.user_name,
+                    '<th scope="row">{1}</th>'
+                    '<td>{2}</td>').format(member.user_netid,
+                                        user_name,
                                         user_admin,
                                         )
         html_code += ('<td><input type="button" class="btn btn-primary btn-sm" value="Remove" onclick="deleteRow(this)"></td>')

@@ -156,22 +156,17 @@ def edit_roster(coop):
 # Add user
 @app.route('/<coop>/roster/edit/add', methods=['POST'])
 def add_user(coop):
-    # data = json.loads(flask.request.form.to_dict()['event_data'])
-    # user = models.Roster(user_netid=data['netid'],
-    #                     user_name='',
-    #                     user_allergies='',
-    #                     user_admin=False,
-    #                     user_cookday='',
-    #                     user_choreday='',
-    #                     coop_name=coop)
-    user = models.Roster(user_netid='sy7',
-                        user_name='Stephanie Yen',
-                        user_allergies='N/A',
-                        user_admin=True,
-                        user_cookday='T W F',
-                        user_choreday='T',
-                        coop_name='2d')
-    database.add_user(user)
+    new_members = json.loads(flask.request.form.to_dict()['event_data'])
+    for netid in new_members:
+        user = models.Roster(user_netid=netid,
+                            user_name='',
+                            user_allergies='',
+                            user_admin=False,
+                            user_cookday='',
+                            user_choreday='',
+                            coop_name=coop)
+        database.add_user(user)
+    
     return ''
 
 #----------------------------------------------------------------------

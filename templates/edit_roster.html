@@ -37,7 +37,7 @@
     <div class="row">
         <div class="col-sm-4">
             <h3>Add New Members</h3><br>
-            <div class="input-group">
+            <div class="input-group" id="add-members-group">
                 Type in netids separated by commas. Anyone added will be able to log in via CAS.
                 <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" id="add-members-txt">
             </div>
@@ -111,18 +111,16 @@
         console.log(newMembers)
 
         // AJAX post request
-        // $.post( "/{{coop}}/roster/edit/add", {
-        //     dataType: 'json',
-        //     contentType: 'application/json',
-        //     event_data: JSON.stringify(json_event),
-        // // success: refreshList
-        // }).done(function (data) 
-        // { 
-        //     // refreshRoster();
-        //     // display a success message?
-        // }).fail(function (jqXHR, textStatus, errorThrown) { 
-        //     alert("Error adding members. Try again!")
-        // });
+        $.post( "/{{coop}}/roster/edit/add", {
+            dataType: 'json',
+            contentType: 'application/json',
+            event_data: JSON.stringify(newMembers),
+        }).done(function (data) 
+        { 
+            $('#add-members-group').html("Success!")
+        }).fail(function (jqXHR, textStatus, errorThrown) { 
+            alert("Error adding members. Try again!")
+        });
     }
 
     function setup() 
