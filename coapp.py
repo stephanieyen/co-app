@@ -43,7 +43,7 @@ def check_coop(current_coop):
         newPage = '/' + coop
         return (False, flask.redirect(newPage))
     else:
-        return (True, "")
+        return (True, "")    
 
 # Error page
 @app.route('/error', methods=['GET'])
@@ -110,6 +110,7 @@ def roster(coop):
     status, redirect = check_coop(coop)
     if status == False or status == "Nonexistent":
         return redirect
+    
     user = database.get_user(netid)
 
     members = database.get_roster_for_coop(coop)
@@ -142,10 +143,14 @@ def roster_members(coop):
 
 @app.route('/<coop>/roster/edit', methods=['GET'])
 def edit_roster(coop):
-    _ = auth.authenticate()
+    netid = auth.authenticate()
     status, redirect = check_coop(coop)
     if status == False or status == "Nonexistent":
         return redirect
+    user = database.get_user(netid)
+    if not user.user_admin:
+        newPage = '/' + coop + '/members'
+        return (False, flask.redirect(newPage))
     members = database.get_roster_for_coop(coop)
     coop_upper = database.get_upper_coop(coop)
     html = flask.render_template('templates/edit_roster.html',
