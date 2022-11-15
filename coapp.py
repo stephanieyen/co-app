@@ -168,7 +168,6 @@ def add_user(coop):
                             user_choreday='',
                             coop_name=coop)
         database.add_user(user)
-    
     return ''
 
 #----------------------------------------------------------------------
@@ -199,6 +198,24 @@ def roster_overview(coop):
 
     response = flask.make_response(html_code)
     return response
+
+#----------------------------------------------------------------------
+
+@app.route('/<coop>/roster/edit/makeadmin', methods=['POST'])
+def make_admin(coop):
+    user_id = flask.request.args.get('id') # make sure it's netid
+    old_user = database.get_user(user_id)
+    new_user = models.Roster(
+        user_netid=user_id,
+        user_name=old_user.user_name,
+        user_allergies=old_user.user_allergies,
+        user_admin= True,
+        user_cookday=old_user.user_cookday,
+        user_choreday=old_user.user_choreday,
+        coop_name=old_user.coop_name
+    )
+    database.update_user(user_id, new_user)
+    return ''
 
 #----------------------------------------------------------------------
 # Co-Op Calendar

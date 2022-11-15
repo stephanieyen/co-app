@@ -66,7 +66,7 @@
             }
             ).done(function (data) 
             { 
-            refreshRoster()
+                refreshRoster()
             }).fail(function (jqXHR, textStatus, errorThrown) { 
             alert("Error updating roster. Try again!")
             });
@@ -117,10 +117,33 @@
             event_data: JSON.stringify(newMembers),
         }).done(function (data) 
         { 
-            $('#add-members-group').html("Success!")
+            $('#add-members-group').html("Success!");
+            refreshRoster();
         }).fail(function (jqXHR, textStatus, errorThrown) { 
             alert("Error adding members. Try again!")
         });
+    }
+
+    function addAdmin(r) {
+        // show confirmation to delete in alert box        
+        if (confirm("Are you sure you want to make this member an admin?") == true) {
+            // var i = r.parentNode.parentNode.rowIndex;
+            let user_netid = r.parentNode.parentNode.lastChild.innerHTML;
+            let url = "/{{coop}}/roster/edit/makeadmin?id=" + user_netid;
+            // document.getElementById("myTable").deleteRow(i);
+            // ajax post request by netid
+            request = $.ajax(
+            {
+                type: 'POST',
+                url: url, 
+            }
+            ).done(function (data) 
+            { 
+                refreshRoster()
+            }).fail(function (jqXHR, textStatus, errorThrown) { 
+                alert("Error updating admin status. Try again!")
+            });
+        }
     }
 
     function setup() 

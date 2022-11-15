@@ -25,7 +25,7 @@ def genRosterHTML(members):
     for member in members:
         # don't display members that do not have names
         if member.user_name == '':
-            break
+            continue
 
         html_code += '<tr>'
 
@@ -76,7 +76,9 @@ def genRosterOverviewHTML(members):
                                         user_name,
                                         user_admin,
                                         )
-        html_code += ('<td><input type="button" class="btn btn-primary btn-sm" value="Remove" onclick="deleteRow(this)"></td>')
+        html_code += ('<td><input type="button" class="btn btn-danger btn-sm" value="Remove" onclick="deleteRow(this)"></td>')
+        if member.user_admin == False:
+            html_code += ('<td><input type="button" class="btn btn-primary btn-sm" value="Make Admin" onclick="addAdmin(this)"></td>')
         html_code += ('<td hidden>{0}</td>').format(member.user_netid)
         html_code += '</tr>'
     

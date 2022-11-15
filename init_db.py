@@ -21,7 +21,7 @@ def add_test_roster(session):
     user = models.Roster(user_netid='amkumar',
                         user_name='Arnav Kumar',
                         user_allergies='N/A',
-                        user_admin=False,
+                        user_admin=True,
                         user_cookday='M W F',
                         user_choreday='M',
                         coop_name='2d')
