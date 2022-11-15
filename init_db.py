@@ -37,7 +37,7 @@ def add_test_roster(session):
     user = models.Roster(user_netid='petrino',
                         user_name='Erin Petrino',
                         user_allergies='Vegan',
-                        user_admin=False,
+                        user_admin=True,
                         user_cookday='T Th Sat Sun',
                         user_choreday='T',
                         coop_name='scully')
@@ -53,7 +53,7 @@ def add_test_roster(session):
     user = models.Roster(user_netid='thaldiya',
                         user_name='Tanvi Haldiya',
                         user_allergies='Soy Allergy',
-                        user_admin=False,
+                        user_admin=True,
                         user_cookday='M T Th F',
                         user_choreday='M',
                         coop_name='ifc')
