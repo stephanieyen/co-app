@@ -2,63 +2,72 @@
     <title>Co-App Edit Roster (Admin Only)</title>
     <!-- <script type='text/javascript' src="{{ url_for('static',filename='jquery-3.6.1.min.js') }}"></script> -->
     <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" -->
-        <!-- integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" -->
-        <!-- crossorigin="anonymous"></script> -->
+    <!-- integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" -->
+    <!-- crossorigin="anonymous"></script> -->
     <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script> -->
 </head>
 
 {% extends "templates/base.html" %}
 {% block content %}
 <div class="container-fluid">
-    <!-- Back button to ROSTER page -->
-    <div class="col-sm-12">
-        <br>
-        <div class="row">
-            <a href="/{{coop}}/roster" role="button" class="btn btn-primary">
-                Back
-            </a>
-        </div>
+    <div class="row">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-11">
+            <!-- <br> -->
+            <!-- Back button to ROSTER page -->
+            <!-- <div class="row">
+                <div class="col-sm-11">
+                <a href="/{{coop}}/roster" role="button" class="btn btn-primary float-start">
+                        Back
+                </a>
+                </div>
+            </div> -->
 
-        <!-- Title Row - "Edit Roster" -->
-        <div class="row">
-            <div class="text-left">
-                <br>
-                <h2>Edit Roster</h2><br>
-            </div>
-        </div>
-
-        <div class="row justify-content-md-center">
-            <div class="container border border-dark rounded" style="background-color: #07a29930;">
-                <div class="table-responsive" id="roster">
-                    <!-- SERVER-SIDE GENERATES ROSTER OVERVIEW TABLE HERE -->
+            <!-- Title Row - "Edit Roster" -->
+            <div class="row">
+                <div class="text-left">
+                    <br>
+                    <h2>Edit Roster</h2><br>
                 </div>
             </div>
-        </div>
 
-        <!-- Title Row - "Edit Roster" -->
-        <div class="row">
-            <div class="text-left">
-                <br>
-                <h3>Add New Members</h3>
+            <div class="row">
+                <div class="col-sm-11">
+                    <div class="container border border-dark rounded" style="background-color: #07a29930;">
+                        <div class="table-responsive" id="roster">
+                            <!-- SERVER-SIDE GENERATES ROSTER OVERVIEW TABLE HERE -->
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <div class="row justify-content-center">
-            <p>Type in netids separated by commas. Anyone added will be able to log in via CAS.</p>
-        </div>
+            <!-- Title Row - "Edit Roster" -->
+            <div class="row">
+                <div class="text-left">
+                    <br>
+                    <h3>Add New Members</h3>
+                </div>
+            </div>
 
-        <div class="input-group" id="add-members-group">
-            <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
-                id="add-members-txt">
-        </div>
-        <br>
-        <div class="row justify-content-end">
-                <button type="button" class="btn btn-primary" id="add-members-btn">
-                    Add
+            <div class="row">
+                <div class="text-left">
+                    <p>Type in netids separated by commas. Anyone added will be able to log in via CAS.</p>
+                </div>
+            </div>
+
+            <div class="col-sm-11">
+            <div class="row">
+                <div class="input-group w-75" id="add-members-group">
+                    <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
+                        id="add-members-txt">
+                </div>
+                <button type="button" class="btn btn-primary float-end w-25" id="add-members-btn" style="color:black">
+                    <img src="{{ url_for('static',filename='airplane.png') }}" width="40" />
                 </button>
+            </div>
+            </div>
+
         </div>
-
-
     </div>
 </div>
 
