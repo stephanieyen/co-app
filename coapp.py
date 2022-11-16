@@ -4,6 +4,7 @@ import json
 import models
 import helper
 from flask import jsonify
+# from apscheduler.schedulers.background import BackgroundScheduler
 # from flask_mail import Mail, Message
 #----------------------------------------------------------------------
 
@@ -15,6 +16,21 @@ app = flask.Flask(__name__, template_folder='.')
 # app.config['MAIL_USE_TLS'] = False
 # app.config['MAIL_USE_SSL'] = True
 # mail = Mail(app)
+## Sends email every minute (WORKS)
+# def test_mail():
+#     with app.app_context():
+#         email = 'amkumar' + "@princeton.edu"
+#         msg = Message(
+#             body="You've been added to a co-op on co-app! Go log in and update your profile!",
+#             sender="from@example.com",
+#             subject="Co-App Addition!",
+#             recipients=["amkumar@princeton.edu", email])
+#         mail.send(msg)
+#         print("Scheduler is alive!")
+
+# sched = BackgroundScheduler(daemon=True)
+# sched.add_job(test_mail,'interval',minutes=1)
+# sched.start()
 
 # Import after making auth since auth uses app
 import auth
