@@ -509,7 +509,8 @@ def list_food_items(coop):
     # for item in items:
     #         print(item.item_name)
 
-    html_code = helper.genItemTableHTML(items, True, user.user_admin)
+    html_code = helper.genItemTableHTML(items, True, user.user_admin, 
+                                                        user.user_netid)
     
     response = flask.make_response(html_code)
     return response
@@ -530,7 +531,8 @@ def list_equipment_items(coop):
     # for item in items:
     #         print(item.item_name)
 
-    html_code = helper.genItemTableHTML(items, False, user.user_admin)
+    html_code = helper.genItemTableHTML(items, False, user.user_admin,
+                                                        user.user_netid)
     
     response = flask.make_response(html_code)
     return response

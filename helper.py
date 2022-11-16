@@ -88,7 +88,7 @@ def genRosterOverviewHTML(members):
 
 #----------------------------------------------------------------------
 
-def genItemTableHTML(items, is_food, is_admin):
+def genItemTableHTML(items, is_food, is_admin, netid):
     '''
         Create HTML code 
     '''
@@ -138,7 +138,7 @@ def genItemTableHTML(items, is_food, is_admin):
             '<input name="order-box" class="form-check-input" type="checkbox" value="" id="order-check" onclick="updateOrdered(this)">')
         html_code += ('<label class="form-check-label" for="order-check">{0}</label>').format(ordered)
         html_code += ('</div></td>')
-        if is_admin:
+        if is_admin or (netid is item.requesting_user):
             html_code += ('<td><button type="button" class="btn btn-danger btn-sm" onclick="removeItem(this)">Remove</button></td>')
         html_code += ('<td hidden>{0}</td>').format(item.item_id)
 
