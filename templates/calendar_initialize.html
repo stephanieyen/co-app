@@ -128,7 +128,7 @@
               let shift_members_input = ""
               let shift_title_input = $('#update_title').val();
               let shift_type_input = $('#update_type option:selected').text();
-              let shift_time_input = $('#update_date').val() + "T" + $("#update_start_time").val();
+              let shift_time_input = "T" + $("#update_start_time").val();
               if ($('#update_meal') != null) {
                 shift_meal_input = $('#update_meal').val();
               }
@@ -465,15 +465,13 @@
               <input type="time" class="form-control" id="add_end_time">
             </div>
           </div> -->
-
           <!-- shift members -->
           <div class="form-group form-inline">
             <div class="mb-3">
-              <label for="add_members" class="form-label"><br>Shift Members:</label>
-              <input type="text" class="form-control" id="add_members" placeholder="NetID:">
+              <label for="add_members" class="form-label">Shift Members:</label>
+              <input type="text" class="form-control" id="add_members" placeholder="Names:">
             </div>
           </div>
-
         </div>
 
         <!-- submit button -->

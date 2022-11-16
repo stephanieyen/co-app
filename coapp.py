@@ -312,11 +312,16 @@ def calendar_update(coop):
     # shift_recurring = True
     # if data['event_data[shift_recurring]'] == 'false':
     #     shift_recurring = False
+
+    shift_time = old_shift.shift_time[0:10]
+    if data['event_data[shift_time]'] != "": 
+        shift_time = shift_time + data['event_data[shift_time]']
+
     new_shift_vals = [
         data['event_data[shift_name]'],
         data['event_data[shift_type]'],
         data['event_data[shift_item]'],
-        data['event_data[shift_time]'],
+        shift_time,
         old_shift.shift_day,
         old_shift.shift_recurring,
         old_shift.shift_creator,
@@ -373,6 +378,7 @@ def events(coop):
         else:
             data['color'] = "#FFDBE9" # light pink
         event_json.append(data)
+
     return jsonify(event_json)
 
 #----------------------------------------------------------------------
