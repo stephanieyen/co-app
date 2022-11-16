@@ -17,6 +17,7 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-sm-1"></div>
+
     <div class="col-sm-11">
       <!-- Title Row - "Shopping List" -->
       <div class="row">
@@ -30,11 +31,11 @@
       <div class="row">
         <div class="col-sm-3">
           <div class="btn-group">
-            <label class="btn btn-secondary active">
-              <input type="radio" class="btn-check" name="options" id="food-btn" value="Food" autocomplete="off" checked> Food
+            <label class="btn btn-secondary active" id="food-toggle">
+              <input type="radio" class="btn-check" name="options" id="food-btn" autocomplete="off"> Food
             </label>
-            <label class="btn btn-secondary">
-              <input type="radio" class="btn-check" name="options" id="equip-btn" value="Equip" autocomplete="off"> Equipment
+            <label class="btn btn-secondary" id="equip-toggle">
+              <input type="radio" class="btn-check" name="options" id="equip-btn" autocomplete="off"> Equipment
             </label>
           </div>
         </div>
@@ -52,20 +53,22 @@
         </div>
       </div>
 
-      <!-- Buttons -->
       <br>
-        <div class="row">
-          <div class="col-sm-11">
-            <!-- Add Button to trigger modal -->
-            <button type="button" class="btn btn-primary float-end" id="add-item-btn" data-bs-toggle="modal"
-              data-bs-target="#createItemModal">
-              Add Item
-            </button>
+
+      <!-- Button -->
+      <div class="row">
+        <div class="col-sm-11">
+          <!-- Add Button to trigger modal -->
+          <button type="button" class="btn btn-primary float-end" id="add-item-btn" data-bs-toggle="modal"
+            data-bs-target="#createItemModal">
+            Add Item
+          </button>
         </div>
       </div>
-      </div>
-    </div>
-</div>
+
+    </div> <!-- col-sm-11 -->
+  </div> <!-- row -->
+</div> <!-- container-fluid -->
 
 
 <!-- Modal -->
@@ -76,7 +79,8 @@
       <!-- header and close button -->
       <div class="modal-header">
         <h4>Make Your Request!</h4>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </p><button type="button" class="close" data-bs-dismiss="modal"><span aria-hidden="true">&times;</span> <span
+            class="sr-only">close</span></button>
       </div>
 
       <!-- SHOPPING LIST FORM -->
@@ -157,26 +161,10 @@
 
   // refresh page with another get request 
   function refreshList(item_type) {
-    console.log("fetching refreshed list");
-
-    // if (item_type == "Food") {
-    //   console.log("Getting Food")
-    //   request = $.ajax(
-    //     {
-    //         type:'GET',
-    //         url: '/{{coop}}/items/food',
-    //         success: handleResponse,
-    //         failure: function () {
-    //           alert('there was an error while fetching items!');
-    //         }
-    //     }
-    //   );
-    // }
+    // console.log("fetching refreshed list");
 
     if (item_type == "Equipment") {
       console.log("Getting Equip")
-      $('#equip-btn').prop("checked", true);
-      $('#food-btn').prop("checked", false);
       request = $.ajax(
         {
           type: 'GET',
@@ -190,8 +178,6 @@
     }
 
     else {
-      $('#equip-btn').prop("checked", false);
-      $('#food-btn').prop("checked", true);
       request = $.ajax(
         {
           type: 'GET',
@@ -206,48 +192,25 @@
     }
 
 
-    console.log("made request")
+    // console.log("made request")
   }
 
   // show all items whose item type is food
   function toggleFood() {
-    refreshList("Food")
-    // request = $.ajax(
-    //     {
-    //         type:'GET',
-    //         url: '/{{coop}}/items/food',
-    //         // success: handleResponse,
-    //         // failure: function () {
-    //         //   alert('there was an error while fetching items!');
-    //         // }
-    //     }).done(function () 
-    // { 
-    //   handleResponse
-    // }).fail(function () { 
-    //   alert("there was an error while fetching items!")
-    // });;
+    if ($('#equip-toggle').hasClass('active')) {
+      $('#equip-toggle').removeClass('active');
+      $('#food-toggle').addClass('active');
+    }
+    refreshList("Food");
   }
 
   // show all items whose item type is equipment
   function toggleEquipment() {
-    refreshList("Equipment")
-    // console.log("trying to get equipment!")
-    // request = $.ajax(
-    //     {
-    //         type:'GET',
-    //         url: '/{{coop}}/items/equipment',
-
-    //         // success: handleResponse,
-    //         // failure: function () {
-    //         //   alert('there was an error while fetching items!');
-    //         // }
-    //     }).done(function () 
-    // { 
-    //   handleResponse
-    // }).fail(function () { 
-    //   alert("there was an error while fetching items!")
-    // });;
-
+    if ($('#food-toggle').hasClass('active')) {
+      $('#food-toggle').removeClass('active');
+      $('#equip-toggle').addClass('active');
+    }
+    refreshList("Equipment");
   }
 
   // show food type option if applicable in modal
@@ -274,13 +237,9 @@
       food_type = $('#food_type').val();
     }
     let item_name = $('#item_name').val();
-    item_name = item_name.charAt(0).toUpperCase() + item_name.slice(1);
     let item_quantity = $('#item_quantity').val();
-    item_quantity = item_quantity.charAt(0).toUpperCase() + item_quantity.slice(1);
     let item_reason = $('#item_reason').val();
-    item_reason = item_reason.charAt(0).toUpperCase() + item_reason.slice(1);
     let alt_request = $('#alt_request').val();
-    alt_request = alt_request.charAt(0).toUpperCase() + alt_request.slice(1);
     if ($('#for_shift').is(':checked')) {
       var for_shift = true;
     }
@@ -345,23 +304,25 @@
 
     let url = "/{{coop}}/list/delete?id=" + item_id;
 
-    request = $.ajax(
-      {
-        type: 'POST',
-        url: url,
-      }
-    ).done(function (data) {
-      // if (item_type=="Equipment") {
-      //   refreshList("Equipment")
-      // }
-      // else {
-      //   refreshList("Food")
-      // }
-      refreshList("");
-    }).fail(function (jqXHR, textStatus, errorThrown) {
-      alert("Error updating shopping list. Try again!")
-    });
-    // refresh list from deleting from db
+    if (confirm("Are you sure you want to remove this item?") == true) {
+      request = $.ajax(
+        {
+          type: 'POST',
+          url: url,
+        }
+      ).done(function (data) {
+        // if (item_type=="Equipment") {
+        //   refreshList("Equipment")
+        // }
+        // else {
+        //   refreshList("Food")
+        // }
+        refreshList("");
+      }).fail(function (jqXHR, textStatus, errorThrown) {
+        alert("Error updating shopping list. Try again!")
+      });
+      // refresh list from deleting from db
+    }
 
   }
 
@@ -375,12 +336,7 @@
         url: url,
       }
     ).done(function (data) {
-      if ($('#equip-btn').is(':checked')) {
-      refreshList("Equipment");
-      }
-      else {
-        refreshList("");
-      }
+      refreshList("");
     }).fail(function (jqXHR, textStatus, errorThrown) {
       alert("Error updating shopping list. Try again!")
     });
