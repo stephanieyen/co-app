@@ -79,8 +79,7 @@
       <!-- header and close button -->
       <div class="modal-header">
         <h4>Make Your Request!</h4>
-        </p><button type="button" class="close" data-bs-dismiss="modal"><span aria-hidden="true">&times;</span> <span
-            class="sr-only">close</span></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
       <!-- SHOPPING LIST FORM -->
@@ -113,28 +112,23 @@
             <option value="Other">Other</option>
           </select>
         </div>
-        <br>
 
         <div class="form-group">
           <label for="item">Requested Item:</label>
           <input type="text" class="form-control" id="item_name" autocapitalize="words">
         </div>
-        <br>
         <div class="form-group">
           <label for="quantity">Quantity</label>
           <input type="text" class="form-control" id="item_quantity" autocapitalize="words">
         </div>
-        <br>
         <div class="form-group">
           <label for="comments">Reason</label>
           <input type="text" class="form-control" id="item_reason" autocapitalize="sentences">
         </div>
-        <br>
         <div class="form-group">
           <label for="alt_item">Alternate Request</label>
           <input type="text" class="form-control" id="alt_request" autocapitalize="sentences">
         </div>
-        <br>
         <div class="form-check">
           <input type="checkbox" class="form-check-input" id="for_shift" name="for_shift">
           <label class="form-check-label" for="for_shift">For Shift?</label>
@@ -237,9 +231,13 @@
       food_type = $('#food_type').val();
     }
     let item_name = $('#item_name').val();
+    item_name = item_name.charAt(0).toUpperCase() + item_name.slice(1);
     let item_quantity = $('#item_quantity').val();
+    item_quantity = item_quantity.charAt(0).toUpperCase() + item_quantity.slice(1);
     let item_reason = $('#item_reason').val();
+    item_reason = item_reason.charAt(0).toUpperCase() + item_reason.slice(1);
     let alt_request = $('#alt_request').val();
+    alt_request = alt_request.charAt(0).toUpperCase() + alt_request.slice(1);
     if ($('#for_shift').is(':checked')) {
       var for_shift = true;
     }
@@ -269,11 +267,17 @@
       event_data: JSON.stringify(json_event),
       // success: refreshList
     }).done(function (data) {
-      if (item_type == "Equipment") {
-        refreshList("Equipment")
+      // if (item_type == "Equipment") {
+      //   refreshList("Equipment")
+      // }
+      // else {
+      //   refreshList("Food")
+      // }
+      if ($('#equip-toggle').hasClass('active')) {
+          refreshList("Equipment");
       }
-      else {
-        refreshList("Food")
+     else {
+         refreshList("");
       }
     }).fail(function (jqXHR, textStatus, errorThrown) {
       alert("Error updating shopping list. Try again!")
@@ -311,13 +315,12 @@
           url: url,
         }
       ).done(function (data) {
-        // if (item_type=="Equipment") {
-        //   refreshList("Equipment")
-        // }
-        // else {
-        //   refreshList("Food")
-        // }
-        refreshList("");
+        if ($('#equip-toggle').hasClass('active')) {
+          refreshList("Equipment");
+        }
+        else {
+         refreshList("");
+        }
       }).fail(function (jqXHR, textStatus, errorThrown) {
         alert("Error updating shopping list. Try again!")
       });
@@ -336,7 +339,12 @@
         url: url,
       }
     ).done(function (data) {
-      refreshList("");
+      if ($('#equip-toggle').hasClass('active')) {
+        refreshList("Equipment");
+      }
+      else {
+        refreshList("");
+      }
     }).fail(function (jqXHR, textStatus, errorThrown) {
       alert("Error updating shopping list. Try again!")
     });
