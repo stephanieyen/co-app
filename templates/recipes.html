@@ -1,0 +1,89 @@
+<head>
+    <title>Co-App Recipes</title>
+</head>
+
+{% extends "templates/base.html" %}
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-1"></div>
+
+        <div class="col-sm-11">
+      <!-- Title Row - "Shopping List" -->
+            <div class="row">
+             <div class="text-left">
+              <br><h2>Recipes</h2><br>
+             </div>
+            </div>
+    
+        <br>
+
+      <div class="row">
+        <div class="col-sm-11 text-center">
+            <br><h3>Insert Recipes Here</h3><br>
+        </div>
+      </div>
+
+      <br>
+
+      <!-- Add Recipe Button -->
+      <div class="row">
+        <div class="col-sm-11">
+          <!-- Add Button to trigger modal -->
+          <button type="button" class="btn btn-primary float-end" id="add-rec-btn" data-bs-toggle="modal"
+            data-bs-target="#createRecipeModal">
+            Add Recipe
+          </button>
+        </div>
+      </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<!-- #createRecipeModal -->
+<div class="modal fade" id="createRecipeModal" tabindex="-1" role="dialog" aria-labelledby="recModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <!-- header and close button -->
+        <div class="modal-header">
+          <h4>Add Your Recipe!</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+  
+        <!-- RECIPE FORM -->
+        <div class="modal-body">
+  
+          <div class="form-group">
+            <label for="item">Link:</label>
+            <input type="text" class="form-control" id="item_name" autocapitalize="words">
+          </div>
+          <div class="form-group">
+            <label for="quantity">Ingredients:</label>
+            <input type="text" class="form-control" id="item_quantity" autocapitalize="words">
+          </div>
+          <div class="form-group">
+            <label for="comments">Instructions:</label>
+            <input type="text" class="form-control" id="item_reason" autocapitalize="sentences">
+          </div>
+  
+        </div>
+  
+        <!-- submit button -->
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary" id="rec_submit">Submit Recipe</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- <script>
+    'use strict';
+
+    $('document').ready(setup);
+
+</script> -->
+
+{% endblock %}

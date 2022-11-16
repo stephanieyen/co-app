@@ -518,3 +518,14 @@ def list_equipment_items(coop):
     
     response = flask.make_response(html_code)
     return response
+
+#----------------------------------------------------------------------
+
+# Recipes page
+@app.route('/<coop>/recipes', methods=['GET'])
+def recipes(coop):
+    coop_upper = database.get_upper_coop(coop)
+    html = flask.render_template('templates/recipes.html',
+                            coop=coop, coop_upper=coop_upper)
+    response = flask.make_response(html)
+    return response
