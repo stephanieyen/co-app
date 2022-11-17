@@ -350,6 +350,27 @@
     });
   }
 
+  function changeUpvote(i) {
+    console.log("Reached")
+    let item_id = i.parentNode.parentNode.lastChild.innerHTML;
+    let url = "/{{coop}}/list/upvote?id=" + item_id;
+    request = $.ajax(
+      {
+        type: 'POST',
+        url: url,
+      }
+    ).done(function (data) {
+      if ($('#equip-toggle').hasClass('active')) {
+        refreshList("Equipment");
+      }
+      else {
+        refreshList("");
+      }
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+      alert("Error updating shopping list. Try again!")
+    });
+  }
+
   function setup() {
     refreshList("");
 

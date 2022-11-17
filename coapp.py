@@ -125,6 +125,19 @@ def profile_update(coop):
     return json.dumps(new_user.user_name)
 
 #----------------------------------------------------------------------
+
+# Get all shifts for a given user
+@app.route('/<coop>/profile/shifts', methods=['GET'])
+def profile_shifts(coop):
+    netid = auth.authenticate()
+    status, redirect = check_coop(coop)
+    if status == False or status == "Nonexistent":
+        return redirect
+    shifts = database.get_user_shifts(netid)
+    return ""
+    
+
+#----------------------------------------------------------------------
 # Co-Op Roster
 #----------------------------------------------------------------------
 
@@ -265,6 +278,9 @@ def calendar(coop):
     if flask.request.method == 'POST':
         data = flask.request.form
         shift_recurring = True
+        # Turn members into a list
+        members = data['event_data[shift_members]'].split(",")
+        members = [m.strip() for m in members]
         if data['event_data[shift_recurring]'] == 'false':
             shift_recurring = False
         new_shift_vals = [
@@ -275,7 +291,7 @@ def calendar(coop):
             data['event_data[shift_day]'],
             shift_recurring,
             data['event_data[shift_creator]'],
-            [data['event_data[shift_members]']],
+            members,
             coop
         ]
         new_shift = models.Shifts(
@@ -328,6 +344,9 @@ def calendar_update(coop):
     # shift_recurring = True
     # if data['event_data[shift_recurring]'] == 'false':
     #     shift_recurring = False
+    # Turn members into a list
+    members = data['event_data[shift_members]'].split(",")
+    members = [m.strip() for m in members]
 
     shift_time = old_shift.shift_time[0:10]
     if data['event_data[shift_time]'] != "": 
@@ -341,7 +360,7 @@ def calendar_update(coop):
         old_shift.shift_day,
         old_shift.shift_recurring,
         old_shift.shift_creator,
-        [data['event_data[shift_members]']],
+        members,
         old_shift.coop_name
     ]
     # jsdata = request.form['event_data']
@@ -369,7 +388,13 @@ def events(coop):
     for shift in shifts: 
         extendedProps = {}
         extendedProps['type'] = shift.shift_type
-        extendedProps['members'] = shift.shift_members
+        # Format members string to be nicer
+        members_string = ""
+        for member in shift.shift_members:
+            members_string += member + ", "
+        members_string = members_string[:-2]
+        members_string.strip()
+        extendedProps['members'] = members_string
         extendedProps['meal'] = shift.shift_item
         extendedProps['creator'] = shift.shift_creator
 
@@ -418,6 +443,7 @@ def list(coop):
             requesting_user=data['requesting_user'],
             food_type=data['food_type'],
             alt_request=data['alt_request'],
+            upvoted_members=[data['requesting_user']],
             coop_name=coop
         )
         database.add_item(new_item)
@@ -461,9 +487,48 @@ def change_ordered(coop):
         requesting_user=old_item.requesting_user,
         food_type=old_item.food_type,
         alt_request=old_item.alt_request,
+        upvoted_members=old_item.upvoted_members,
         coop_name=coop
     )
-    print(new_item.item_ordered)
+    # print(new_item.item_ordered)
+    database.update_item(item_id, new_item)
+    return ''
+
+#----------------------------------------------------------------------
+
+@app.route('/<coop>/list/upvote', methods=['POST'])
+def change_upvote(coop):
+    ''' 
+        Updates a shift whether an item was ordered after
+        clicking checkbox                   
+    '''
+    netid = auth.authenticate()
+    status, redirect = check_coop(coop)
+    if status == False or status == "Nonexistent":
+        return redirect
+    item_id = flask.request.args.get('id')
+    old_item = database.get_item(item_id)
+    old_upvotes = old_item.upvoted_members
+    if netid in old_upvotes:
+        old_upvotes.remove(netid)
+    else:
+        old_upvotes.append(netid)
+    # Make new item with opposite ordered as old_item
+    new_item = models.ShoppingList(
+        item_id=item_id,
+        item_type=old_item.item_type,
+        item_name=old_item.item_name,
+        item_quantity=old_item.item_quantity,
+        item_ordered=old_item.item_ordered,
+        for_shift = old_item.for_shift,
+        item_reason=old_item.item_reason,
+        requesting_user=old_item.requesting_user,
+        food_type=old_item.food_type,
+        alt_request=old_item.alt_request,
+        upvoted_members=old_upvotes,
+        coop_name=coop
+    )
+    # print(new_item.item_ordered)
     database.update_item(item_id, new_item)
     return ''
 

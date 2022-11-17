@@ -77,6 +77,7 @@ def add_test_shopping(session):
                             requesting_user='amkumar',
                             food_type="Fruit",
                             alt_request="N/A",
+                            upvoted_members=['amkumar'],
                             coop_name='2d')
     session.add(item)
     item = models.ShoppingList(item_type="Food",
@@ -88,6 +89,7 @@ def add_test_shopping(session):
                             requesting_user='sy7',
                             food_type="Condiment",
                             alt_request="Tabasco",
+                            upvoted_members=['sy7'],
                             coop_name='2d')
     session.add(item)
     item = models.ShoppingList(item_type="Food",
@@ -99,6 +101,7 @@ def add_test_shopping(session):
                             requesting_user='petrino',
                             food_type="Special",
                             alt_request="Creamer",
+                            upvoted_members=['petrino'],
                             coop_name='scully')
     session.add(item)
     item = models.ShoppingList(item_type="Equipment",
@@ -110,6 +113,7 @@ def add_test_shopping(session):
                             requesting_user='sarahep',
                             food_type="Item",
                             alt_request="Stick Frying Pan",
+                            upvoted_members=['sarahep'],
                             coop_name='realfood')
     session.add(item)
     item = models.ShoppingList(item_type="Equipment",
@@ -121,6 +125,7 @@ def add_test_shopping(session):
                             requesting_user='thaldiya',
                             food_type="Item",
                             alt_request="Hammer",
+                            upvoted_members=['thaldiya'],
                             coop_name='ifc')
     session.add(item)
     item = models.ShoppingList(item_type="Equipment",
@@ -132,6 +137,7 @@ def add_test_shopping(session):
                             requesting_user='dpw',
                             food_type="Special",
                             alt_request="Laptops",
+                            upvoted_members=['dpw'],
                             coop_name='brown')
     session.add(item)
 # Add test shifts
@@ -144,7 +150,7 @@ def add_test_shifts(session):
                         shift_day=[4],
                         shift_creator='amkumar',
                         shift_members=['amkumar', 'sy7'],
-                        coop_name='brown')
+                        coop_name='2d')
     session.add(shift)
     shift = models.Shifts(shift_name='Brunch',
                         shift_type='Cooking',

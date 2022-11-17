@@ -59,7 +59,6 @@ def get_shifts_for_coop(coop) -> List[models.Shifts]:
     with sqlalchemy.orm.Session(engine) as session:
         coop_shifts = session.query(models.Shifts).filter(
             models.Shifts.coop_name==coop).all()
-        print(coop_shifts)
     return coop_shifts
 #----------------------------------------------------------------------
 # User queries
@@ -77,6 +76,17 @@ def get_user(netid) -> models.Roster:
         user = session.query(models.Roster).filter(
             models.Roster.user_netid == netid).first()
     return user
+
+# Get shifts of user
+def get_user_shifts(netid) -> List[models.Shifts]:
+    with sqlalchemy.orm.Session(engine) as session:
+        shifts = session.query(models.Shifts).all()
+        user_shifts = []
+        for shift in shifts:
+            if netid in shift.shift_members or netid in shift.shift_creator:
+                user_shifts.append(shift)
+    return user_shifts
+
 # Update a user's information
 def update_user(netid, new_user: models.Roster):
     with sqlalchemy.orm.Session(engine) as session:
@@ -129,6 +139,7 @@ def update_item(id, new_item: models.ShoppingList):
                     'requesting_user': new_item.requesting_user,
                     'food_type': new_item.food_type,
                     'alt_request': new_item.alt_request,
+                    'upvoted_members': new_item.upvoted_members,
                     'coop_name': new_item.coop_name
                 }
             )

@@ -102,7 +102,9 @@ def genItemTableHTML(items, is_food, is_admin, netid):
         html_code += ('<th scope="col">Food Type</th>')
     html_code += ('<th scope="col">Qty</th><th scope="col">Comments</th>'
                 '<th scope="col">Alt Item</th><th scope="col">For Shift?</th>'
-                '<th scope="col">Ordered?</th><th scope="col"> </th></tr>')
+                '<th scope="col">Ordered?</th>'
+                '<th scope="col">Upvotes</th>'
+                '</tr>')
     html_code += ('</thead><tbody id="tbody">')
 
     # sort items by food type
@@ -138,6 +140,13 @@ def genItemTableHTML(items, is_food, is_admin, netid):
             '<input name="order-box" class="form-check-input" type="checkbox" value="" id="order-check" onclick="updateOrdered(this)">')
         html_code += ('<label class="form-check-label" for="order-check">{0}</label>').format(ordered)
         html_code += ('</div></td>')
+        upvote_count = str(len(item.upvoted_members))
+        if netid in item.upvoted_members:
+            html_code += ('<td><button type="button" class="btn btn-info btn-sm" onclick="changeUpvote(this)">')
+            html_code += upvote_count + ('</button></td>')
+        else:
+            html_code += ('<td><button type="button" class="btn btn-secondary btn-sm" onclick="changeUpvote(this)">')
+            html_code += upvote_count + ('</button></td>')
         if is_admin or (netid is item.requesting_user):
             html_code += ('<td><button type="button" class="btn btn-danger btn-sm" onclick="removeItem(this)">Remove</button></td>')
         html_code += ('<td hidden>{0}</td>').format(item.item_id)
