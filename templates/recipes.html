@@ -28,7 +28,7 @@
               <div class="carousel-item active">
                 <div class="container">
                   <div class="row">
-                    <div class="col-lg-4 d-none d-lg-block">
+                    <div class="col-lg-4 d-lg-block">
                       <div class="card">
                         <img src="{{ url_for('static',filename='no_image.png') }}" class="card-img-top"
                           alt="No image available" />
@@ -39,7 +39,7 @@
                       </div>
                     </div>
 
-                    <div class="col-lg-4 d-none d-lg-block">
+                    <div class="col-lg-4 d-lg-block">
                       <div class="card">
                         <img src="{{ url_for('static',filename='cookie_pizza.jpg') }}" class="card-img-top"/>
                         <div class="card-body">
@@ -50,7 +50,7 @@
                       </div>
                     </div>
 
-                    <div class="col-lg-4 d-none d-lg-block">
+                    <div class="col-lg-4 d-lg-block">
                       <div class="card">
                         <img src="{{ url_for('static',filename='pad thai.jpg') }}" class="card-img-top"/>
                         <div class="card-body">
@@ -78,7 +78,7 @@
                       </div>
                     </div>
 
-                    <div class="col-lg-4 d-none d-lg-block">
+                    <div class="col-lg-4 d-lg-block">
                       <div class="card">
                         <img src="{{ url_for('static',filename='no_image.png') }}" class="card-img-top"
                           alt="No image available" />
@@ -142,13 +142,20 @@
       <div class="modal-body">
 
         <div class="form-group">
-          <label for="item">Link:</label>
-          <input type="text" class="form-control" id="item_name" autocapitalize="words">
+          <label for="item">Name of recipe:</label>
+          <input type="text" class="form-control" id="item_name" autocapitalize="words" required>
         </div>
+        <br>
+        <div class="form-group">
+          <label for="item_link">Link:</label>
+          <input type="text" class="form-control" id="item_link" autocapitalize="words">
+        </div>
+        <br>
         <div class="form-group">
           <label for="quantity">Ingredients:</label>
           <input type="text" class="form-control" id="item_quantity" autocapitalize="words">
         </div>
+        <br>
         <div class="form-group">
           <label for="comments">Instructions:</label>
           <input type="text" class="form-control" id="item_reason" autocapitalize="sentences">

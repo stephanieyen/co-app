@@ -93,9 +93,9 @@
         $('#profile_name').val("{{user.user_name}}");
         $('#profile_allergies').val("{{user.user_allergies}}");
         if ("{{user.user_admin}}" === "False") {
-            $('#member_status').html('Status: Admin');
-        } else {
             $('#member_status').html('Status: Member');
+        } else {
+            $('#member_status').html('Status: Admin');
         }
         // check correct days 
         let cook_string = "{{user.user_cookday}}";
