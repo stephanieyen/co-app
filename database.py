@@ -80,12 +80,17 @@ def get_user(netid) -> models.Roster:
 # Get shifts of user
 def get_user_shifts(netid) -> List[models.Shifts]:
     with sqlalchemy.orm.Session(engine) as session:
-        shifts = session.query(models.Shifts).all()
-        user_shifts = []
-        for shift in shifts:
-            if netid in shift.shift_members or netid in shift.shift_creator:
-                user_shifts.append(shift)
-    return user_shifts
+        shifts = session.query(models.Shifts).filter(
+            sqlalchemy.or_(
+                models.Shifts.shift_members.contains([netid]),
+                models.Shifts.shift_creator == netid
+            )
+        ).all()
+        # user_shifts = []
+        # for shift in shifts:
+        #     if netid in shift.shift_members or netid in shift.shift_creator:
+        #         user_shifts.append(shift)
+    return shifts
 
 # Update a user's information
 def update_user(netid, new_user: models.Roster):
@@ -141,6 +146,16 @@ def update_item(id, new_item: models.ShoppingList):
                     'alt_request': new_item.alt_request,
                     'upvoted_members': new_item.upvoted_members,
                     'coop_name': new_item.coop_name
+                }
+            )
+        session.commit()
+# Update one field of an item
+def update_item_field(id, field, new_val):
+    with sqlalchemy.orm.Session(engine) as session:
+        session.query(models.ShoppingList).filter(
+            models.ShoppingList.item_id == id).update(
+                {
+                    field: new_val
                 }
             )
         session.commit()

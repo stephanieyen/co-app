@@ -134,6 +134,8 @@ def profile_shifts(coop):
     if status == False or status == "Nonexistent":
         return redirect
     shifts = database.get_user_shifts(netid)
+    # for shift in shifts:
+    #     print(shift.shift_members)
     return ""
     
 
@@ -476,22 +478,7 @@ def change_ordered(coop):
     item_id = flask.request.args.get('id')
     old_item = database.get_item(item_id)
     # Make new item with opposite ordered as old_item
-    new_item = models.ShoppingList(
-        item_id=item_id,
-        item_type=old_item.item_type,
-        item_name=old_item.item_name,
-        item_quantity=old_item.item_quantity,
-        item_ordered=not old_item.item_ordered,
-        for_shift = old_item.for_shift,
-        item_reason=old_item.item_reason,
-        requesting_user=old_item.requesting_user,
-        food_type=old_item.food_type,
-        alt_request=old_item.alt_request,
-        upvoted_members=old_item.upvoted_members,
-        coop_name=coop
-    )
-    # print(new_item.item_ordered)
-    database.update_item(item_id, new_item)
+    database.update_item_field(item_id, "item_ordered", not old_item.item_ordered)
     return ''
 
 #----------------------------------------------------------------------
@@ -513,23 +500,8 @@ def change_upvote(coop):
         old_upvotes.remove(netid)
     else:
         old_upvotes.append(netid)
-    # Make new item with opposite ordered as old_item
-    new_item = models.ShoppingList(
-        item_id=item_id,
-        item_type=old_item.item_type,
-        item_name=old_item.item_name,
-        item_quantity=old_item.item_quantity,
-        item_ordered=old_item.item_ordered,
-        for_shift = old_item.for_shift,
-        item_reason=old_item.item_reason,
-        requesting_user=old_item.requesting_user,
-        food_type=old_item.food_type,
-        alt_request=old_item.alt_request,
-        upvoted_members=old_upvotes,
-        coop_name=coop
-    )
-    # print(new_item.item_ordered)
-    database.update_item(item_id, new_item)
+    # Make new item with new upvotes list
+    database.update_item_field(item_id, "upvoted_members", old_upvotes)
     return ''
 
 #----------------------------------------------------------------------

@@ -1,5 +1,6 @@
 import sqlalchemy.ext.declarative
 import sqlalchemy
+from sqlalchemy.dialects.postgresql import ARRAY
 
 Base = sqlalchemy.ext.declarative.declarative_base()
 
@@ -27,7 +28,7 @@ class ShoppingList (Base):
     requesting_user = sqlalchemy.Column(sqlalchemy.String)
     food_type = sqlalchemy.Column(sqlalchemy.String)
     alt_request = sqlalchemy.Column(sqlalchemy.String)
-    upvoted_members = sqlalchemy.Column(sqlalchemy.ARRAY(sqlalchemy.String))
+    upvoted_members = sqlalchemy.Column(ARRAY(sqlalchemy.String))
     coop_name = sqlalchemy.Column(sqlalchemy.String)
 
 # Shifts table
@@ -41,5 +42,5 @@ class Shifts (Base):
     shift_recurring = sqlalchemy.Column(sqlalchemy.Boolean)
     shift_day = sqlalchemy.Column(sqlalchemy.ARRAY(sqlalchemy.String))
     shift_creator = sqlalchemy.Column(sqlalchemy.String)
-    shift_members = sqlalchemy.Column(sqlalchemy.ARRAY(sqlalchemy.String))
+    shift_members = sqlalchemy.Column(ARRAY(sqlalchemy.String))
     coop_name = sqlalchemy.Column(sqlalchemy.String)
