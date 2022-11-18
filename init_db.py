@@ -150,6 +150,7 @@ def add_test_shifts(session):
                         shift_day=[4],
                         shift_creator='amkumar',
                         shift_members=['amkumar', 'sy7'],
+                        notify_email=False,
                         coop_name='2d')
     session.add(shift)
     shift = models.Shifts(shift_name='Brunch',
@@ -160,6 +161,7 @@ def add_test_shifts(session):
                         shift_day=[0],
                         shift_creator='thaldiya',
                         shift_members=['thaldiya'],
+                        notify_email=False,
                         coop_name='ifc')
     session.add(shift)
 

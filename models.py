@@ -43,4 +43,5 @@ class Shifts (Base):
     shift_day = sqlalchemy.Column(sqlalchemy.ARRAY(sqlalchemy.String))
     shift_creator = sqlalchemy.Column(sqlalchemy.String)
     shift_members = sqlalchemy.Column(ARRAY(sqlalchemy.String))
+    notify_email = sqlalchemy.Column(sqlalchemy.Boolean)
     coop_name = sqlalchemy.Column(sqlalchemy.String)

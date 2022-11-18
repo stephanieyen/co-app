@@ -4,6 +4,7 @@ import sqlalchemy
 import sqlalchemy.orm
 import models
 import helper
+from datetime import datetime, timedelta
 
 # How to use env var for this???
 db_url = 'postgresql://qqoyksvp:4DE2MIUDdxlcY8L66A5aMLj5ze4zaNbF@peanut.db.elephantsql.com/qqoyksvp'
@@ -86,10 +87,6 @@ def get_user_shifts(netid) -> List[models.Shifts]:
                 models.Shifts.shift_creator == netid
             )
         ).all()
-        # user_shifts = []
-        # for shift in shifts:
-        #     if netid in shift.shift_members or netid in shift.shift_creator:
-        #         user_shifts.append(shift)
     return shifts
 
 # Update a user's information
@@ -180,6 +177,22 @@ def get_shift(id) -> models.Shifts:
         shift = session.query(models.Shifts).filter(
             models.Shifts.shift_id == id).first()
     return shift
+# Get shift from id
+def get_shift_notifications():
+    notification_shifts = []
+    tomorrow = (datetime.now() + timedelta(1)).strftime('%Y-%m-%d')
+    tomorrow = str(tomorrow)
+    with sqlalchemy.orm.Session(engine) as session:
+        notification_shifts = session.query(models.Shifts).filter(
+            models.Shifts.shift_time.contains(tomorrow),
+            models.Shifts.notify_email == True
+        ).all()
+    notification_members = []
+    for shift in notification_shifts:
+        for member in shift.shift_members:
+            if member not in notification_members:
+                notification_members.append(member)
+    return notification_members
 # Update a shift's information
 def update_shift(id, new_shift: models.Shifts):
     with sqlalchemy.orm.Session(engine) as session:
@@ -194,6 +207,7 @@ def update_shift(id, new_shift: models.Shifts):
                     'shift_day': new_shift.shift_day,
                     'shift_creator': new_shift.shift_creator,
                     'shift_members': new_shift.shift_members,
+                    'notify_email': new_shift.notify_email,
                     'coop_name': new_shift.coop_name
                 }
             )

@@ -4,33 +4,35 @@ import json
 import models
 import helper
 from flask import jsonify
-# from apscheduler.schedulers.background import BackgroundScheduler
-# from flask_mail import Mail, Message
+from apscheduler.schedulers.background import BackgroundScheduler
+from flask_mail import Mail, Message
 #----------------------------------------------------------------------
 
 app = flask.Flask(__name__, template_folder='.')
-# app.config['MAIL_SERVER']='smtp.gmail.com'
-# app.config['MAIL_PORT'] = 465
-# app.config['MAIL_USERNAME'] = 'coappemail@gmail.com'
-# app.config['MAIL_PASSWORD'] = 'zdymxwgrisdsftkv'
-# app.config['MAIL_USE_TLS'] = False
-# app.config['MAIL_USE_SSL'] = True
-# mail = Mail(app)
-## Sends email every minute (WORKS)
-# def test_mail():
-#     with app.app_context():
-#         email = 'amkumar' + "@princeton.edu"
-#         msg = Message(
-#             body="You've been added to a co-op on co-app! Go log in and update your profile!",
-#             sender="from@example.com",
-#             subject="Co-App Addition!",
-#             recipients=["amkumar@princeton.edu", email])
-#         mail.send(msg)
-#         print("Scheduler is alive!")
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = 'coappemail@gmail.com'
+app.config['MAIL_PASSWORD'] = 'zdymxwgrisdsftkv'
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail = Mail(app)
+# Sends email every minute (WORKS)
+def send_shift_emails():
+    members = database.get_shift_notifications()
+    for member in members:
+        with app.app_context():
+            email = member + "@princeton.edu"
+            msg = Message(
+                body="You have a shift tomorrow for your coop! Check it out!",
+                sender="coappemail@gmail.com",
+                subject="Co-App Addition!",
+                recipients=[email])
+            mail.send(msg)
+            print("Email sent")
 
-# sched = BackgroundScheduler(daemon=True)
-# sched.add_job(test_mail,'interval',minutes=1)
-# sched.start()
+sched = BackgroundScheduler(daemon=True)
+sched.add_job(send_shift_emails,'interval', minutes=1)
+sched.start()
 
 # Import after making auth since auth uses app
 import auth
@@ -280,11 +282,13 @@ def calendar(coop):
     if flask.request.method == 'POST':
         data = flask.request.form
         shift_recurring = True
+        if data['event_data[shift_recurring]'] == 'false':
+            shift_recurring = False
         # Turn members into a list
         members = data['event_data[shift_members]'].split(",")
         members = [m.strip() for m in members]
-        if data['event_data[shift_recurring]'] == 'false':
-            shift_recurring = False
+        # Deal with email notify
+        email_notify = True
         new_shift_vals = [
             data['event_data[shift_name]'],
             data['event_data[shift_type]'],
@@ -294,6 +298,7 @@ def calendar(coop):
             shift_recurring,
             data['event_data[shift_creator]'],
             members,
+            email_notify,
             coop
         ]
         new_shift = models.Shifts(
@@ -305,7 +310,8 @@ def calendar(coop):
             shift_recurring=new_shift_vals[5],
             shift_creator=new_shift_vals[6],
             shift_members=new_shift_vals[7],
-            coop_name=new_shift_vals[8]
+            notify_email=new_shift_vals[8],
+            coop_name=new_shift_vals[9]
         )
         database.add_shift(new_shift)
     netid = auth.authenticate()
@@ -342,18 +348,18 @@ def calendar_update(coop):
     shift_id = flask.request.args.get('id')
     old_shift = database.get_shift(shift_id)
     data = flask.request.form
-    # Once recurring done, do this
-    # shift_recurring = True
-    # if data['event_data[shift_recurring]'] == 'false':
-    #     shift_recurring = False
+
     # Turn members into a list
     members = data['event_data[shift_members]'].split(",")
     members = [m.strip() for m in members]
-
+    # Update time
     shift_time = old_shift.shift_time[0:10]
     if data['event_data[shift_time]'] != "": 
         shift_time = shift_time + data['event_data[shift_time]']
-
+    
+    # GET NEW EMAIL NOTIFY VALUE
+    email_notify = False
+    # UPDATE THIS WHEN EMAIL NOTIFY ADDED
     new_shift_vals = [
         data['event_data[shift_name]'],
         data['event_data[shift_type]'],
@@ -363,6 +369,7 @@ def calendar_update(coop):
         old_shift.shift_recurring,
         old_shift.shift_creator,
         members,
+        email_notify,
         old_shift.coop_name
     ]
     # jsdata = request.form['event_data']
@@ -376,13 +383,14 @@ def calendar_update(coop):
         shift_recurring=new_shift_vals[5],
         shift_creator=new_shift_vals[6],
         shift_members=new_shift_vals[7],
-        coop_name=new_shift_vals[8]
+        notify_email=new_shift_vals[8],
+        coop_name=new_shift_vals[9]
     )
     database.update_shift(shift_id, new_shift)
     return ''
 
 #----------------------------------------------------------------------
-
+# UPDATE THIS WITH EMAIL NOTIFY
 @app.route('/<coop>/events', methods=['GET'])
 def events(coop):
     shifts = database.get_shifts_for_coop(coop)
