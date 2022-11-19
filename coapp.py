@@ -589,12 +589,32 @@ def list_equipment_items(coop):
     return response
 
 #----------------------------------------------------------------------
+# Co-Op Recipes
+#----------------------------------------------------------------------
 
-# Recipes page
 @app.route('/<coop>/recipes', methods=['GET'])
 def recipes(coop):
     coop_upper = database.get_upper_coop(coop)
     html = flask.render_template('templates/recipes.html',
                             coop=coop, coop_upper=coop_upper)
     response = flask.make_response(html)
+    return response
+
+#----------------------------------------------------------------------
+
+@app.route('/<coop>/recipes/carousel', methods=['GET'])
+def recipes_carousel(coop):
+    # get user info
+    netid = auth.authenticate()
+    status, redirect = check_coop(coop)
+    if status == False or status == "Nonexistent":
+        return redirect
+    user = database.get_user(netid)
+
+    # print("GET request for food items")
+    recipes = database.get_recipes_for_coop(coop)
+    print(recipes)
+    html_code = helper.genRecipeGalleryHTML(recipes)
+    
+    response = flask.make_response(html_code)
     return response

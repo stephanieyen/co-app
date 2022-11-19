@@ -156,3 +156,49 @@ def genItemTableHTML(items, is_food, is_admin, netid):
     html_code += ('</tbody></table>')
 
     return html_code
+
+#----------------------------------------------------------------------
+
+def genRecipeGalleryHTML(recipes):
+    # inner
+    html_code = ('<div class="carousel-inner py-4">')
+
+    # row
+    html_code += ('<div class="carousel-item active">')
+    html_code += ('<div class="container">')
+    html_code += ('<div class="row">')
+
+    # single item
+    for recipe in recipes:
+        html_code += ('<div class="col-lg-4 d-lg-block">')
+        html_code += ('<div class="card">')
+
+        img_src = ('\'static\',filename=\'{0}\'').format(recipe.recipe_img)
+        html_code += ('<img src="{{ url_for({0}) }}" class="card-img-top"/>').format(img_src)
+        html_code += ('<div class="card-body">')
+        html_code += ('<h5 class="card-title">{0}</h5>').format(recipe.recipe_name)
+
+        if recipe.recipe_link: 
+            html_code += ('<p class="card-text"><a href="{0}">Link to Recipe</a></p>').format(recipe.recipe_link)
+
+        html_code += ('<a href="#!" class="btn btn-primary">Instructions</a>')
+
+        html_code += ('</div></div></div>')
+    
+    html_code += ('</div></div></div>') # row
+
+    html_code += ('</div>') # inner
+
+    # controls
+    html_code += ('<div class="d-flex justify-content-center mb-4">')
+    html_code += ('<button class="carousel-control-prev position-relative" type="button" data-bs-target="#recipeCarousel" data-bs-slide="prev">')
+    html_code += ('<span class="carousel-control-prev-icon" aria-hidden="true"></span>')
+    html_code += ('<span class="visually-hidden">Previous</span>')
+    html_code += ('</button>')
+    html_code += ('<button class="carousel-control-next position-relative" type="button" data-bs-target="#recipeCarousel" data-bs-slide="next">')
+    html_code += ('<span class="carousel-control-next-icon" aria-hidden="true"></span>')
+    html_code += ('<span class="visually-hidden">Next</span>')
+    html_code += ('</button>')
+    html_code += ('</div>')
+
+    return html_code

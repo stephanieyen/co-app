@@ -66,6 +66,9 @@ def add_test_roster(session):
                         user_choreday='T',
                         coop_name='brown')
     session.add(user)
+
+#----------------------------------------------------------------------
+
 # Add test shopping list
 def add_test_shopping(session):
     item = models.ShoppingList(item_type="Food",
@@ -146,6 +149,9 @@ def add_test_shopping(session):
                             date_added="2022-11-19",
                             coop_name='brown')
     session.add(item)
+
+#----------------------------------------------------------------------
+
 # Add test shifts
 def add_test_shifts(session):
     shift = models.Shifts(shift_name='Going to Wegmans',
@@ -171,6 +177,29 @@ def add_test_shifts(session):
                         coop_name='ifc')
     session.add(shift)
 
+#----------------------------------------------------------------------
+
+# Add test recipes
+def add_test_recipes(session): 
+    recipe = models.Recipes(recipe_author='sy7',
+                            recipe_name='Cookie Pizza', 
+                            recipe_link='https://sallysbakingaddiction.com/chocolate-chip-cookie-pizza/',
+                            recipe_ingredients='See link',
+                            recipe_instructions='See link', 
+                            recipe_img='cookie_pizza.jpg',
+                            coop_name='2d')
+    session.add(recipe)
+    recipe = models.Recipes(recipe_author='amkumar',
+                            recipe_name='the best pad thai you will ever have', 
+                            recipe_link='',
+                            recipe_ingredients='See link',
+                            recipe_instructions='See link', 
+                            recipe_img='pad thai.jpg',
+                            coop_name='2d')
+    session.add(recipe)    
+
+#----------------------------------------------------------------------
+
 def main():
     # Create engine and drop and recreate all tables
     engine = sqlalchemy.create_engine(db_url)
@@ -178,10 +207,11 @@ def main():
     models.Base.metadata.create_all(engine)
 
     with sqlalchemy.orm.Session(engine) as session:
-        # Add fake test daa
+        # Add fake test data
         add_test_roster(session)
         add_test_shopping(session)
         add_test_shifts(session)
+        add_test_recipes(session)
         session.commit()
    
     engine.dispose()

@@ -25,7 +25,7 @@ class ShoppingList (Base):
     item_ordered = sqlalchemy.Column(sqlalchemy.Boolean)
     for_shift = sqlalchemy.Column(sqlalchemy.Boolean)
     item_reason = sqlalchemy.Column(sqlalchemy.String)
-    requesting_user = sqlalchemy.Column(sqlalchemy.String)
+    requesting_user = sqlalchemy.Column(sqlalchemy.String) # item_author
     food_type = sqlalchemy.Column(sqlalchemy.String)
     alt_request = sqlalchemy.Column(sqlalchemy.String)
     upvoted_members = sqlalchemy.Column(ARRAY(sqlalchemy.String))
@@ -42,7 +42,19 @@ class Shifts (Base):
     shift_time = sqlalchemy.Column(sqlalchemy.String)
     shift_recurring = sqlalchemy.Column(sqlalchemy.Boolean)
     shift_day = sqlalchemy.Column(sqlalchemy.ARRAY(sqlalchemy.String))
-    shift_creator = sqlalchemy.Column(sqlalchemy.String)
+    shift_creator = sqlalchemy.Column(sqlalchemy.String) # shift_author
     shift_members = sqlalchemy.Column(ARRAY(sqlalchemy.String))
     notify_email = sqlalchemy.Column(sqlalchemy.Boolean)
+    coop_name = sqlalchemy.Column(sqlalchemy.String)
+
+# Recipes table
+class Recipes(Base): 
+    __tablename__ = 'recipes'
+    recipe_id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True)
+    recipe_author = sqlalchemy.Column(sqlalchemy.String)
+    recipe_name = sqlalchemy.Column(sqlalchemy.String)
+    recipe_link = sqlalchemy.Column(sqlalchemy.String)
+    recipe_ingredients = sqlalchemy.Column(sqlalchemy.String)
+    recipe_instructions = sqlalchemy.Column(sqlalchemy.String)
+    recipe_img = sqlalchemy.Column(sqlalchemy.String)
     coop_name = sqlalchemy.Column(sqlalchemy.String)

@@ -10,7 +10,7 @@
     <div class="col-sm-1"></div>
 
     <div class="col-sm-11">
-      <!-- Title Row - "Shopping List" -->
+      <!-- Title -->
       <div class="row text-left">
         <div class="text-left">
           <br>
@@ -18,16 +18,20 @@
         </div>
       </div>
 
+      <!-- Recipe Gallery Carousel -->
       <div class="row">
-        <div class="col-sm-11 text-center">
+        <div iclass="col-sm-11 text-center">
           <!-- Carousel wrapper -->
           <div id="recipeCarousel" class="carousel slide carousel-dark text-center" data-bs-ride="carousel">
+            <!-- SERVER-SIDE GENERATES RECIPE GALLERY HERE -->
+            
             <!-- Inner -->
             <div class="carousel-inner py-4">
               <!-- Single item -->
               <div class="carousel-item active">
                 <div class="container">
                   <div class="row">
+
                     <div class="col-lg-4 d-lg-block">
                       <div class="card">
                         <img src="{{ url_for('static',filename='no_image.png') }}" class="card-img-top"
@@ -50,21 +54,12 @@
                       </div>
                     </div>
 
-                    <div class="col-lg-4 d-lg-block">
-                      <div class="card">
-                        <img src="{{ url_for('static',filename='pad thai.jpg') }}" class="card-img-top"/>
-                        <div class="card-body">
-                          <h5 class="card-title">the best pad thai you will ever have</h5>
-                          <a href="#!" class="btn btn-primary">Instructions</a>
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
 
               <!-- Single item -->
-              <div class="carousel-item">
+              <!-- <div class="carousel-item">
                 <div class="container">
                   <div class="row">
                     <div class="col-lg-4 col-md-12">
@@ -88,13 +83,24 @@
                         </div>
                       </div>
                     </div>
+
+                    <div class="col-lg-4 d-lg-block">
+                      <div class="card">
+                        <img src="{{ url_for('static',filename='pad thai.jpg') }}" class="card-img-top"/>
+                        <div class="card-body">
+                          <h5 class="card-title">the best pad thai you will ever have</h5>
+                          <a href="#!" class="btn btn-primary">Instructions</a>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </div> -->
 
-            </div>
+            </div> <!-- Inner -->
+            
             <!-- Controls -->
-            <div class="d-flex justify-content-center mb-4">
+            <!-- <div class="d-flex justify-content-center mb-4">
               <button class="carousel-control-prev position-relative" type="button" data-bs-target="#recipeCarousel"
                 data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -105,17 +111,16 @@
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
               </button>
-            </div>
-            <!-- Inner -->
+            </div> -->
+            
           </div>
           <!-- Carousel wrapper -->
         </div>
       </div>
 
-      <!-- Add Recipe Button -->
+      <!-- Add Recipe Button (triggers modal) -->
       <div class="row">
         <div class="col-sm-11">
-          <!-- Add Button to trigger modal -->
           <button type="button" class="btn btn-primary float-end" id="add-rec-btn" data-bs-toggle="modal"
             data-bs-target="#createRecipeModal">
             Add Recipe
@@ -123,9 +128,9 @@
         </div>
       </div>
 
-    </div>
-  </div>
-</div>
+    </div> <!-- col-sm-11 -->
+  </div> <!-- row -->
+</div> <!-- container-fluid -->
 
 <!-- Modal -->
 <!-- #createRecipeModal -->
@@ -171,11 +176,52 @@
   </div>
 </div>
 
-<!-- <script>
+<script>
     'use strict';
+
+    function handleResponse(response) 
+    {
+      console.log(response);
+      $('#recipeCarousel').html(response);
+    }
+
+    let request = null;
+
+    function refreshGallery() 
+    {
+      request = $.ajax(
+        {
+          type: 'GET',
+          url: '/{{coop}}/recipes/carousel',
+          success: handleResponse,
+          failure: function () {
+            alert('There was an error while fetching recipes!');
+          }
+        }
+      );
+    }
+
+    function addRecipe() 
+    {
+      $('#rec_submit').unbind('click');
+      $('#add-rec-btn').unbind('click');
+
+      // extract input from modal
+
+      console.log(json_event)
+
+      // AJAX POST request
+    }
+
+    function setup() 
+    {
+      refreshGallery();
+
+      $("#createRecipeModal").on("click", "#rec_submit", addRecipe);
+    }
 
     $('document').ready(setup);
 
-</script> -->
+</script>
 
 {% endblock %}

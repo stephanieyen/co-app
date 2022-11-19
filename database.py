@@ -135,6 +135,14 @@ def get_shifts_for_week(coop, year, month, day) -> List[models.Shifts]:
             )
         ).all()
     return coop_shifts
+
+# Get the recipes for a co-op
+def get_recipes_for_coop(coop) -> List[models.Recipes]:
+    coop_recipes = []
+    with sqlalchemy.orm.Session(engine) as session:
+        coop_recipes = session.query(models.Recipes).filter(
+            models.Recipes.coop_name==coop).all()
+    return coop_recipes
 #----------------------------------------------------------------------
 # User queries
 #----------------------------------------------------------------------
