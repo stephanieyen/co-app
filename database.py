@@ -61,6 +61,27 @@ def get_shifts_for_coop(coop) -> List[models.Shifts]:
         coop_shifts = session.query(models.Shifts).filter(
             models.Shifts.coop_name==coop).all()
     return coop_shifts
+
+# Get the current shifts for a co-op for a given week
+def get_shifts_for_week(coop, year, month, day) -> List[models.Shifts]:
+    coop_shifts = []
+    startDate = datetime(year, month, day)
+    startOfWeek = startDate.strftime('%Y-%m-%d')
+    endOfWeek = (startDate + timedelta(7)).strftime('%Y-%m-%d')
+    startOfWeek = str(startOfWeek)
+    endOfWeek = str(endOfWeek)
+    with sqlalchemy.orm.Session(engine) as session:
+        coop_shifts = session.query(models.Shifts).filter(
+            sqlalchemy.or_(
+                sqlalchemy.and_(
+                    models.Shifts.coop_name==coop,
+                    models.Shifts.shift_time >= startOfWeek,
+                    models.Shifts.shift_time <= endOfWeek
+                ),
+                models.Shifts.shift_recurring
+            )
+        ).all()
+    return coop_shifts
 #----------------------------------------------------------------------
 # User queries
 #----------------------------------------------------------------------

@@ -214,13 +214,13 @@ def add_user(coop):
                             user_choreday='',
                             coop_name=coop)
         database.add_user(user)
-        # email = netid + "@princeton.edu"
-        # msg = Message(
-        #     body="You've been added to a co-op on co-app! Go log in and update your profile!",
-        #     sender="from@example.com",
-        #     subject="Co-App Addition!",
-        #     recipients=["amkumar@princeton.edu", email])
-        # mail.send(msg)
+        email = netid + "@princeton.edu"
+        msg = Message(
+            body="You've been added to a co-op on co-app! Go log in and update your profile!",
+            sender="coappemail@gmail.com",
+            subject="Co-App Addition!",
+            recipients=["amkumar@princeton.edu", email])
+        mail.send(msg)
     return ''
 
 #----------------------------------------------------------------------
@@ -320,6 +320,9 @@ def calendar(coop):
         return redirect
     user = database.get_user(netid)
     coop_upper = database.get_upper_coop(coop)
+    shifts_of_week = database.get_shifts_for_week(coop, 2022, 11, 20)
+    for shift in shifts_of_week:
+        print(shift.shift_name)
     html_code = flask.render_template('templates/calendar_initialize.html',
                 coop=coop, coop_upper=coop_upper, user=user)
     response = flask.make_response(html_code)
