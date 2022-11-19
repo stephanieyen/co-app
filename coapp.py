@@ -322,9 +322,9 @@ def calendar(coop):
         return redirect
     user = database.get_user(netid)
     coop_upper = database.get_upper_coop(coop)
-    shifts_of_week = database.get_shifts_for_week(coop, 2022, 11, 20)
-    for shift in shifts_of_week:
-        print(shift.shift_name)
+    # shifts_of_week = database.get_user_shifts('amkumar')
+    # for shift in shifts_of_week:
+    #     print(shift.shift_name)
     html_code = flask.render_template('templates/calendar_initialize.html',
                 coop=coop, coop_upper=coop_upper, user=user)
     response = flask.make_response(html_code)

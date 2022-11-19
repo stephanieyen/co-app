@@ -154,11 +154,16 @@ def get_user(netid) -> models.Roster:
 
 # Get shifts of user
 def get_user_shifts(netid) -> List[models.Shifts]:
+    today = str(datetime.now().strftime('%Y-%m-%d'))
     with sqlalchemy.orm.Session(engine) as session:
         shifts = session.query(models.Shifts).filter(
             sqlalchemy.or_(
                 models.Shifts.shift_members.contains([netid]),
                 models.Shifts.shift_creator == netid
+            ),
+            sqlalchemy.or_(
+                models.Shifts.shift_time >= today,
+                models.Shifts.shift_recurring
             )
         ).all()
     return shifts
