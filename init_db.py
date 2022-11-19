@@ -78,6 +78,7 @@ def add_test_shopping(session):
                             food_type="Fruit",
                             alt_request="N/A",
                             upvoted_members=['amkumar'],
+                            date_added="2022-11-19",
                             coop_name='2d')
     session.add(item)
     item = models.ShoppingList(item_type="Food",
@@ -90,6 +91,7 @@ def add_test_shopping(session):
                             food_type="Condiment",
                             alt_request="Tabasco",
                             upvoted_members=['sy7'],
+                            date_added="2022-11-21",
                             coop_name='2d')
     session.add(item)
     item = models.ShoppingList(item_type="Food",
@@ -102,6 +104,7 @@ def add_test_shopping(session):
                             food_type="Special",
                             alt_request="Creamer",
                             upvoted_members=['petrino'],
+                            date_added="2022-11-24",
                             coop_name='scully')
     session.add(item)
     item = models.ShoppingList(item_type="Equipment",
@@ -114,6 +117,7 @@ def add_test_shopping(session):
                             food_type="Item",
                             alt_request="Stick Frying Pan",
                             upvoted_members=['sarahep'],
+                            date_added="2022-11-18",
                             coop_name='realfood')
     session.add(item)
     item = models.ShoppingList(item_type="Equipment",
@@ -126,6 +130,7 @@ def add_test_shopping(session):
                             food_type="Item",
                             alt_request="Hammer",
                             upvoted_members=['thaldiya'],
+                            date_added="2022-11-19",
                             coop_name='ifc')
     session.add(item)
     item = models.ShoppingList(item_type="Equipment",
@@ -138,6 +143,7 @@ def add_test_shopping(session):
                             food_type="Special",
                             alt_request="Laptops",
                             upvoted_members=['dpw'],
+                            date_added="2022-11-19",
                             coop_name='brown')
     session.add(item)
 # Add test shifts

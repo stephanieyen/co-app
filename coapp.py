@@ -6,6 +6,8 @@ import helper
 from flask import jsonify
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask_mail import Mail, Message
+from datetime import datetime, timedelta
+
 #----------------------------------------------------------------------
 
 app = flask.Flask(__name__, template_folder='.')
@@ -445,7 +447,7 @@ def list(coop):
         data = json.loads(flask.request.form.to_dict()['event_data'])
 
         # What to display for "For Shift" - Yes/No
-
+        today = str(datetime.now().strftime('%Y-%m-%d'))
         new_item = models.ShoppingList(
             item_type=data['item_type'],
             item_name=data['item_name'],
@@ -457,6 +459,7 @@ def list(coop):
             food_type=data['food_type'],
             alt_request=data['alt_request'],
             upvoted_members=[data['requesting_user']],
+            date_added=today,
             coop_name=coop
         )
         database.add_item(new_item)

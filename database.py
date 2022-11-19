@@ -54,6 +54,59 @@ def get_equipment_list_for_coop(coop) -> List[models.ShoppingList]:
             ).all()
     return coop_shopping
 
+# Get the current shopping list for a co-op within 7 days of the passed in date
+def get_shopping_for_week(coop, year, month, day) -> List[models.ShoppingList]:
+    coop_shopping = []
+    startDate = datetime(year, month, day)
+    startOfWeek = startDate.strftime('%Y-%m-%d')
+    endOfWeek = (startDate + timedelta(7)).strftime('%Y-%m-%d')
+    startOfWeek = str(startOfWeek)
+    endOfWeek = str(endOfWeek)
+    with sqlalchemy.orm.Session(engine) as session:
+        coop_shopping = session.query(models.ShoppingList).filter(
+            models.ShoppingList.coop_name==coop,
+            models.ShoppingList.date_added >= startOfWeek,
+            models.ShoppingList.date_added <= endOfWeek
+        ).all()
+    return coop_shopping
+
+def get_food_list_for_week(coop, year, month, day) -> List[models.ShoppingList]:
+    coop_shopping = []
+    startDate = datetime(year, month, day)
+    startOfWeek = startDate.strftime('%Y-%m-%d')
+    endOfWeek = (startDate + timedelta(7)).strftime('%Y-%m-%d')
+    startOfWeek = str(startOfWeek)
+    endOfWeek = str(endOfWeek)
+    with sqlalchemy.orm.Session(engine) as session:
+        coop_shopping = session.query(models.ShoppingList).filter(
+            models.ShoppingList.coop_name==coop,
+            models.ShoppingList.item_type=="Food",
+            models.ShoppingList.date_added >= startOfWeek,
+            models.ShoppingList.date_added <= endOfWeek
+        ).order_by(
+            models.ShoppingList.food_type.desc(),
+            models.ShoppingList.item_name
+        ).all()
+    return coop_shopping
+
+def get_equipment_list_for_week(coop, year, month, day) -> List[models.ShoppingList]:
+    coop_shopping = []
+    startDate = datetime(year, month, day)
+    startOfWeek = startDate.strftime('%Y-%m-%d')
+    endOfWeek = (startDate + timedelta(7)).strftime('%Y-%m-%d')
+    startOfWeek = str(startOfWeek)
+    endOfWeek = str(endOfWeek)
+    with sqlalchemy.orm.Session(engine) as session:
+        coop_shopping = session.query(models.ShoppingList).filter(
+            models.ShoppingList.coop_name==coop,
+            models.ShoppingList.item_type=="Equipment",
+            models.ShoppingList.date_added >= startOfWeek,
+            models.ShoppingList.date_added <= endOfWeek
+        ).order_by(
+            models.ShoppingList.item_name
+        ).all()
+    return coop_shopping
+
 # Get the current shifts for a co-op
 def get_shifts_for_coop(coop) -> List[models.Shifts]:
     coop_shifts = []
@@ -163,6 +216,7 @@ def update_item(id, new_item: models.ShoppingList):
                     'food_type': new_item.food_type,
                     'alt_request': new_item.alt_request,
                     'upvoted_members': new_item.upvoted_members,
+                    'date_added': new_item.date_added,
                     'coop_name': new_item.coop_name
                 }
             )
