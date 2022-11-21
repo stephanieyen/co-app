@@ -724,8 +724,8 @@ A HORIZONTAL event
     z-index: 1; /* container inner z-index's because <tr>s can't do it */
   }
 .fc .fc-daygrid-day.fc-day-today {
-      background-color: #77889970;
-      background-color: var(--fc-today-bg-color, #77889970);
+      background-color: #f0f7b960;
+      background-color: var(--fc-today-bg-color, #f0f7b960);
     }
 .fc .fc-daygrid-day-frame {
     position: relative;

@@ -118,13 +118,13 @@ def get_shifts_for_coop(coop) -> List[models.Shifts]:
     return coop_shifts
 
 # Get the current shifts for a co-op for a given week
-def get_shifts_for_week(coop, year, month, day) -> List[models.Shifts]:
+def get_shifts_for_week(coop, startDate, endDate) -> List[models.Shifts]:
     coop_shifts = []
-    startDate = datetime(year, month, day)
-    startOfWeek = startDate.strftime('%Y-%m-%d')
-    endOfWeek = (startDate + timedelta(7)).strftime('%Y-%m-%d')
-    startOfWeek = str(startOfWeek)
-    endOfWeek = str(endOfWeek)
+    # startDate = datetime(year, month, day)
+    # startOfWeek = startDate.strftime('%Y-%m-%d')
+    # endOfWeek = (startDate + timedelta(7)).strftime('%Y-%m-%d')
+    startOfWeek = str(startDate)
+    endOfWeek = str(endDate)
     with sqlalchemy.orm.Session(engine) as session:
         coop_shifts = session.query(models.Shifts).filter(
             sqlalchemy.or_(

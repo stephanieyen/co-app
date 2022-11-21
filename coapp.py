@@ -391,7 +391,10 @@ def calendar_update(coop):
 #----------------------------------------------------------------------
 @app.route('/<coop>/events', methods=['GET'])
 def events(coop):
-    shifts = database.get_shifts_for_coop(coop)
+    start_date = flask.request.args.get('start')[0:10]
+    end_date = flask.request.args.get('end')[0:10]
+
+    shifts = database.get_shifts_for_week(coop, start_date, end_date)
     event_json = []
     for shift in shifts: 
         extendedProps = {}
