@@ -181,7 +181,9 @@ def genRecipeGalleryHTML(recipes):
         if recipe.recipe_link: 
             html_code += ('<p class="card-text"><a href="{0}">Link to Recipe</a></p>').format(recipe.recipe_link)
 
-        html_code += ('<a href="#!" class="btn btn-primary">Instructions</a>')
+        # html_code += ('<a href="#!" class="btn btn-primary">Instructions</a>')
+        html_code += ('<button type="button" class="btn btn-primary float-end" id="view_instr-btn" data-bs-toggle="modal" data-bs-target="#viewInstructionsModal">')
+        html_code += ('Instructions </button>')
 
         html_code += ('</div></div></div>')
     
