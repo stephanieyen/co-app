@@ -24,6 +24,7 @@ def add_test_roster(session):
                         user_admin=True,
                         user_cookday='M W F',
                         user_choreday='M',
+                        notify_email = True,
                         coop_name='2d')
     session.add(user)
     user = models.Roster(user_netid='sy7',
@@ -32,6 +33,7 @@ def add_test_roster(session):
                         user_admin=True,
                         user_cookday='T W F',
                         user_choreday='T',
+                        notify_email = False,
                         coop_name='2d')
     session.add(user)
     user = models.Roster(user_netid='petrino',
@@ -40,6 +42,7 @@ def add_test_roster(session):
                         user_admin=True,
                         user_cookday='T Th Sat Sun',
                         user_choreday='T',
+                        notify_email = False,
                         coop_name='scully')
     session.add(user)
     user = models.Roster(user_netid='sarahep',
@@ -48,6 +51,7 @@ def add_test_roster(session):
                         user_admin=True,
                         user_cookday='M W F Sun',
                         user_choreday='M',
+                        notify_email = False,
                         coop_name='realfood')
     session.add(user)
     user = models.Roster(user_netid='thaldiya',
@@ -56,6 +60,7 @@ def add_test_roster(session):
                         user_admin=True,
                         user_cookday='M T Th F',
                         user_choreday='M',
+                        notify_email = False,
                         coop_name='ifc')
     session.add(user)
     user = models.Roster(user_netid='dpw',
@@ -64,6 +69,7 @@ def add_test_roster(session):
                         user_admin=True,
                         user_cookday='T W F',
                         user_choreday='T',
+                        notify_email = False,
                         coop_name='brown')
     session.add(user)
 
@@ -162,7 +168,6 @@ def add_test_shifts(session):
                         shift_day=[4],
                         shift_creator='amkumar',
                         shift_members=['amkumar', 'sy7'],
-                        notify_email=False,
                         coop_name='2d')
     session.add(shift)
     shift = models.Shifts(shift_name='Brunch',
@@ -173,7 +178,6 @@ def add_test_shifts(session):
                         shift_day=[0],
                         shift_creator='thaldiya',
                         shift_members=['thaldiya'],
-                        notify_email=False,
                         coop_name='ifc')
     session.add(shift)
 

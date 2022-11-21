@@ -20,6 +20,7 @@ app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
 # Sends email every minute (WORKS)
 def send_shift_emails():
+    print("reached")
     members = database.get_shift_notifications()
     for member in members:
         with app.app_context():
@@ -123,6 +124,7 @@ def profile_update(coop):
         user_admin=old_user.user_admin,
         user_cookday=cookday,
         user_choreday=choreday,
+        notify_email = old_user.notify_email,
         coop_name=old_user.coop_name
     )
     database.update_user(netid, new_user)
@@ -267,6 +269,7 @@ def make_admin(coop):
         user_admin= True,
         user_cookday=old_user.user_cookday,
         user_choreday=old_user.user_choreday,
+        notify_email = old_user.notify_email,
         coop_name=old_user.coop_name
     )
     database.update_user(user_id, new_user)
@@ -289,8 +292,6 @@ def calendar(coop):
         # Turn members into a list
         members = data['event_data[shift_members]'].split(",")
         members = [m.strip() for m in members]
-        # Deal with email notify
-        email_notify = True
         new_shift_vals = [
             data['event_data[shift_name]'],
             data['event_data[shift_type]'],
@@ -300,7 +301,6 @@ def calendar(coop):
             shift_recurring,
             data['event_data[shift_creator]'],
             members,
-            email_notify,
             coop
         ]
         new_shift = models.Shifts(
@@ -312,8 +312,7 @@ def calendar(coop):
             shift_recurring=new_shift_vals[5],
             shift_creator=new_shift_vals[6],
             shift_members=new_shift_vals[7],
-            notify_email=new_shift_vals[8],
-            coop_name=new_shift_vals[9]
+            coop_name=new_shift_vals[8]
         )
         database.add_shift(new_shift)
     netid = auth.authenticate()
@@ -362,9 +361,6 @@ def calendar_update(coop):
     if data['event_data[shift_time]'] != "": 
         shift_time = shift_time + data['event_data[shift_time]']
     
-    # GET NEW EMAIL NOTIFY VALUE
-    email_notify = False
-    # UPDATE THIS WHEN EMAIL NOTIFY ADDED
     new_shift_vals = [
         data['event_data[shift_name]'],
         data['event_data[shift_type]'],
@@ -374,7 +370,6 @@ def calendar_update(coop):
         old_shift.shift_recurring,
         old_shift.shift_creator,
         members,
-        email_notify,
         old_shift.coop_name
     ]
     # jsdata = request.form['event_data']
@@ -388,14 +383,12 @@ def calendar_update(coop):
         shift_recurring=new_shift_vals[5],
         shift_creator=new_shift_vals[6],
         shift_members=new_shift_vals[7],
-        notify_email=new_shift_vals[8],
-        coop_name=new_shift_vals[9]
+        coop_name=new_shift_vals[8]
     )
     database.update_shift(shift_id, new_shift)
     return ''
 
 #----------------------------------------------------------------------
-# UPDATE THIS WITH EMAIL NOTIFY
 @app.route('/<coop>/events', methods=['GET'])
 def events(coop):
     shifts = database.get_shifts_for_coop(coop)

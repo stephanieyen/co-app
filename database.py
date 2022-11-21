@@ -22,7 +22,9 @@ def get_roster_for_coop(coop) -> List[models.Roster]:
     coop_roster = []
     with sqlalchemy.orm.Session(engine) as session:
         coop_roster = session.query(models.Roster).filter(
-            models.Roster.coop_name==coop).order_by(models.Roster.user_name.desc()).all()
+            models.Roster.coop_name==coop).order_by(
+                models.Roster.user_name.desc()
+            ).all()
     return coop_roster
 
 # Get the current shopping list for a co-op
@@ -188,6 +190,7 @@ def update_user(netid, new_user: models.Roster):
                     'user_admin': new_user.user_admin,
                     'user_cookday': new_user.user_cookday,
                     'user_choreday': new_user.user_choreday,
+                    'notify_email': new_user.notify_email,
                     'coop_name': new_user.coop_name,
                 }
             )
@@ -272,14 +275,19 @@ def get_shift_notifications():
     tomorrow = str(tomorrow)
     with sqlalchemy.orm.Session(engine) as session:
         notification_shifts = session.query(models.Shifts).filter(
-            models.Shifts.shift_time.contains(tomorrow),
-            models.Shifts.notify_email == True
+            models.Shifts.shift_time.contains(tomorrow)
         ).all()
     notification_members = []
     for shift in notification_shifts:
         for member in shift.shift_members:
             if member not in notification_members:
-                notification_members.append(member)
+                user = get_user(member)
+                if user.notify_email:
+                    notification_members.append(member)
+        if shift.shift_creator not in notification_members:
+            user = get_user(shift.shift_creator)
+            if shift.shift_creator.notify_email:
+                notification_members.append(shift.shift_creator)
     return notification_members
 # Update a shift's information
 def update_shift(id, new_shift: models.Shifts):
@@ -295,7 +303,6 @@ def update_shift(id, new_shift: models.Shifts):
                     'shift_day': new_shift.shift_day,
                     'shift_creator': new_shift.shift_creator,
                     'shift_members': new_shift.shift_members,
-                    'notify_email': new_shift.notify_email,
                     'coop_name': new_shift.coop_name
                 }
             )

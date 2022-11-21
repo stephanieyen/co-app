@@ -13,6 +13,7 @@ class Roster (Base):
     user_admin = sqlalchemy.Column(sqlalchemy.Boolean)
     user_cookday = sqlalchemy.Column(sqlalchemy.String)
     user_choreday = sqlalchemy.Column(sqlalchemy.String)
+    notify_email = sqlalchemy.Column(sqlalchemy.Boolean)
     coop_name = sqlalchemy.Column(sqlalchemy.String)
 
 # Shopping list table
@@ -44,7 +45,6 @@ class Shifts (Base):
     shift_day = sqlalchemy.Column(sqlalchemy.ARRAY(sqlalchemy.String))
     shift_creator = sqlalchemy.Column(sqlalchemy.String) # shift_author
     shift_members = sqlalchemy.Column(ARRAY(sqlalchemy.String))
-    notify_email = sqlalchemy.Column(sqlalchemy.Boolean)
     coop_name = sqlalchemy.Column(sqlalchemy.String)
 
 # Recipes table
