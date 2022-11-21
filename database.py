@@ -314,6 +314,13 @@ def delete_shift(id):
             models.Shifts.shift_id == id).delete()
         session.commit()
 #----------------------------------------------------------------------
+# Recipe queries
+#----------------------------------------------------------------------
+def add_recipe(recipe: models.Recipes):
+    with sqlalchemy.orm.Session(engine) as session:
+        session.add(recipe)
+        session.commit()
+#----------------------------------------------------------------------
 
 # Unit testing for these
 def main():

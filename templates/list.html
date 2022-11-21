@@ -255,14 +255,7 @@
       dataType: 'json',
       contentType: 'application/json',
       event_data: JSON.stringify(json_event),
-      // success: refreshList
     }).done(function (data) {
-      // if (item_type == "Equipment") {
-      //   refreshList("Equipment")
-      // }
-      // else {
-      //   refreshList("Food")
-      // }
       if ($('#equip-toggle').hasClass('active')) {
           refreshList("Equipment");
       }
@@ -273,7 +266,6 @@
       alert("Error updating shopping list. Try again!")
     });
 
-    // refreshList()
 
     // hide modal
     $('#createItemModal').modal('hide');

@@ -585,8 +585,24 @@ def list_equipment_items(coop):
 # Co-Op Recipes
 #----------------------------------------------------------------------
 
-@app.route('/<coop>/recipes', methods=['GET'])
+@app.route('/<coop>/recipes', methods=['GET','POST'])
 def recipes(coop):
+
+    if flask.request.method == 'POST':
+        data = json.loads(flask.request.form.to_dict()['event_data'])
+
+        new_recipe = models.Recipes(
+            recipe_author=data['recipe_author'],
+            recipe_name=data['recipe_name'],
+            recipe_link=data['recipe_link'],
+            recipe_ingredients=data['recipe_ingredients'],
+            recipe_instructions=data['recipe_instructions'],
+            recipe_img=data['recipe_img'],
+            coop_name=coop
+        )
+        print("new rec")
+        print(new_recipe.recipe_name)
+        database.add_recipe(new_recipe)
 
      # get user info
     netid = auth.authenticate()
@@ -605,20 +621,22 @@ def recipes(coop):
 
 @app.route('/<coop>/recipes/carousel', methods=['GET', 'POST'])
 def recipes_carousel(coop):
-    if flask.request.method == 'POST':
-        data = json.loads(flask.request.form.to_dict()['event_data'])
+    # if flask.request.method == 'POST':
+    #     data = json.loads(flask.request.form.to_dict()['event_data'])
 
-        # What to display for "For Shift" - Yes/No
-        new_recipe = models.Recipes(
-            recipe_author=data['recipe_author'],
-            recipe_name=data['recipe_name'],
-            recipe_link=data['recipe_link'],
-            recipe_ingredients=data['recipe_ingredients'],
-            recipe_instructions=data['recipe_instructions'],
-            recipe_img=data['recipe_img'],
-            coop_name=coop
-        )
-        database.add_item(new_recipe)
+    #     # What to display for "For Shift" - Yes/No
+    #     new_recipe = models.Recipes(
+    #         recipe_author=data['recipe_author'],
+    #         recipe_name=data['recipe_name'],
+    #         recipe_link=data['recipe_link'],
+    #         recipe_ingredients=data['recipe_ingredients'],
+    #         recipe_instructions=data['recipe_instructions'],
+    #         recipe_img=data['recipe_img'],
+    #         coop_name=coop
+    #     )
+    #     print("new rec")
+    #     print(new_recipe.recipe_name)
+    #     database.add_recipe(new_recipe)
 
 
     # get user info
@@ -628,10 +646,10 @@ def recipes_carousel(coop):
         return redirect
     user = database.get_user(netid)
 
-    # print("GET request for food items")
     recipes = database.get_recipes_for_coop(coop)
+    print("recipes from DB")
     print(recipes)
     html_code = helper.genRecipeGalleryHTML(recipes)
     
-    response = flask.make_response(html_code, user=user)
+    response = flask.make_response(html_code)
     return response

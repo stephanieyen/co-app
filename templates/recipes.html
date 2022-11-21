@@ -209,29 +209,31 @@
     let recipe_name = $('#recipe_name').val();
     let recipe_link = $('#recipe_link').val();
     let recipe_ingredients = $('#recipe_ingredients').val();
-    let recipe_instructions= $('#item_reason').val();
+    let recipe_instructions= $('#recipe_instructions').val();
 
     // AJAX update database
     var json_event = {
       "recipe_author": "{{user.user_netid}}",
       "recipe_name": recipe_name,
       "recipe_link": recipe_link,
-      "recipe_ingredients": recipe_instructions,
+      "recipe_ingredients": recipe_ingredients,
+      "recipe_instructions": recipe_instructions,
       "recipe_img": ""
     };
   
     console.log(json_event)
 
     // AJAX POST request
-    $.post("/<coop>/recipes/carousel", {
+    $.post("/<coop>/recipes", {
       dataType: 'json',
       contentType: 'application/json',
       event_data: JSON.stringify(json_event),
       // success: refresh gallery
     }).done(function (data) {
+        console.log("success")
         refreshGallery();
     }).fail(function (jqXHR, textStatus, errorThrown) {
-      alert("Error updating shopping list. Try again!")
+      alert("Error adding recipe. Try again!")
     });
 
     // hide modal
