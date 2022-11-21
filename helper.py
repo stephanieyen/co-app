@@ -179,13 +179,24 @@ def genRecipeGalleryHTML(recipes):
         html_code += ('<h5 class="card-title">{0}</h5>').format(recipe.recipe_name)
 
         if recipe.recipe_link: 
-            html_code += ('<p class="card-text"><a href="{0}">Link to Recipe</a></p>').format(recipe.recipe_link)
+            html_code += ('<p class="card-text"><a href="{0}" target="_blank">Link to Recipe</a></p>').format(recipe.recipe_link)
 
         # html_code += ('<a href="#!" class="btn btn-primary">Instructions</a>')
-        html_code += ('<button type="button" class="btn btn-primary float-end" id="view_instr-btn" data-bs-toggle="modal" data-bs-target="#viewInstructionsModal">')
+        html_code += ('<button type="button" class="btn btn-primary float-end" id="view_instr-btn" data-bs-toggle="modal" data-bs-target="#viewInstructionsModal{0}">').format(recipe.recipe_id)
         html_code += ('Instructions </button>')
 
         html_code += ('</div></div></div>')
+
+        # modal for each recipe's instructions
+        html_code += ('<div class="modal fade" id="viewInstructionsModal{0}" tabindex="-1" role="dialog" aria-labelledby="recModalLabel">').format(recipe.recipe_id)
+        html_code += ('<div class="modal-dialog" role="document">')
+        html_code += ('<div class="modal-content">')
+        html_code += ('<div class="modal-header"><h4>How To Make {0}!</h4>').format(recipe.recipe_name)
+        html_code += ('<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>')
+        html_code += ('<div class="modal-body">')
+        html_code += ('<h5>Ingredients:</h5><p>{0}</p><hr>').format(recipe.recipe_ingredients)
+        html_code += ('<h5>Instructions:</h5><p>{0}</p>').format(recipe.recipe_instructions)
+        html_code += ('</div></div></div></div>')
     
     html_code += ('</div></div></div>') # row
 
@@ -202,5 +213,6 @@ def genRecipeGalleryHTML(recipes):
     html_code += ('<span class="visually-hidden">Next</span>')
     html_code += ('</button>')
     html_code += ('</div>')
+
 
     return html_code
