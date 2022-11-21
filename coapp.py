@@ -587,9 +587,17 @@ def list_equipment_items(coop):
 
 @app.route('/<coop>/recipes', methods=['GET'])
 def recipes(coop):
+
+     # get user info
+    netid = auth.authenticate()
+    status, redirect = check_coop(coop)
+    if status == False or status == "Nonexistent":
+        return redirect
+    user = database.get_user(netid)
+
     coop_upper = database.get_upper_coop(coop)
     html = flask.render_template('templates/recipes.html',
-                            coop=coop, coop_upper=coop_upper)
+                            coop=coop, coop_upper=coop_upper, user=user)
     response = flask.make_response(html)
     return response
 
