@@ -550,8 +550,11 @@ def list_food_items(coop):
         return redirect
     user = database.get_user(netid)
 
+    start_date = flask.request.args.get('startDate')
+    end_date = flask.request.args.get('endDate')
+
     # print("GET request for food items")
-    items = database.get_food_list_for_coop(coop)
+    items = database.get_food_list_for_week(coop, start_date, end_date)
     # for item in items:
     #         print(item.item_name)
 
@@ -572,8 +575,11 @@ def list_equipment_items(coop):
         return redirect
     user = database.get_user(netid)
 
+    start_date = flask.request.args.get('startDate')
+    end_date = flask.request.args.get('endDate')
+
     # print("GET request for equipment items")
-    items = database.get_equipment_list_for_coop(coop)
+    items = database.get_equipment_list_for_week(coop, start_date, end_date)
     # for item in items:
     #         print(item.item_name)
 

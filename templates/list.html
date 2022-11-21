@@ -20,13 +20,23 @@
 
       <!-- Toggle Buttons (Food/Equipment) -->
       <div class="row">
-        <div class="col-sm-3">
+        <div class="col-sm-9 float-start">
           <div class="btn-group">
             <label class="btn btn-secondary active" id="food-toggle">
               <input type="radio" class="btn-check" name="options" id="food-btn" autocomplete="off"> Food
             </label>
             <label class="btn btn-secondary" id="equip-toggle">
               <input type="radio" class="btn-check" name="options" id="equip-btn" autocomplete="off"> Equipment
+            </label>
+          </div>
+        </div>
+        <div class="col-sm-3 float-end">
+          <div class="btn-group">
+            <label class="btn btn-secondary" id="last-week-toggle">
+              <input type="radio" class="btn-check" name="options" id="last-week" autocomplete="off"> Last Week
+            </label>
+            <label class="btn btn-secondary active" id="this-week-toggle">
+              <input type="radio" class="btn-check" name="options" id="this-week" autocomplete="off"> This Week
             </label>
           </div>
         </div>
@@ -146,13 +156,19 @@
   // refresh page with another get request 
   function refreshList(item_type) {
     // console.log("fetching refreshed list");
+    var curr = new Date; // get date for week
+    var start = getDate()
+    var end = start + 6;
+    var startDate = new Date(curr.setDate(start)).toISOString().substring(0, 10);
+    var endDate = new Date(curr.setDate(end)).toISOString().substring(0, 10);
+
 
     if (item_type == "Equipment") {
       console.log("Getting Equip")
       request = $.ajax(
         {
           type: 'GET',
-          url: '/{{coop}}/items/equipment',
+          url: '/{{coop}}/items/equipment?startDate=' + startDate + '&endDate=' + endDate,
           success: handleResponse,
           failure: function () {
             alert('there was an error while fetching items!');
@@ -165,7 +181,7 @@
       request = $.ajax(
         {
           type: 'GET',
-          url: '/{{coop}}/items/food',
+          url: '/{{coop}}/items/food?startDate=' + startDate + '&endDate=' + endDate,
           success: handleResponse,
           failure: function () {
             alert('there was an error while fetching items!');
@@ -174,8 +190,6 @@
       );
 
     }
-
-
     // console.log("made request")
   }
 
@@ -186,6 +200,42 @@
       $('#food-toggle').addClass('active');
     }
     refreshList("Food");
+  }
+
+  function getDate() {
+    var curr = new Date; // get current date
+    if ($('#last-week-toggle').hasClass('active')) {
+      var first = curr.getDate() - curr.getDay() - 7; // First day is the day of the month - the day of the week
+    } else {
+      var first = curr.getDate() - curr.getDay(); // First day is the day of the month - the day of the week
+    }
+    return first;
+  }
+
+  function toggleCurr() {
+    if ($('#last-week-toggle').hasClass('active')) {
+      $('#last-week-toggle').removeClass('active');
+      $('#this-week-toggle').addClass('active');
+    }
+
+    if ($('#equip-toggle').hasClass('active')) {
+      refreshList("Equipment");
+    } else {
+      refreshList("Food")
+    }
+  }
+
+  function toggleLast() {
+    if ($('#this-week-toggle').hasClass('active')) {
+      $('#this-week-toggle').removeClass('active');
+      $('#last-week-toggle').addClass('active');
+    }
+
+    if ($('#equip-toggle').hasClass('active')) {
+      refreshList("Equipment");
+    } else {
+      refreshList("Food")
+    }
   }
 
   // show all items whose item type is equipment
@@ -257,10 +307,10 @@
       event_data: JSON.stringify(json_event),
     }).done(function (data) {
       if ($('#equip-toggle').hasClass('active')) {
-          refreshList("Equipment");
+        refreshList("Equipment");
       }
-     else {
-         refreshList("");
+      else {
+        refreshList("");
       }
     }).fail(function (jqXHR, textStatus, errorThrown) {
       alert("Error updating shopping list. Try again!")
@@ -301,7 +351,7 @@
           refreshList("Equipment");
         }
         else {
-         refreshList("");
+          refreshList("");
         }
       }).fail(function (jqXHR, textStatus, errorThrown) {
         alert("Error updating shopping list. Try again!")
@@ -360,6 +410,8 @@
     $("#food-btn").on("click", toggleFood)
     $("#equip-btn").on("click", toggleEquipment)
     $('#rm-btn').on('click', removeItem);
+    $("#this-week").on("click", toggleCurr)
+    $("#last-week").on("click", toggleLast)
 
     // MODAL event handling
     $('#item_type').on('change', showFoodType)

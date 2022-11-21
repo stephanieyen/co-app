@@ -57,13 +57,13 @@ def get_equipment_list_for_coop(coop) -> List[models.ShoppingList]:
     return coop_shopping
 
 # Get the current shopping list for a co-op within 7 days of the passed in date
-def get_shopping_for_week(coop, year, month, day) -> List[models.ShoppingList]:
+def get_shopping_for_week(coop, startDate, endDate) -> List[models.ShoppingList]:
     coop_shopping = []
-    startDate = datetime(year, month, day)
-    startOfWeek = startDate.strftime('%Y-%m-%d')
-    endOfWeek = (startDate + timedelta(7)).strftime('%Y-%m-%d')
-    startOfWeek = str(startOfWeek)
-    endOfWeek = str(endOfWeek)
+    # startDate = datetime(year, month, day)
+    # startOfWeek = startDate.strftime('%Y-%m-%d')
+    # endOfWeek = (startDate + timedelta(7)).strftime('%Y-%m-%d')
+    startOfWeek = str(startDate)
+    endOfWeek = str(endDate)
     with sqlalchemy.orm.Session(engine) as session:
         coop_shopping = session.query(models.ShoppingList).filter(
             models.ShoppingList.coop_name==coop,
@@ -72,13 +72,13 @@ def get_shopping_for_week(coop, year, month, day) -> List[models.ShoppingList]:
         ).all()
     return coop_shopping
 
-def get_food_list_for_week(coop, year, month, day) -> List[models.ShoppingList]:
+def get_food_list_for_week(coop, startDate, endDate) -> List[models.ShoppingList]:
     coop_shopping = []
-    startDate = datetime(year, month, day)
-    startOfWeek = startDate.strftime('%Y-%m-%d')
-    endOfWeek = (startDate + timedelta(7)).strftime('%Y-%m-%d')
-    startOfWeek = str(startOfWeek)
-    endOfWeek = str(endOfWeek)
+    # startDate = datetime(year, month, day)
+    # startOfWeek = startDate.strftime('%Y-%m-%d')
+    # endOfWeek = (startDate + timedelta(7)).strftime('%Y-%m-%d')
+    startOfWeek = str(startDate)
+    endOfWeek = str(endDate)
     with sqlalchemy.orm.Session(engine) as session:
         coop_shopping = session.query(models.ShoppingList).filter(
             models.ShoppingList.coop_name==coop,
@@ -91,13 +91,13 @@ def get_food_list_for_week(coop, year, month, day) -> List[models.ShoppingList]:
         ).all()
     return coop_shopping
 
-def get_equipment_list_for_week(coop, year, month, day) -> List[models.ShoppingList]:
+def get_equipment_list_for_week(coop, startDate, endDate) -> List[models.ShoppingList]:
     coop_shopping = []
-    startDate = datetime(year, month, day)
-    startOfWeek = startDate.strftime('%Y-%m-%d')
-    endOfWeek = (startDate + timedelta(7)).strftime('%Y-%m-%d')
-    startOfWeek = str(startOfWeek)
-    endOfWeek = str(endOfWeek)
+    # startDate = datetime(year, month, day)
+    # startOfWeek = startDate.strftime('%Y-%m-%d')
+    # endOfWeek = (startDate + timedelta(7)).strftime('%Y-%m-%d')
+    startOfWeek = str(startDate)
+    endOfWeek = str(endDate)
     with sqlalchemy.orm.Session(engine) as session:
         coop_shopping = session.query(models.ShoppingList).filter(
             models.ShoppingList.coop_name==coop,
