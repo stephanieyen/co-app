@@ -27,8 +27,8 @@
 
             <!-- Inner -->
             <!-- <div class="carousel-inner py-4"> -->
-              <!-- Single item -->
-              <!-- <div class="carousel-item active">
+            <!-- Single item -->
+            <!-- <div class="carousel-item active">
                 <div class="container">
                   <div class="row">
 
@@ -60,8 +60,8 @@
                 </div>
               </div> -->
 
-              <!-- Single item -->
-              <!-- <div class="carousel-item">
+            <!-- Single item -->
+            <!-- <div class="carousel-item">
                 <div class="container">
                   <div class="row">
                     <div class="col-lg-4 col-md-12">
@@ -99,10 +99,10 @@
                 </div>
               </div> -->
 
-            </div> <!-- Inner -->
+          </div> <!-- Inner -->
 
-            <!-- Controls -->
-            <!-- <div class="d-flex justify-content-center mb-4">
+          <!-- Controls -->
+          <!-- <div class="d-flex justify-content-center mb-4">
               <button class="carousel-control-prev position-relative" type="button" data-bs-target="#recipeCarousel"
                 data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -115,23 +115,23 @@
               </button>
             </div> -->
 
-          </div>
-          <!-- Carousel wrapper -->
         </div>
+        <!-- Carousel wrapper -->
       </div>
+    </div>
 
-      <!-- Add Recipe Button (triggers modal) -->
-      <div class="row">
-        <div class="col-sm-11">
-          <button type="button" class="btn btn-primary float-end" id="add-rec-btn" data-bs-toggle="modal"
-            data-bs-target="#createRecipeModal">
-            Add Recipe
-          </button>
-        </div>
+    <!-- Add Recipe Button (triggers modal) -->
+    <div class="row">
+      <div class="col-sm-11">
+        <button type="button" class="btn btn-primary float-end" id="add-rec-btn" data-bs-toggle="modal"
+          data-bs-target="#createRecipeModal">
+          Add Recipe
+        </button>
       </div>
+    </div>
 
-    </div> <!-- col-sm-11 -->
-  </div> <!-- row -->
+  </div> <!-- col-sm-11 -->
+</div> <!-- row -->
 </div> <!-- container-fluid -->
 
 <!-- Modal -->
@@ -167,6 +167,22 @@
           <label for="recipe_instructions">Instructions:</label>
           <input type="text" class="form-control" id="recipe_instructions" autocapitalize="sentences">
         </div>
+        <br>
+        <div>
+          <div class="mb-4 d-flex justify-content-center">
+            <img src="{{ url_for('static',filename='no_image.png') }}" id="placeholder_img" alt="placeholder"
+              style="width: 300px;" />
+          </div>
+          <div class="d-flex justify-content-center">
+              <div class="btn btn-primary btn-rounded" style="margin-right:16px">
+                <label class="form-label text-white m-1" for="recipe_img">Upload Image</label>
+                <input type="file" accept="image/*" class="form-control d-none" id="recipe_img" alt= />
+              </div>
+              <br>
+              <button type="submit" class="btn btn-primary btn-rounded d-none" id="delete_img">Delete Image</button>
+          </div>
+        </div>
+
 
       </div>
 
@@ -209,7 +225,7 @@
     let recipe_name = $('#recipe_name').val();
     let recipe_link = $('#recipe_link').val();
     let recipe_ingredients = $('#recipe_ingredients').val();
-    let recipe_instructions= $('#recipe_instructions').val();
+    let recipe_instructions = $('#recipe_instructions').val();
 
     // AJAX update database
     var json_event = {
@@ -218,9 +234,9 @@
       "recipe_link": recipe_link,
       "recipe_ingredients": recipe_ingredients,
       "recipe_instructions": recipe_instructions,
-      "recipe_img": ""
+      "recipe_img": "no_image.png"
     };
-  
+
     console.log(json_event)
 
     // AJAX POST request
@@ -230,8 +246,8 @@
       event_data: JSON.stringify(json_event),
       // success: refresh gallery
     }).done(function (data) {
-        console.log("success")
-        refreshGallery();
+      console.log("success")
+      refreshGallery();
     }).fail(function (jqXHR, textStatus, errorThrown) {
       alert("Error adding recipe. Try again!")
     });
@@ -247,10 +263,35 @@
 
   }
 
+  // replace placeholder image with uploaded img
+  function readURL(input) {
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+
+      reader.onload = function (e) {
+        $('#placeholder_img').attr('src', e.target.result);
+      }
+
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+
   function setup() {
     refreshGallery();
 
     $("#createRecipeModal").on("click", "#rec_submit", addRecipe);
+
+    // image upload/delete
+    $("#recipe_img").change(function () {
+      readURL(this);
+      $('#delete_img').removeClass('d-none');
+    });
+
+    $('#delete_img').on('click', function(){
+      $('#delete_img').addClass('d-none');
+      $('#placeholder_img').attr('src', "{{ url_for('static',filename='no_image.png') }}");
+    });
+
   }
 
   $('document').ready(setup);
