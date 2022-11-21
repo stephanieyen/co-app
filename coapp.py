@@ -33,7 +33,7 @@ def send_shift_emails():
             print("Email sent")
 
 sched = BackgroundScheduler(daemon=True)
-sched.add_job(send_shift_emails,'interval', minutes=1)
+sched.add_job(send_shift_emails,'interval', minutes=24*60)
 sched.start()
 
 # Import after making auth since auth uses app
