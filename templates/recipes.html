@@ -26,9 +26,9 @@
             <!-- SERVER-SIDE GENERATES RECIPE GALLERY HERE -->
 
             <!-- Inner -->
-            <div class="carousel-inner py-4">
+            <!-- <div class="carousel-inner py-4"> -->
               <!-- Single item -->
-              <div class="carousel-item active">
+              <!-- <div class="carousel-item active">
                 <div class="container">
                   <div class="row">
 
@@ -58,7 +58,7 @@
 
                   </div>
                 </div>
-              </div>
+              </div> -->
 
               <!-- Single item -->
               <!-- <div class="carousel-item">
@@ -224,7 +224,7 @@
     console.log(json_event)
 
     // AJAX POST request
-    $.post("/<coop>/recipes", {
+    $.post("/{{coop}}/recipes", {
       dataType: 'json',
       contentType: 'application/json',
       event_data: JSON.stringify(json_event),
