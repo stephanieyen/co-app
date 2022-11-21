@@ -128,6 +128,7 @@
         newMembers = newMembers.split(",").map((member) => member.trim());
 
         console.log(newMembers)
+        $('#add-members-txt').val('')
 
         // AJAX post request
         $.post("/{{coop}}/roster/edit/add", {

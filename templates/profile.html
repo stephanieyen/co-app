@@ -112,6 +112,7 @@
                 $(this).prop('checked', true);
             }
         });
+
         $("input[name='cook_days']").prop("disabled", true)
         $("input[name='chore_days']").prop("disabled", true)
         // make fields editable when update profile checked
@@ -326,6 +327,14 @@
                             </div>
                         </div>
                         <br>
+
+                        <h4><label for="profile_group">Notifications</label></h4>
+                        <div class="form-group form-check form-switch" id="profile_group">
+                            <input class="form-check-input" type="checkbox" role="switch" id="profile_notif">
+                            <label class="form-check-label" for="profile_notif">On</label>
+                        </div> 
+                        <p>When on, Co-App will send an email notification to you the day before any shift you are signed up for :)</p>  
+
                         <button type="submit" id="save_profile" class="btn btn-primary d-none">Save Profile</button>
                         <button type="submit" id="cancel_save" class="btn btn-primary d-none">Cancel Changes</button>
                     </form>

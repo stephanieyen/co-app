@@ -24,7 +24,7 @@
           <!-- Carousel wrapper -->
           <div id="recipeCarousel" class="carousel slide carousel-dark text-center" data-bs-ride="carousel">
             <!-- SERVER-SIDE GENERATES RECIPE GALLERY HERE -->
-            
+
             <!-- Inner -->
             <div class="carousel-inner py-4">
               <!-- Single item -->
@@ -45,10 +45,12 @@
 
                     <div class="col-lg-4 d-lg-block">
                       <div class="card">
-                        <img src="{{ url_for('static',filename='cookie_pizza.jpg') }}" class="card-img-top"/>
+                        <img src="{{ url_for('static',filename='cookie_pizza.jpg') }}" class="card-img-top" />
                         <div class="card-body">
                           <h5 class="card-title">COOKIE PIZZA</h5>
-                          <p class="card-text"><a href="https://sallysbakingaddiction.com/chocolate-chip-cookie-pizza/">Link to Recipe</a></p>
+                          <p class="card-text"><a
+                              href="https://sallysbakingaddiction.com/chocolate-chip-cookie-pizza/">Link to Recipe</a>
+                          </p>
                           <a href="#!" class="btn btn-primary">Instructions</a>
                         </div>
                       </div>
@@ -98,7 +100,7 @@
               </div> -->
 
             </div> <!-- Inner -->
-            
+
             <!-- Controls -->
             <!-- <div class="d-flex justify-content-center mb-4">
               <button class="carousel-control-prev position-relative" type="button" data-bs-target="#recipeCarousel"
@@ -112,7 +114,7 @@
                 <span class="visually-hidden">Next</span>
               </button>
             </div> -->
-            
+
           </div>
           <!-- Carousel wrapper -->
         </div>
@@ -147,23 +149,23 @@
       <div class="modal-body">
 
         <div class="form-group">
-          <label for="item">Name of recipe:</label>
-          <input type="text" class="form-control" id="item_name" autocapitalize="words" required>
+          <label for="recipe_name">Name of recipe:</label>
+          <input type="text" class="form-control" id="recipe_name" autocapitalize="words" required>
         </div>
         <br>
         <div class="form-group">
-          <label for="item_link">Link:</label>
-          <input type="text" class="form-control" id="item_link" autocapitalize="words">
+          <label for="recipe_link">Link:</label>
+          <input type="text" class="form-control" id="recipe_link">
         </div>
         <br>
         <div class="form-group">
           <label for="quantity">Ingredients:</label>
-          <input type="text" class="form-control" id="item_quantity" autocapitalize="words">
+          <input type="text" class="form-control" id="recipe_ingredients">
         </div>
         <br>
         <div class="form-group">
-          <label for="comments">Instructions:</label>
-          <input type="text" class="form-control" id="item_reason" autocapitalize="sentences">
+          <label for="recipe_instructions">Instructions:</label>
+          <input type="text" class="form-control" id="recipe_instructions" autocapitalize="sentences">
         </div>
 
       </div>
@@ -177,50 +179,79 @@
 </div>
 
 <script>
-    'use strict';
+  'use strict';
 
-    function handleResponse(response) 
-    {
-      console.log(response);
-      $('#recipeCarousel').html(response);
-    }
+  function handleResponse(response) {
+    console.log(response);
+    $('#recipeCarousel').html(response);
+  }
 
-    let request = null;
+  let request = null;
 
-    function refreshGallery() 
-    {
-      request = $.ajax(
-        {
-          type: 'GET',
-          url: '/{{coop}}/recipes/carousel',
-          success: handleResponse,
-          failure: function () {
-            alert('There was an error while fetching recipes!');
-          }
+  function refreshGallery() {
+    request = $.ajax(
+      {
+        type: 'GET',
+        url: '/{{coop}}/recipes/carousel',
+        success: handleResponse,
+        failure: function () {
+          alert('There was an error while fetching recipes!');
         }
-      );
-    }
+      }
+    );
+  }
 
-    function addRecipe() 
-    {
-      $('#rec_submit').unbind('click');
-      $('#add-rec-btn').unbind('click');
+  function addRecipe() {
+    $('#rec_submit').unbind('click');
+    $('#add-rec-btn').unbind('click');
 
-      // extract input from modal
+    // extract input from modal
+    let recipe_name = $('#recipe_name').val();
+    let recipe_link = $('#recipe_link').val();
+    let recipe_ingredients = $('#recipe_ingredients').val();
+    let recipe_instructions= $('#item_reason').val();
 
-      console.log(json_event)
+    // AJAX update database
+    var json_event = {
+      "recipe_author": "{{user.user_netid}}",
+      "recipe_name": recipe_name,
+      "recipe_link": recipe_link,
+      "recipe_ingredients": recipe_instructions,
+      "recipe_img": ""
+    };
+  
+    console.log(json_event)
 
-      // AJAX POST request
-    }
+    // AJAX POST request
+    $.post("/<coop>/recipes/carousel", {
+      dataType: 'json',
+      contentType: 'application/json',
+      event_data: JSON.stringify(json_event),
+      // success: refresh gallery
+    }).done(function (data) {
+        refreshGallery();
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+      alert("Error updating shopping list. Try again!")
+    });
 
-    function setup() 
-    {
-      refreshGallery();
+    // hide modal
+    $('#createRecipeModal').modal('hide');
 
-      $("#createRecipeModal").on("click", "#rec_submit", addRecipe);
-    }
+    // reset all fields in modal
+    $('#recipe_name').val('');
+    $('#recipe_link').val('');
+    $('#recipe_ingredients').val('');
+    $('#recipe_instructions').val('');
 
-    $('document').ready(setup);
+  }
+
+  function setup() {
+    refreshGallery();
+
+    $("#createRecipeModal").on("click", "#rec_submit", addRecipe);
+  }
+
+  $('document').ready(setup);
 
 </script>
 
