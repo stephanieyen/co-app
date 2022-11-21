@@ -25,6 +25,7 @@
         $("input[name='chore_days']").prop("disabled", false);
         $("#profile_name").prop("disabled", false);
         $("#profile_allergies").prop("disabled", false);
+        $("#profile_notif").prop("disabled", false)
         // $('#update_profile').unbind('click');
     }
     function cancelEdit() {
@@ -34,6 +35,7 @@
         $("input[name='chore_days']").prop("disabled", true);
         $("#profile_name").prop("disabled", true);
         $("#profile_allergies").prop("disabled", true);
+        $("#profile_notif").prop("disabled", true)
         location.reload()
     }
     function updateProfile() {
@@ -45,6 +47,7 @@
 
         $("#profile_name").prop("disabled", true);
         $("#profile_allergies").prop("disabled", true);
+        $("#profile_notif").prop("disabled", true)
 
         // extract input
         let profile_name = $('#profile_name').val();
@@ -57,11 +60,15 @@
         $.each($("input[name='chore_days']:checked"), function () {
             chore_days.push($(this).val());
         });
+
+        let notify_on = $("#profile_notif").prop('checked')
+
         var json_event = {
             "user_name": profile_name,
             "user_allergies": profile_allergies,
             "user_cookday": cook_days,
-            "user_choreday": chore_days
+            "user_choreday": chore_days,
+            "notify_on": notify_on
         };
         if (request != null)
             request.abort();
@@ -86,6 +93,14 @@
                 redirect();
             })
         } 
+    }
+    function updateNotifLabel() {
+        if ($("#profile_notif").prop('checked')) {
+            $("#notif_label").text("On")
+        }
+        else {
+            $("#notif_label").text("Off")
+        }
     }
     function setup() {
         // fill in info from database
@@ -115,6 +130,18 @@
 
         $("input[name='cook_days']").prop("disabled", true)
         $("input[name='chore_days']").prop("disabled", true)
+
+        let notify_on = "{{user.notify_email}}" == "True" ? true: false
+        if (notify_on) {
+            $("#profile_notif").prop('checked', true);
+            $("#notif_label").text("On")
+        }
+        else {
+            $("#profile_notif").prop('checked', false);
+            $("#notif_label").text("Off")
+        }
+        $("#profile_notif").prop("disabled", true)
+
         // make fields editable when update profile checked
         $('#update_profile').on('click', makeEditable);
         // do nothing when profile edit canceled
@@ -330,8 +357,8 @@
 
                         <h4><label for="profile_group">Notifications</label></h4>
                         <div class="form-group form-check form-switch" id="profile_group">
-                            <input class="form-check-input" type="checkbox" role="switch" id="profile_notif">
-                            <label class="form-check-label" for="profile_notif">On</label>
+                            <input name="notif" class="form-check-input" type="checkbox" role="switch" id="profile_notif" onclick="updateNotifLabel()">
+                            <label class="form-check-label" for="profile_notif" id="notif_label">Off</label>
                         </div> 
                         <p>When on, Co-App will send an email notification to you the day before any shift you are signed up for :)</p>  
 

@@ -20,7 +20,6 @@ app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
 # Sends email every minute (WORKS)
 def send_shift_emails():
-    print("reached")
     members = database.get_shift_notifications()
     for member in members:
         with app.app_context():
@@ -124,7 +123,7 @@ def profile_update(coop):
         user_admin=old_user.user_admin,
         user_cookday=cookday,
         user_choreday=choreday,
-        notify_email = old_user.notify_email,
+        notify_email = data['notify_on'],
         coop_name=old_user.coop_name
     )
     database.update_user(netid, new_user)
