@@ -202,7 +202,7 @@ def add_test_recipes(session):
                             recipe_link='https://sallysbakingaddiction.com/chocolate-chip-cookie-pizza/',
                             recipe_ingredients='See link',
                             recipe_instructions='See link', 
-                            recipe_img='cookie_pizza.jpg',
+                            recipe_img='https://res.cloudinary.com/coapp/image/upload/v1669151973/umdj7uujfqbre9z0dec9.jpg',
                             coop_name='2d')
     session.add(recipe)
     recipe = models.Recipes(recipe_author='amkumar',
@@ -210,7 +210,7 @@ def add_test_recipes(session):
                             recipe_link='',
                             recipe_ingredients='See link',
                             recipe_instructions='See link', 
-                            recipe_img='pad thai.jpg',
+                            recipe_img='https://res.cloudinary.com/coapp/image/upload/v1669151022/prjhmx1wqmkxxzoypekd.png',
                             coop_name='2d')
     session.add(recipe)    
 
