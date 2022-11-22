@@ -126,7 +126,7 @@ def add_test_shopping(session):
                             food_type="Item",
                             alt_request="Stick Frying Pan",
                             upvoted_members=['sarahep'],
-                            date_added="2022-11-18",
+                            date_added="2022-11-03",
                             coop_name='realfood')
     session.add(item)
     item = models.ShoppingList(item_type="Equipment",
@@ -152,7 +152,19 @@ def add_test_shopping(session):
                             food_type="Special",
                             alt_request="Laptops",
                             upvoted_members=['dpw'],
-                            date_added="2022-11-19",
+                            date_added="2022-11-07",
+                            coop_name='brown')
+    item = models.ShoppingList(item_type="Equipment",
+                            item_name="Computer",
+                            item_quantity='10',
+                            item_ordered=False,
+                            for_shift = False,
+                            item_reason='Turn Brown into computer hub',
+                            requesting_user='dpw',
+                            food_type="Special",
+                            alt_request="Laptops",
+                            upvoted_members=['dpw'],
+                            date_added="2022-10-28",
                             coop_name='brown')
     session.add(item)
 

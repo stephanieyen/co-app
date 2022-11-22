@@ -20,20 +20,21 @@ app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
 # Sends email every minute (WORKS)
 def send_shift_emails():
+    # Delete old shopping list items once a week
+    database.delete_old_items()
     members = database.get_shift_notifications()
     for member in members:
         with app.app_context():
             email = member + "@princeton.edu"
             msg = Message(
-                body="You have a shift tomorrow for your coop! Check it out!",
+                body="You have a shift tomorrow for your coop! Check it out at https://co-app.onrender.com!",
                 sender="coappemail@gmail.com",
-                subject="Co-App Addition!",
+                subject="Co-App Shift Reminder!",
                 recipients=[email])
             mail.send(msg)
-            print("Email sent")
 
 sched = BackgroundScheduler(daemon=True)
-sched.add_job(send_shift_emails,'interval', minutes=24*60)
+sched.add_job(send_shift_emails,'interval', minutes=0.5)
 sched.start()
 
 # Import after making auth since auth uses app
@@ -219,10 +220,10 @@ def add_user(coop):
         database.add_user(user)
         email = netid + "@princeton.edu"
         msg = Message(
-            body="You've been added to a co-op on co-app! Go log in and update your profile!",
+            body="You've been added to a co-op on co-app! Go log in and update your profile at https://co-app.onrender.com!",
             sender="coappemail@gmail.com",
             subject="Co-App Addition!",
-            recipients=["amkumar@princeton.edu", email])
+            recipients=[email])
         mail.send(msg)
     return ''
 

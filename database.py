@@ -253,6 +253,19 @@ def delete_item(id):
         session.query(models.ShoppingList).filter(
             models.ShoppingList.item_id == id).delete()
         session.commit()
+
+# Delete a shift's information
+def delete_old_items():
+    today = datetime.now()
+    weekday = today.weekday()
+    twoweeksago = str(datetime.now() - timedelta(days = 14))
+    # if weekday != 6:
+    #     return
+    with sqlalchemy.orm.Session(engine) as session:
+        session.query(models.ShoppingList).filter(
+            models.ShoppingList.date_added <= twoweeksago,
+        ).delete()
+        session.commit()
 #----------------------------------------------------------------------
 # Shift queries
 #----------------------------------------------------------------------
