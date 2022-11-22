@@ -191,8 +191,7 @@ def gen_recipe_gallery_html(recipes):
         html_code += ('<div class="col-lg-4 d-lg-block">')
         html_code += ('<div class="card">')
 
-        img_src = ('\'static\',filename=\'{0}\'').format(recipe.recipe_img)
-        html_code += ('<img src="{{ url_for({0}) }}" class="card-img-top"/>').format(img_src)
+        html_code += ('<img src="{0}" class="card-img-top"/>').format(recipe.recipe_img)
         html_code += ('<div class="card-body">')
         html_code += ('<h5 class="card-title">{0}</h5>').format(recipe.recipe_name)
 

@@ -1,5 +1,7 @@
 <head>
   <title>Co-App Recipes</title>
+
+  <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
 </head>
 
 {% extends "templates/base.html" %}
@@ -24,114 +26,23 @@
           <!-- Carousel wrapper -->
           <div id="recipeCarousel" class="carousel slide carousel-dark text-center" data-bs-ride="carousel">
             <!-- SERVER-SIDE GENERATES RECIPE GALLERY HERE -->
-
-            <!-- Inner -->
-            <!-- <div class="carousel-inner py-4"> -->
-            <!-- Single item -->
-            <!-- <div class="carousel-item active">
-                <div class="container">
-                  <div class="row">
-
-                    <div class="col-lg-4 d-lg-block">
-                      <div class="card">
-                        <img src="{{ url_for('static',filename='no_image.png') }}" class="card-img-top"
-                          alt="No image available" />
-                        <div class="card-body">
-                          <h5 class="card-title">Fish tacos</h5>
-                          <a href="#!" class="btn btn-primary">Instructions</a>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="col-lg-4 d-lg-block">
-                      <div class="card">
-                        <img src="{{ url_for('static',filename='cookie_pizza.jpg') }}" class="card-img-top" />
-                        <div class="card-body">
-                          <h5 class="card-title">COOKIE PIZZA</h5>
-                          <p class="card-text"><a
-                              href="https://sallysbakingaddiction.com/chocolate-chip-cookie-pizza/">Link to Recipe</a>
-                          </p>
-                          <a href="#!" class="btn btn-primary">Instructions</a>
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-              </div> -->
-
-            <!-- Single item -->
-            <!-- <div class="carousel-item">
-                <div class="container">
-                  <div class="row">
-                    <div class="col-lg-4 col-md-12">
-                      <div class="card">
-                        <img src="{{ url_for('static',filename='no_image.png') }}" class="card-img-top"
-                          alt="No image available" />
-                        <div class="card-body">
-                          <h5 class="card-title">Pork dumplings</h5>
-                          <a href="#!" class="btn btn-primary">Instructions</a>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="col-lg-4 d-lg-block">
-                      <div class="card">
-                        <img src="{{ url_for('static',filename='no_image.png') }}" class="card-img-top"
-                          alt="No image available" />
-                        <div class="card-body">
-                          <h5 class="card-title">French toast</h5>
-                          <a href="#!" class="btn btn-primary">Instructions</a>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="col-lg-4 d-lg-block">
-                      <div class="card">
-                        <img src="{{ url_for('static',filename='pad thai.jpg') }}" class="card-img-top"/>
-                        <div class="card-body">
-                          <h5 class="card-title">the best pad thai you will ever have</h5>
-                          <a href="#!" class="btn btn-primary">Instructions</a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div> -->
-
-          </div> <!-- Inner -->
-
-          <!-- Controls -->
-          <!-- <div class="d-flex justify-content-center mb-4">
-              <button class="carousel-control-prev position-relative" type="button" data-bs-target="#recipeCarousel"
-                data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-              </button>
-              <button class="carousel-control-next position-relative" type="button" data-bs-target="#recipeCarousel"
-                data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-              </button>
-            </div> -->
-
+          </div>
+          <!-- Carousel wrapper -->
         </div>
-        <!-- Carousel wrapper -->
       </div>
-    </div>
 
-    <!-- Add Recipe Button (triggers modal) -->
-    <div class="row">
-      <div class="col-sm-11">
-        <button type="button" class="btn btn-primary float-end" id="add-rec-btn" data-bs-toggle="modal"
-          data-bs-target="#createRecipeModal">
-          Add Recipe
-        </button>
+      <!-- Add Recipe Button (triggers modal) -->
+      <div class="row">
+        <div class="col-sm-11">
+          <button type="button" class="btn btn-primary float-end" id="add-rec-btn" data-bs-toggle="modal"
+            data-bs-target="#createRecipeModal">
+            Add Recipe
+          </button>
+        </div>
       </div>
-    </div>
 
-  </div> <!-- col-sm-11 -->
-</div> <!-- row -->
+    </div> <!-- col-sm-11 -->
+  </div> <!-- row -->
 </div> <!-- container-fluid -->
 
 <!-- Modal -->
@@ -152,6 +63,7 @@
           <label for="recipe_name">Name of recipe:</label>
           <input type="text" class="form-control" id="recipe_name" autocapitalize="words" required>
         </div>
+        <br>
         <div class="form-group">
           <label for="recipe_type">Recipe Type:</label>
           <select class="form-select" id="food_type" aria-label="Select food type">
@@ -181,20 +93,11 @@
         <br>
         <div>
           <div class="mb-4 d-flex justify-content-center">
-            <img src="{{ url_for('static',filename='no_image.png') }}" id="placeholder_img" alt="placeholder"
-              style="width: 300px;" />
-          </div>
-          <div class="d-flex justify-content-center">
-              <div class="btn btn-primary btn-rounded" style="margin-right:16px">
-                <label class="form-label text-white m-1" for="recipe_img">Upload Image</label>
-                <input type="file" accept="image/*" class="form-control d-none" id="recipe_img" alt= />
-              </div>
-              <br>
-              <button type="submit" class="btn btn-primary btn-rounded d-none" id="delete_img">Delete Image</button>
+            <img src="https://res.cloudinary.com/coapp/image/upload/v1669151022/prjhmx1wqmkxxzoypekd.png"
+              id="recipe_img" alt="placeholder" style="width: 300px;" />
+              <button id="upload_widget" class="cloudinary-button">Upload Image</button>
           </div>
         </div>
-
-
       </div>
 
       <!-- submit button -->
@@ -204,33 +107,6 @@
     </div>
   </div>
 </div>
-
-<!-- Modal -->
-<!-- #viewInstructionsModal -->
-<!-- <div class="modal fade" id="viewInstructionsModal" tabindex="-1" role="dialog" aria-labelledby="recModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content"> -->
-      <!-- header and close button -->
-      <!-- <div class="modal-header">
-        <h4>Recipe Instructions!</h4>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div> -->
-
-      <!-- RECIPE Link, Ingredients, Instructions -->
-      <!-- <div class="modal-body">
-        <h5>Link:</h5>
-        <p>link will go here</p>
-        <hr>
-        <h5>Ingredients:</h5>
-        <p>insert ingredients</p>
-        <hr>
-        <h5>Instructions:</h5>
-        <p>insert instructions</p>
-      </div> -->
-
-    <!-- </div>
-  </div>
-</div> -->
 
 <script>
   'use strict';
@@ -264,6 +140,7 @@
     let recipe_link = $('#recipe_link').val();
     let recipe_ingredients = $('#recipe_ingredients').val();
     let recipe_instructions = $('#recipe_instructions').val();
+    let recipe_img = $('#recipe_img').attr('src');
 
     // AJAX update database
     var json_event = {
@@ -272,7 +149,7 @@
       "recipe_link": recipe_link,
       "recipe_ingredients": recipe_ingredients,
       "recipe_instructions": recipe_instructions,
-      "recipe_img": "no_image.png"
+      "recipe_img": recipe_img
     };
 
     console.log(json_event)
@@ -336,6 +213,32 @@
   }
 
   function setup() {
+    // set up image uploading w/ cloudinary
+    const myWidget = cloudinary.createUploadWidget(
+      {
+        cloudName: 'coapp',
+        uploadPreset: 'dyew2nw8',
+        multiple: false,  //restrict upload to a single file
+        tags: ["{{coop}}"], //add the given tags to the uploaded files
+        maxImageFileSize: 2000000,  //restrict file size to less than 2MB
+        maxImageWidth: 2000, //Scales the image down to a width of 2000 pixels before uploading
+      },
+      (error, result) => {
+        if (!error && result && result.event === "success") {
+          document
+            .getElementById("recipe_img")
+            .setAttribute("src", result.info.secure_url);
+        }
+      }
+    );
+    document.getElementById("upload_widget").addEventListener(
+      "click",
+      function () {
+        myWidget.open();
+      },
+      false
+    );
+
     refreshGallery();
 
     $("#createRecipeModal").on("click", "#rec_submit", addRecipe);
@@ -346,7 +249,7 @@
       $('#delete_img').removeClass('d-none');
     });
 
-    $('#delete_img').on('click', function(){
+    $('#delete_img').on('click', function () {
       $('#delete_img').addClass('d-none');
       $('#placeholder_img').attr('src', "{{ url_for('static',filename='no_image.png') }}");
     });
