@@ -152,6 +152,17 @@
           <label for="recipe_name">Name of recipe:</label>
           <input type="text" class="form-control" id="recipe_name" autocapitalize="words" required>
         </div>
+        <div class="form-group">
+          <label for="recipe_type">Recipe Type:</label>
+          <select class="form-select" id="food_type" aria-label="Select food type">
+            <option value="0" selected>Choose...</option>
+            <option value="Breakfast">Breakfast</option>
+            <option value="Lunch">Lunch</option>
+            <option value="Dinner">Dinner</option>
+            <option value="Dessert">Dessert</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
         <br>
         <div class="form-group">
           <label for="recipe_link">Link:</label>
@@ -300,6 +311,27 @@
       }
 
       reader.readAsDataURL(input.files[0]);
+    }
+  }
+
+  // handle event when Remove button clicked
+  function removeRecipe(i) {
+    let recipe_id = i.parentNode.lastChild.innerHTML;
+
+    let url = "/{{coop}}/recipes/delete?id=" + recipe_id;
+
+    if (confirm("Are you sure you want to remove this recipe?") == true) {
+      request = $.ajax(
+        {
+          type: 'POST',
+          url: url,
+        }
+      ).done(function (data) {
+        refreshGallery();
+      }).fail(function (jqXHR, textStatus, errorThrown) {
+        alert("Error updating recipe gallery. Try again!")
+      });
+      // refresh list from deleting from db
     }
   }
 

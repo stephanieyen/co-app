@@ -628,26 +628,8 @@ def recipes(coop):
 
 #----------------------------------------------------------------------
 
-@app.route('/<coop>/recipes/carousel', methods=['GET', 'POST'])
+@app.route('/<coop>/recipes/carousel', methods=['GET'])
 def recipes_carousel(coop):
-    # if flask.request.method == 'POST':
-    #     data = json.loads(flask.request.form.to_dict()['event_data'])
-
-    #     # What to display for "For Shift" - Yes/No
-    #     new_recipe = models.Recipes(
-    #         recipe_author=data['recipe_author'],
-    #         recipe_name=data['recipe_name'],
-    #         recipe_link=data['recipe_link'],
-    #         recipe_ingredients=data['recipe_ingredients'],
-    #         recipe_instructions=data['recipe_instructions'],
-    #         recipe_img=data['recipe_img'],
-    #         coop_name=coop
-    #     )
-    #     print("new rec")
-    #     print(new_recipe.recipe_name)
-    #     database.add_recipe(new_recipe)
-
-
     # get user info
     netid = auth.authenticate()
     status, redirect = check_coop(coop)
@@ -662,3 +644,15 @@ def recipes_carousel(coop):
     
     response = flask.make_response(html_code)
     return response
+
+#----------------------------------------------------------------------
+
+@app.route('/<coop>/recipes/delete', methods=['POST'])
+def recipes_delete(coop):
+    ''' 
+        Deletes a recipe from the recipe gallery of the co-op 
+        in the specified route.                     
+    '''
+    recipe_id = flask.request.args.get('id')
+    database.delete_recipe(recipe_id)
+    return ''
