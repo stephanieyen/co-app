@@ -85,7 +85,7 @@
     request = $.ajax(
         {
             type:'GET',
-            url: '/{{coop}}/members',
+            url: '/{{coop}}/roster/members',
             success: handleResponse,
             failure: function () {
               alert('there was an error while fetching members!');

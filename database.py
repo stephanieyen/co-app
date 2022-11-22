@@ -11,7 +11,7 @@ db_url = 'postgresql://qqoyksvp:4DE2MIUDdxlcY8L66A5aMLj5ze4zaNbF@peanut.db.eleph
 # Global engine to use
 engine =  sqlalchemy.create_engine(db_url)
 #----------------------------------------------------------------------
-# Co-op info queries
+# Co-op Info Queries
 #----------------------------------------------------------------------
 def get_upper_coop(coop):
     ''' returns the correctly-cased string of the input co-op name'''
@@ -19,6 +19,10 @@ def get_upper_coop(coop):
 
 # Get the entire roster for a given coop
 def get_roster_for_coop(coop) -> List[models.Roster]:
+    '''
+        Get and return the entire roster of the input co-op, 
+        sorted by name.
+    '''
     coop_roster = []
     with sqlalchemy.orm.Session(engine) as session:
         coop_roster = session.query(models.Roster).filter(
@@ -332,13 +336,6 @@ def delete_shift(id):
 def add_recipe(recipe: models.Recipes):
     with sqlalchemy.orm.Session(engine) as session:
         session.add(recipe)
-        session.commit()
-
-# Delete a recipe's information
-def delete_recipe(id):
-    with sqlalchemy.orm.Session(engine) as session:
-        session.query(models.Recipes).filter(
-            models.Recipes.recipe_id == id).delete()
         session.commit()
 #----------------------------------------------------------------------
 

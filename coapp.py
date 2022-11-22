@@ -42,6 +42,9 @@ import auth
 
 # Fake secret key ???
 app.secret_key = b'\xbc>\xe0\xf8\xdf\x84\xe9aS\x02`i\x8e\xa1\xee\x92'
+
+#----------------------------------------------------------------------
+# Co-App
 #----------------------------------------------------------------------
 
 # Home page
@@ -91,11 +94,18 @@ def error_page():
 
 @app.route('/<coop>/profile', methods=['GET'])
 def profile(coop):
+    '''
+        Renders the Profile page of an authenticated Co-App user
+        (who is a member or admin of the co-op in the specified route).
+    '''
+    # get user info + redirect if needed
     netid = auth.authenticate()
     status, redirect = check_coop(coop)
     if status == False or status == "Nonexistent":
         return redirect
     user = database.get_user(netid)
+
+    # render Profile page HTML
     coop_upper = database.get_upper_coop(coop)
     html = flask.render_template('templates/profile.html',
             coop=coop, coop_upper=coop_upper, user=user)
@@ -106,17 +116,29 @@ def profile(coop):
 
 @app.route('/<coop>/profile/update', methods=['POST'])
 def profile_update(coop):
+    '''
+        Updates the profile of an authenticated Co-App user, who can 
+        edit their name, allergies, shift days, and/or notification 
+        preferences.
+    '''
+    # get user to edit
     netid = auth.authenticate()
     old_user = database.get_user(netid)
+
+    # get edited data
     data = json.loads(flask.request.form.to_dict()['event_data'])
+
     cookday = ''
     for day in data['user_cookday']:
         cookday += day + ' '
     cookday.strip()
+
     choreday = ''
     for day in data['user_choreday']:
         choreday += day + ' '
     choreday.strip()
+
+    # update user info
     new_user = models.Roster(
         user_netid=netid,
         user_name=data['user_name'],
@@ -132,18 +154,19 @@ def profile_update(coop):
 
 #----------------------------------------------------------------------
 
-# Get all shifts for a given user
-@app.route('/<coop>/profile/shifts', methods=['GET'])
-def profile_shifts(coop):
-    netid = auth.authenticate()
-    status, redirect = check_coop(coop)
-    if status == False or status == "Nonexistent":
-        return redirect
-    shifts = database.get_user_shifts(netid)
-    # for shift in shifts:
-    #     print(shift.shift_members)
-    return ""
+# @app.route('/<coop>/profile/shifts', methods=['GET'])
+# def profile_shifts(coop):
+#     '''
+#         Get all the shifts for an authenticated user.
+#     '''
+#     # get user info + redirect if needed
+#     netid = auth.authenticate()
+#     status, redirect = check_coop(coop)
+#     if status == False or status == "Nonexistent":
+#         return redirect
     
+#     shifts = database.get_user_shifts(netid)
+#     return ""
 
 #----------------------------------------------------------------------
 # Co-Op Roster
@@ -151,13 +174,17 @@ def profile_shifts(coop):
 
 @app.route('/<coop>/roster', methods=['GET'])
 def roster(coop):
+    '''
+        Renders the Roster page of the co-op in the specified route,
+    '''
+    # get user info + redirect if needed
     netid = auth.authenticate()
     status, redirect = check_coop(coop)
     if status == False or status == "Nonexistent":
         return redirect
-    
     user = database.get_user(netid)
 
+    # render Roster page HTML
     members = database.get_roster_for_coop(coop)
     coop_upper = database.get_upper_coop(coop)
     html = flask.render_template('templates/roster.html',
@@ -167,35 +194,46 @@ def roster(coop):
 
 #----------------------------------------------------------------------
 
-@app.route('/<coop>/members', methods=['GET'])
+@app.route('/<coop>/roster/members', methods=['GET'])
 def roster_members(coop):
-    # print("GET request for members")
+    '''
+        Fetches the Co-App members in the co-op and returns the HTML 
+        code for the roster table that shows these members.
+    '''
+    # get user info + redirect if needed
     status, redirect = check_coop(coop)
     if status == False or status == "Nonexistent":
         return redirect
-    members = database.get_roster_for_coop(coop)
-    # for member in members:
-    #     print(member.user_name)
     
-    html_code = helper.genRosterHTML(members)
-
+    # return roster table HTML
+    members = database.get_roster_for_coop(coop)
+    html_code = helper.gen_roster_table_html(members)
     response = flask.make_response(html_code)
     return response
 
 #----------------------------------------------------------------------
-# Co-Op Edit Roster
+# Co-Op Edit Roster (admin-only)
 #----------------------------------------------------------------------
 
 @app.route('/<coop>/roster/edit', methods=['GET'])
 def edit_roster(coop):
+    '''
+        Renders the Edit Roster page (admin-only) of the co-op in the
+        specified route.
+    '''
+    # get user info + redirect if needed
     netid = auth.authenticate()
     status, redirect = check_coop(coop)
     if status == False or status == "Nonexistent":
         return redirect
     user = database.get_user(netid)
+
+    # redirect the user if not admin
     if not user.user_admin:
         newPage = '/' + coop + '/members'
         return (False, flask.redirect(newPage))
+    
+    # render Edit Roster page HTML
     members = database.get_roster_for_coop(coop)
     coop_upper = database.get_upper_coop(coop)
     html = flask.render_template('templates/edit_roster.html',
@@ -205,11 +243,14 @@ def edit_roster(coop):
 
 #----------------------------------------------------------------------
 
-# Add user
 @app.route('/<coop>/roster/edit/add', methods=['POST'])
 def add_user(coop):
+    '''
+        Adds new members to the co-op roster based on input netid(s).
+    '''
     new_members = json.loads(flask.request.form.to_dict()['event_data'])
     for netid in new_members:
+        # create empty user model 
         user = models.Roster(user_netid=netid,
                             user_name='',
                             user_allergies='',
@@ -218,6 +259,8 @@ def add_user(coop):
                             user_choreday='',
                             coop_name=coop)
         database.add_user(user)
+        
+        # send email notification
         email = netid + "@princeton.edu"
         msg = Message(
             body="You've been added to a co-op on co-app! Go log in and update your profile at https://co-app.onrender.com!",
@@ -232,8 +275,7 @@ def add_user(coop):
 @app.route('/<coop>/roster/edit/delete', methods=['POST'])
 def roster_delete(coop):
     ''' 
-        Deletes a member from the roster of the co-op 
-        in the specified route.                     
+        Deletes a member from the co-op roster.                 
     '''
     user_id = flask.request.args.get('id') # make sure it's netid
     database.delete_user(user_id)
@@ -241,18 +283,22 @@ def roster_delete(coop):
 
 #----------------------------------------------------------------------
 
-@app.route('/<coop>/members/overview', methods=['GET'])
-def roster_overview(coop):
-    # print("GET request for members")
+@app.route('/<coop>/members/admin_view', methods=['GET'])
+def roster_members_admin_view(coop):
+    '''
+        Fetches the Co-App members in the co-op and returns the HTML 
+        code for the roster table that shows these members and 
+        which has extra admin permissions:
+            Add, Remove, Make Admin
+    '''
+    # get user info + redirect if needed
     status, redirect = check_coop(coop)
     if status == False or status == "Nonexistent":
         return redirect
-    members = database.get_roster_for_coop(coop)
-    # for member in members:
-    #     print(member.user_name)
     
-    html_code = helper.genRosterOverviewHTML(members)
-
+    # return roster table (admin view) HTML
+    members = database.get_roster_for_coop(coop)
+    html_code = helper.gen_roster_table_admin_html(members)
     response = flask.make_response(html_code)
     return response
 
@@ -260,8 +306,14 @@ def roster_overview(coop):
 
 @app.route('/<coop>/roster/edit/makeadmin', methods=['POST'])
 def make_admin(coop):
+    '''
+        Updates the admin status of a specified user in the co-op.
+    '''
+    # get user to edit
     user_id = flask.request.args.get('id') # make sure it's netid
     old_user = database.get_user(user_id)
+
+    # update user admin status to True
     new_user = models.Roster(
         user_netid=user_id,
         user_name=old_user.user_name,
@@ -282,8 +334,10 @@ def make_admin(coop):
 @app.route('/<coop>', methods=['GET', 'POST'])
 @app.route('/<coop>/calendar', methods=['GET', 'POST'])
 def calendar(coop):
-    ''' Renders the calendar of the given co-op. '''
-    # If posting, create new shift and then load in shifts
+    ''' 
+        Renders the Calendar page of the co-op in the specified route.
+    '''
+    # if POST request, add new shift to database
     if flask.request.method == 'POST':
         data = flask.request.form
         shift_recurring = True
@@ -315,15 +369,16 @@ def calendar(coop):
             coop_name=new_shift_vals[8]
         )
         database.add_shift(new_shift)
+    
+    # get user info + redirect if needed
     netid = auth.authenticate()
     status, redirect = check_coop(coop)
     if status == False or status == "Nonexistent":
         return redirect
     user = database.get_user(netid)
+
+    # render Calendar page HTML
     coop_upper = database.get_upper_coop(coop)
-    # shifts_of_week = database.get_user_shifts('amkumar')
-    # for shift in shifts_of_week:
-    #     print(shift.shift_name)
     html_code = flask.render_template('templates/calendar_initialize.html',
                 coop=coop, coop_upper=coop_upper, user=user)
     response = flask.make_response(html_code)
@@ -334,8 +389,7 @@ def calendar(coop):
 @app.route('/<coop>/calendar/delete', methods=['POST'])
 def calendar_delete(coop):
     ''' 
-        Deletes a shift from the calendar of the co-op 
-        in the specified route.                     
+        Deletes a shift from the co-op calendar.     
     '''
     shift_id = flask.request.args.get('id')
     database.delete_shift(shift_id)
@@ -346,8 +400,7 @@ def calendar_delete(coop):
 @app.route('/<coop>/calendar/update', methods=['POST'])
 def calendar_update(coop):
     ''' 
-        Updates a shift in the calendar of the co-op 
-        in the specified route. 
+        Updates a shift in the co-op calendar.
     '''
     shift_id = flask.request.args.get('id')
     old_shift = database.get_shift(shift_id)
@@ -439,6 +492,11 @@ def events(coop):
 
 @app.route('/<coop>/list', methods=['GET', 'POST'])
 def list(coop):
+    '''
+        Renders the Shopping List page of the co-op in the specified
+        route.
+    '''
+    # if POST request, add new item to database
     if flask.request.method == 'POST':
         data = json.loads(flask.request.form.to_dict()['event_data'])
 
@@ -460,20 +518,17 @@ def list(coop):
         )
         database.add_item(new_item)
 
-    # get user info
+    # get user info + redirect if needed
     netid = auth.authenticate()
     status, redirect = check_coop(coop)
     if status == False or status == "Nonexistent":
         return redirect
     user = database.get_user(netid)
 
-    # items = database.get_shopping_for_coop(coop)
+    # render Shopping List page HTML
     coop_upper = database.get_upper_coop(coop)
-    # html = flask.render_template('templates/list.html',
-    #         items=items, coop=coop, coop_upper=coop_upper)
     html_code = flask.render_template('templates/list.html', 
                         coop=coop, coop_upper=coop_upper, user=user)
-        
     response = flask.make_response(html_code)
     return response
 
@@ -499,10 +554,12 @@ def change_upvote(coop):
         Updates a shift whether an item was ordered after
         clicking checkbox                   
     '''
+    # get user info + redirect if needed
     netid = auth.authenticate()
     status, redirect = check_coop(coop)
     if status == False or status == "Nonexistent":
         return redirect
+    
     item_id = flask.request.args.get('id')
     old_item = database.get_item(item_id)
     old_upvotes = old_item.upvoted_members
@@ -519,8 +576,7 @@ def change_upvote(coop):
 @app.route('/<coop>/list/delete', methods=['POST'])
 def list_delete(coop):
     ''' 
-        Deletes a shift from the shopping list of the co-op 
-        in the specified route.                     
+        Deletes a shift from the co-op shopping list.              
     '''
     item_id = flask.request.args.get('id')
     database.delete_item(item_id)
@@ -528,23 +584,32 @@ def list_delete(coop):
 
 #----------------------------------------------------------------------
 
-# @app.route('/<coop>/items', methods=['GET'])
-# def list_items(coop):
-#     # print("GET request for items")
-#     items = database.get_shopping_for_coop(coop)
-#     # for item in items:
-#     #     print(item.item_name)
+# TRIED TO MAKE A HELPER FUNCTION BUT IT DID NOT WORK
+# def list_items(coop, is_food):
+#     # get user info + redirect if needed
+#     netid = auth.authenticate()
+#     status, redirect = check_coop(coop)
+#     if status == False or status == "Nonexistent":
+#         return redirect
+#     user = database.get_user(netid)
 
-#     html_code = helper.genItemTableHTML(items)
+#     start_date = flask.request.args.get('startDate')
+#     end_date = flask.request.args.get('endDate')
+
+#     items = database.get_food_list_for_week(coop, start_date, end_date)
+#     html_code = helper.gen_item_table_html(items, is_food, user.user_admin, 
+#                                                         user.user_netid)
     
 #     response = flask.make_response(html_code)
 #     return response
 
 #----------------------------------------------------------------------
 
+
 @app.route('/<coop>/items/food', methods=['GET'])
 def list_food_items(coop):
-    # get user info
+    # return list_items(coop, True)
+    # get user info + redirect if needed
     netid = auth.authenticate()
     status, redirect = check_coop(coop)
     if status == False or status == "Nonexistent":
@@ -554,12 +619,8 @@ def list_food_items(coop):
     start_date = flask.request.args.get('startDate')
     end_date = flask.request.args.get('endDate')
 
-    # print("GET request for food items")
     items = database.get_food_list_for_week(coop, start_date, end_date)
-    # for item in items:
-    #         print(item.item_name)
-
-    html_code = helper.genItemTableHTML(items, True, user.user_admin, 
+    html_code = helper.gen_item_table_html(items, True, user.user_admin, 
                                                         user.user_netid)
     
     response = flask.make_response(html_code)
@@ -569,7 +630,8 @@ def list_food_items(coop):
 
 @app.route('/<coop>/items/equipment', methods=['GET'])
 def list_equipment_items(coop):
-    # get user info
+    # return list_items(coop, False)
+    # # get user info + redirect if needed
     netid = auth.authenticate()
     status, redirect = check_coop(coop)
     if status == False or status == "Nonexistent":
@@ -579,12 +641,8 @@ def list_equipment_items(coop):
     start_date = flask.request.args.get('startDate')
     end_date = flask.request.args.get('endDate')
 
-    # print("GET request for equipment items")
     items = database.get_equipment_list_for_week(coop, start_date, end_date)
-    # for item in items:
-    #         print(item.item_name)
-
-    html_code = helper.genItemTableHTML(items, False, user.user_admin,
+    html_code = helper.gen_item_table_html(items, False, user.user_admin,
                                                         user.user_netid)
     
     response = flask.make_response(html_code)
@@ -596,7 +654,11 @@ def list_equipment_items(coop):
 
 @app.route('/<coop>/recipes', methods=['GET','POST'])
 def recipes(coop):
+    '''
+        Renders the Recipes page of the co-op in the specified route.
+    '''
 
+    # if POST request, add new recipe to database
     if flask.request.method == 'POST':
         data = json.loads(flask.request.form.to_dict()['event_data'])
 
@@ -609,17 +671,16 @@ def recipes(coop):
             recipe_img=data['recipe_img'],
             coop_name=coop
         )
-        print("new rec")
-        print(new_recipe.recipe_name)
         database.add_recipe(new_recipe)
 
-     # get user info
+     # get user info + redirect if needed
     netid = auth.authenticate()
     status, redirect = check_coop(coop)
     if status == False or status == "Nonexistent":
         return redirect
     user = database.get_user(netid)
 
+    # render Recipe page HTML
     coop_upper = database.get_upper_coop(coop)
     html = flask.render_template('templates/recipes.html',
                             coop=coop, coop_upper=coop_upper, user=user)
@@ -628,20 +689,22 @@ def recipes(coop):
 
 #----------------------------------------------------------------------
 
-@app.route('/<coop>/recipes/carousel', methods=['GET'])
+@app.route('/<coop>/recipes/gallery', methods=['GET'])
 def recipes_carousel(coop):
-    # get user info
+    '''
+        Fetches the recipes of the co-op and returns the HTML code
+        for the recipe gallery that shows these recipes.
+    '''
+    # get user info + redirect if needed
     netid = auth.authenticate()
     status, redirect = check_coop(coop)
     if status == False or status == "Nonexistent":
         return redirect
     user = database.get_user(netid)
 
+    # return recipe gallery HTML
     recipes = database.get_recipes_for_coop(coop)
-    print("recipes from DB")
-    print(recipes)
-    html_code = helper.genRecipeGalleryHTML(recipes)
-    
+    html_code = helper.gen_recipe_gallery_html(recipes)
     response = flask.make_response(html_code)
     return response
 
@@ -650,8 +713,7 @@ def recipes_carousel(coop):
 @app.route('/<coop>/recipes/delete', methods=['POST'])
 def recipes_delete(coop):
     ''' 
-        Deletes a recipe from the recipe gallery of the co-op 
-        in the specified route.                     
+        Deletes a recipe from the co-op recipes.            
     '''
     recipe_id = flask.request.args.get('id')
     database.delete_recipe(recipe_id)

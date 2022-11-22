@@ -11,7 +11,13 @@ def get_coop_names():
 
 #----------------------------------------------------------------------
 
-def genRosterHTML(members):
+def gen_roster_table_html(members):
+    '''
+        Generates HTML for a roster table that displays this data for 
+        the input members:
+        
+            Member Name, Dietary Restrictions, Cook Shift, Chore Shift
+    '''
 
     html_code = (
         '<table class="table" id="myTable" style="margin: 0;">'
@@ -37,8 +43,6 @@ def genRosterHTML(members):
                                         member.user_cookday,
                                         member.user_choreday,
                                         )
-        # html_code += ('<td><input type="button" class="btn btn-primary btn-sm" value="Remove" onclick="deleteRow(this)"></td>')
-        # html_code += ('<td hidden>{0}</td>').format(member.user_netid)
         html_code += '</tr>'
     
     html_code += ('</tbody></table>')
@@ -47,7 +51,15 @@ def genRosterHTML(members):
 
 #----------------------------------------------------------------------
 
-def genRosterOverviewHTML(members):
+def gen_roster_table_admin_html(members):
+    '''
+        Generates HTML for a roster table that displays this data for 
+        the input members:
+
+            Member NetID, Member Name, Admin Status
+
+            and a Remove button next to each member
+    '''
 
     html_code = (
         '<table class="table" id="myTable" style="margin: 0;">'
@@ -56,8 +68,6 @@ def genRosterOverviewHTML(members):
     html_code += ('<thead id="theader">')
     html_code += ('<tr><th scope="col">Member NetID</th><th scope="col">Member Name</th><th scope="col">Admin Status</th>')
     html_code += ('</thead><tbody id="tbody">')
-
-    # sort members
 
     for member in members:
         html_code += '<tr>'
@@ -88,10 +98,18 @@ def genRosterOverviewHTML(members):
 
 #----------------------------------------------------------------------
 
-def genItemTableHTML(items, is_food, is_admin, netid):
+def gen_item_table_html(items, is_food, is_admin, netid):
     '''
-        Create HTML code 
+        Generates HTML for a shopping list table that displays this data
+        for the input item:
+
+            Item, Type, Food Type (if food), Quantity, Comments,
+            Alternative Item, For Shift, Ordered,
+
+            as well as an Upvotes count and a Remove button next to each
+            item
     '''
+
     html_code = (
         '<table class="table" id="myTable" style="margin: 0;">'
         )
@@ -159,7 +177,7 @@ def genItemTableHTML(items, is_food, is_admin, netid):
 
 #----------------------------------------------------------------------
 
-def genRecipeGalleryHTML(recipes):
+def gen_recipe_gallery_html(recipes):
     # inner
     html_code = ('<div class="carousel-inner py-4">')
 
