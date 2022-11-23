@@ -20,6 +20,7 @@ app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
 # Sends email every minute (WORKS)
 def send_shift_emails():
+    print("called?")
     # Delete old shopping list items once a week
     database.delete_old_items()
     members = database.get_shift_notifications()
@@ -34,7 +35,7 @@ def send_shift_emails():
             mail.send(msg)
 
 sched = BackgroundScheduler(daemon=True)
-sched.add_job(send_shift_emails,'interval', minutes=0.5)
+sched.add_job(send_shift_emails,'interval', minutes=24*60)
 sched.start()
 
 # Import after making auth since auth uses app
@@ -346,6 +347,7 @@ def calendar(coop):
         # Turn members into a list
         members = data['event_data[shift_members]'].split(",")
         members = [m.strip() for m in members]
+        members.pop()
         new_shift_vals = [
             data['event_data[shift_name]'],
             data['event_data[shift_type]'],
@@ -376,11 +378,11 @@ def calendar(coop):
     if status == False or status == "Nonexistent":
         return redirect
     user = database.get_user(netid)
-
+    members = database.get_names_for_coop(coop)
     # render Calendar page HTML
     coop_upper = database.get_upper_coop(coop)
     html_code = flask.render_template('templates/calendar_initialize.html',
-                coop=coop, coop_upper=coop_upper, user=user)
+                coop=coop, coop_upper=coop_upper, user=user, members=members)
     response = flask.make_response(html_code)
     return response
 
@@ -409,6 +411,7 @@ def calendar_update(coop):
     # Turn members into a list
     members = data['event_data[shift_members]'].split(",")
     members = [m.strip() for m in members]
+    members.pop()
     # Update time
     shift_time = old_shift.shift_time[0:10]
     if data['event_data[shift_time]'] != "": 

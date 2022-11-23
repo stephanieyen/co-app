@@ -1,4 +1,3 @@
-from tokenize import String
 from typing import List
 import sqlalchemy
 import sqlalchemy.orm
@@ -9,7 +8,7 @@ from datetime import datetime, timedelta
 # How to use env var for this???
 db_url = 'postgresql://qqoyksvp:4DE2MIUDdxlcY8L66A5aMLj5ze4zaNbF@peanut.db.elephantsql.com/qqoyksvp'
 # Global engine to use
-engine =  sqlalchemy.create_engine(db_url)
+engine =  sqlalchemy.create_engine(db_url, pool_pre_ping=True)
 #----------------------------------------------------------------------
 # Co-op Info Queries
 #----------------------------------------------------------------------
@@ -30,6 +29,23 @@ def get_roster_for_coop(coop) -> List[models.Roster]:
                 models.Roster.user_name.desc()
             ).all()
     return coop_roster
+
+# Get the entire roster for a given coop
+def get_names_for_coop(coop):
+    '''
+        Get and return the entire roster of the input co-op
+        mapping names to netid
+    '''
+    coop_roster = []
+    with sqlalchemy.orm.Session(engine) as session:
+        coop_roster = session.query(models.Roster).filter(
+            models.Roster.coop_name==coop).order_by(
+                models.Roster.user_name.desc()
+            ).all()
+        members = {}
+        for member in coop_roster:
+            members[member.user_name] = member.user_netid
+    return members
 
 # Get the current shopping list for a co-op
 def get_shopping_for_coop(coop) -> List[models.ShoppingList]:
@@ -263,8 +279,8 @@ def delete_old_items():
     today = datetime.now()
     weekday = today.weekday()
     twoweeksago = str(datetime.now() - timedelta(days = 14))
-    # if weekday != 6:
-    #     return
+    if weekday != 6:
+        return
     with sqlalchemy.orm.Session(engine) as session:
         session.query(models.ShoppingList).filter(
             models.ShoppingList.date_added <= twoweeksago,
