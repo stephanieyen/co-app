@@ -353,6 +353,14 @@ def add_recipe(recipe: models.Recipes):
     with sqlalchemy.orm.Session(engine) as session:
         session.add(recipe)
         session.commit()
+
+# Delete a user's information
+def delete_recipe(recipe_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        session.query(models.Recipes).filter(
+            models.Recipes.recipe_id == recipe_id).delete()
+        session.commit()
+
 #----------------------------------------------------------------------
 
 # Unit testing for these

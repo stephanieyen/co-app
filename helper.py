@@ -203,7 +203,7 @@ def gen_recipe_gallery_html(recipes):
         html_code += ('Instructions </button>')
 
         # Remove button
-        html_code += ('<input type="button" class="btn btn-danger btn-sm" value="Remove" onclick="removeRecipe(this)">')
+        html_code += ('<input type="button" class="btn btn-danger" value="Remove" onclick="removeRecipe(this)">')
 
         # hidden recipe ID
         html_code += ('<p hidden>{0}</p>').format(recipe.recipe_id)

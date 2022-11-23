@@ -222,7 +222,10 @@
         multiple: false,  //restrict upload to a single file
         tags: ["{{coop}}"], //add the given tags to the uploaded files
         maxImageFileSize: 2000000,  //restrict file size to less than 2MB
-        maxImageWidth: 2000, //Scales the image down to a width of 2000 pixels before uploading
+        maxImageWidth: 1080, //Scales the image down to a width of 1080 pixels before uploading
+        maxImageHeight: 1080,
+        cropping: true,
+        croppingValidateDimensions: true
       },
       (error, result) => {
         if (!error && result && result.event === "success") {
@@ -243,18 +246,6 @@
     refreshGallery();
 
     $("#createRecipeModal").on("click", "#rec_submit", addRecipe);
-
-    // image upload/delete
-    $("#recipe_img").change(function () {
-      readURL(this);
-      $('#delete_img').removeClass('d-none');
-    });
-
-    $('#delete_img').on('click', function () {
-      $('#delete_img').addClass('d-none');
-      $('#placeholder_img').attr('src', "{{ url_for('static',filename='no_image.png') }}");
-    });
-
   }
 
   $('document').ready(setup);
