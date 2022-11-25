@@ -721,3 +721,27 @@ def recipes_delete(coop):
     recipe_id = flask.request.args.get('id')
     database.delete_recipe(recipe_id)
     return ''
+
+#----------------------------------------------------------------------
+# Co-Op Sign-in
+#----------------------------------------------------------------------
+
+@app.route('/<coop>/signin', methods=['GET','POST'])
+def sign_in(coop):
+    '''
+        Renders the Sign-in page of the co-op in the specified route.
+    '''
+
+    # get user info + redirect if needed
+    netid = auth.authenticate()
+    status, redirect = check_coop(coop)
+    if status == False or status == "Nonexistent":
+        return redirect
+    user = database.get_user(netid)
+
+    # render Recipe page HTML
+    coop_upper = database.get_upper_coop(coop)
+    html = flask.render_template('templates/sign_in.html',
+                            coop=coop, coop_upper=coop_upper, user=user)
+    response = flask.make_response(html)
+    return response
