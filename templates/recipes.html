@@ -20,6 +20,39 @@
         </div>
       </div>
 
+      <!-- Toggle Buttons (Meal Type) -->
+      <div class="row text-left">
+          <div class="btn-group">
+            <div class="col-sm-2">
+              <label class="btn btn-secondary active" id="breakfast-toggle">
+                <input type="radio" class="btn-check" name="break-option" id="breakfast-btn" autocomplete="off"> Breakfast
+              </label>
+            </div>
+            <div class="col-sm-2">
+              <label class="btn btn-secondary" id="lunch-toggle">
+                <input type="radio" class="btn-check" name="lunch-option" id="lunch-btn" autocomplete="off"> Lunch
+              </label>
+            </div>
+            <div class="col-sm-2">
+              <label class="btn btn-secondary" id="din-toggle">
+                <input type="radio" class="btn-check" name="din-option" id="din-btn" autocomplete="off"> Dinner
+              </label>
+            </div>
+            <div class="col-sm-2">
+              <label class="btn btn-secondary" id="dessert-toggle">
+                <input type="radio" class="btn-check" name="dessert-option" id="dessert-btn" autocomplete="off"> Dessert
+              </label>
+            </div>
+            <div class="col-sm-2">
+              <label class="btn btn-secondary" id="other-toggle">
+                <input type="radio" class="btn-check" name="other-option" id="other-btn" autocomplete="off"> Other
+              </label>
+            </div>
+          </div>
+      </div>
+
+      <br>      
+
       <!-- Recipe Gallery Carousel -->
       <div class="row">
         <div iclass="col-sm-11 text-center">
@@ -246,6 +279,9 @@
     refreshGallery();
 
     $("#createRecipeModal").on("click", "#rec_submit", addRecipe);
+    $(".btn-check").on("click", function() {
+      console.log("detected button click")
+    })
   }
 
   $('document').ready(setup);
