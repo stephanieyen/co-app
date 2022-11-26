@@ -160,11 +160,13 @@ def gen_item_table_html(items, is_food, is_admin, netid):
         html_code += ('</div></td>')
         upvote_count = str(len(item.upvoted_members))
         if netid in item.upvoted_members:
-            html_code += ('<td><button type="button" class="btn btn-info btn-sm" onclick="changeUpvote(this)">')
-            html_code += upvote_count + ('</button></td>')
+            html_code += ('<td><button type="button" class="btn btn-primary btn-sm" onclick="changeUpvote(this)">')
+            html_code += ('<i class="bi bi-hand-thumbs-up"></i>')
+            html_code += ' ' + upvote_count + ('</button></td>')
         else:
             html_code += ('<td><button type="button" class="btn btn-secondary btn-sm" onclick="changeUpvote(this)">')
-            html_code += upvote_count + ('</button></td>')
+            html_code += ('<i class="bi bi-hand-thumbs-up"></i>')
+            html_code += ' ' + upvote_count + ('</button></td>')
         if is_admin or (netid == item.requesting_user):
             html_code += ('<td><button type="button" class="btn btn-danger btn-sm" onclick="removeItem(this)">Remove</button></td>')
         html_code += ('<td hidden>{0}</td>').format(item.item_id)
