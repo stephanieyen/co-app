@@ -5,6 +5,7 @@ import models
 import helper
 from flask import jsonify
 from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.cron import CronTrigger
 from flask_mail import Mail, Message
 from datetime import datetime, timedelta
 
@@ -18,11 +19,12 @@ app.config['MAIL_PASSWORD'] = 'zdymxwgrisdsftkv'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
-# Sends email every minute (WORKS)
+# Sends email every day
 def send_shift_emails():
-    print("called?")
     # Delete old shopping list items once a week
     database.delete_old_items()
+    # Reset signin table
+    database.reset_signin()
     members = database.get_shift_notifications()
     for member in members:
         with app.app_context():
@@ -33,10 +35,13 @@ def send_shift_emails():
                 subject="Co-App Shift Reminder!",
                 recipients=[email])
             mail.send(msg)
-
+# Do it every day at 12:00 AM EST
+trigger = CronTrigger(
+    year="*", month="*", day="*", hour="5", minute="00", timezone="UTC"
+)
 sched = BackgroundScheduler(daemon=True)
-sched.add_job(send_shift_emails,'interval', minutes=24*60)
 sched.start()
+sched.add_job(send_shift_emails, trigger=trigger)
 
 # Import after making auth since auth uses app
 import auth
@@ -779,6 +784,14 @@ def sign_in_details(coop):
     if status == False or status == "Nonexistent":
         return redirect
     signin = database.get_signin(netid)
+    if signin is None:
+        data = {}
+        data['brunch'] = False
+        data['brunch_guests'] = 0
+        data['dinner'] = False
+        data['dinner_guests'] = 0
+        data['current_count_brunch'], data['current_count_dinner'] = database.get_total_guests(coop)
+        return jsonify(data)
     data = {}
     data['brunch'] = signin.brunch
     data['brunch_guests'] = signin.brunch_guests

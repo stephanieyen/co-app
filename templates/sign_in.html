@@ -161,11 +161,18 @@
         request = $.post("/{{coop}}/signin", {
             dataType: 'json',
             contentType: 'application/json',
-            event_data: JSON.stringify(json_event)
+            event_data: JSON.stringify(json_event),
+            beforeSend: function(){
+                // Show image container
+                $("#overlay").show();
+                $("#signin-content").hide();
+            }
         }).done(function (data) {
             refreshInfo("");
         }).fail(function (jqXHR, textStatus, errorThrown) {
             alert("Error updating sign-in information. Try again!")
+            $("#overlay").hide();
+            $("#signin-content").show();
         });
     }
 

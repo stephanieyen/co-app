@@ -413,28 +413,10 @@ def get_total_guests(coop):
                 total_count_dinner += member.dinner_guests + 1
         return (total_count_brunch, total_count_dinner)
 
-def get_total_brunch(coop):
-    total_count = 0
+def reset_signin():
     with sqlalchemy.orm.Session(engine) as session:
-        total_signin = session.query(models.SignIn).filter(
-            models.SignIn.coop_name == coop,
-            models.SignIn.brunch
-        ).all()
-        for member in total_signin:
-            total_count += member.brunch_guests + 1
-        return total_count
-
-def get_total_dinner(coop):
-    total_count = 0
-    with sqlalchemy.orm.Session(engine) as session:
-        total_signin = session.query(models.SignIn).filter(
-            models.SignIn.coop_name == coop,
-            models.SignIn.dinner
-        ).all()
-        for member in total_signin:
-            total_count += member.dinner_guests + 1
-        return total_count
-
+        session.query(models.SignIn).delete()
+        session.commit()
 #----------------------------------------------------------------------
 
 # Unit testing for these
