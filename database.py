@@ -362,6 +362,66 @@ def delete_recipe(recipe_id):
         session.commit()
 
 #----------------------------------------------------------------------
+# Signin queries
+#----------------------------------------------------------------------
+def get_signin(netid) -> models.SignIn:
+    signin = None
+    with sqlalchemy.orm.Session(engine) as session:
+        signin = session.query(models.SignIn).filter(
+            models.SignIn.netid == netid).first()
+    return signin
+
+def add_signin(signin: models.SignIn):
+    with sqlalchemy.orm.Session(engine) as session:
+        session.add(signin)
+        session.commit()
+
+# Update a user's information
+def update_signin(netid, new_signin: models.SignIn):
+    with sqlalchemy.orm.Session(engine) as session:
+        session.query(models.SignIn).filter(
+            models.SignIn.netid == netid).update(
+                {
+                    'netid': new_signin.netid,
+                    'brunch': new_signin.brunch,
+                    'brunch_guests': new_signin.brunch_guests,
+                    'dinner': new_signin.dinner,
+                    'dinner_guests': new_signin.dinner_guests,
+                    'coop_name': new_signin.coop_name
+                }
+            )
+        session.commit()
+
+# Delete a user's information
+def delete_signin(netid):
+    with sqlalchemy.orm.Session(engine) as session:
+        session.query(models.SignIn).filter(
+            models.SignIn.netid == netid).first().delete()
+        session.commit()
+
+def get_total_brunch(coop):
+    total_count = 0
+    with sqlalchemy.orm.Session(engine) as session:
+        total_signin = session.query(models.SignIn).filter(
+            models.SignIn.coop_name == coop,
+            models.SignIn.brunch
+        ).all()
+        for member in total_signin:
+            total_count += member.brunch_guests + 1
+        return total_count
+
+def get_total_dinner(coop):
+    total_count = 0
+    with sqlalchemy.orm.Session(engine) as session:
+        total_signin = session.query(models.SignIn).filter(
+            models.SignIn.coop_name == coop,
+            models.SignIn.dinner
+        ).all()
+        for member in total_signin:
+            total_count += member.dinner_guests + 1
+        return total_count
+
+#----------------------------------------------------------------------
 
 # Unit testing for these
 def main():

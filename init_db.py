@@ -216,6 +216,29 @@ def add_test_recipes(session):
 
 #----------------------------------------------------------------------
 
+# Add test recipes
+def add_test_signin(session): 
+    signin = models.SignIn(
+        netid = 'amkumar',
+        coop_name = '2d',
+        brunch = True,
+        brunch_guests = 0,
+        dinner = True,
+        dinner_guests = 0
+    )
+    session.add(signin)
+    signin = models.SignIn(
+        netid = 'sy7',
+        coop_name = '2d',
+        brunch = False,
+        brunch_guests = 0,
+        dinner = True,
+        dinner_guests = 2
+    )
+    session.add(signin)
+
+#----------------------------------------------------------------------
+
 def main():
     # Create engine and drop and recreate all tables
     engine = sqlalchemy.create_engine(db_url)
@@ -228,6 +251,7 @@ def main():
         add_test_shopping(session)
         add_test_shifts(session)
         add_test_recipes(session)
+        add_test_signin(session)
         session.commit()
    
     engine.dispose()

@@ -58,3 +58,15 @@ class Recipes(Base):
     recipe_instructions = sqlalchemy.Column(sqlalchemy.String)
     recipe_img = sqlalchemy.Column(sqlalchemy.String)
     coop_name = sqlalchemy.Column(sqlalchemy.String)
+
+# Sign-in table
+class SignIn(Base):
+    __tablename__ = 'signin'
+    netid = sqlalchemy.Column(sqlalchemy.String, primary_key=True)
+    coop_name = sqlalchemy.Column(sqlalchemy.String)
+    brunch = sqlalchemy.Column(sqlalchemy.Boolean)
+    brunch_guests = sqlalchemy.Column(sqlalchemy.Integer)
+    dinner = sqlalchemy.Column(sqlalchemy.Boolean)
+    dinner_guests = sqlalchemy.Column(sqlalchemy.Integer)
+
+    
