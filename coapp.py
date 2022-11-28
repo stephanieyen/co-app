@@ -669,12 +669,14 @@ def recipes(coop):
             recipe_author=data['recipe_author'],
             recipe_name=data['recipe_name'],
             recipe_link=data['recipe_link'],
+            # recipe_type=data['recipe_type'],
             recipe_ingredients=data['recipe_ingredients'],
             recipe_instructions=data['recipe_instructions'],
             recipe_img=data['recipe_img'],
             coop_name=coop
         )
         database.add_recipe(new_recipe)
+        print(new_recipe)
 
      # get user info + redirect if needed
     netid = auth.authenticate()
@@ -704,6 +706,11 @@ def recipes_carousel(coop):
     if status == False or status == "Nonexistent":
         return redirect
     user = database.get_user(netid)
+
+    # get meal type to generate according recipes
+    meal = flask.request.args.get('meal')
+    meal.strip()
+    print("meal = ", meal)
 
     # return recipe gallery HTML
     recipes = database.get_recipes_for_coop(coop)
