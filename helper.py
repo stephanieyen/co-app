@@ -121,7 +121,7 @@ def gen_item_table_html(items, is_food, is_admin, netid):
     html_code += ('<th scope="col">Qty</th><th scope="col">Comments</th>'
                 '<th scope="col">Alt Item</th><th scope="col">For Shift?</th>'
                 '<th scope="col">Ordered?</th>'
-                '<th scope="col">Upvotes</th><th scope="col">Requesting User</th>'
+                '<th scope="col">Upvotes</th><th scope="col">Requester</th>'
                 '</tr>')
     html_code += ('</thead><tbody id="tbody">')
 
