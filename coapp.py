@@ -669,12 +669,14 @@ def recipes(coop):
             recipe_author=data['recipe_author'],
             recipe_name=data['recipe_name'],
             recipe_link=data['recipe_link'],
+            # recipe_type=data['recipe_type'],
             recipe_ingredients=data['recipe_ingredients'],
             recipe_instructions=data['recipe_instructions'],
             recipe_img=data['recipe_img'],
             coop_name=coop
         )
         database.add_recipe(new_recipe)
+        print(new_recipe)
 
      # get user info + redirect if needed
     netid = auth.authenticate()
@@ -705,6 +707,11 @@ def recipes_carousel(coop):
         return redirect
     user = database.get_user(netid)
 
+    # get meal type to generate according recipes
+    meal = flask.request.args.get('meal')
+    meal.strip()
+    print("meal = ", meal)
+
     # return recipe gallery HTML
     recipes = database.get_recipes_for_coop(coop)
     html_code = helper.gen_recipe_gallery_html(recipes)
@@ -731,6 +738,22 @@ def sign_in(coop):
     '''
         Renders the Sign-in page of the co-op in the specified route.
     '''
+    # if POST request, add new recipe to database
+    if flask.request.method == 'POST':
+        data = json.loads(flask.request.form.to_dict()['event_data'])
+        new_signin = models.SignIn(
+            netid = data['netid'],
+            coop_name = coop,
+            brunch = data['brunch'],
+            brunch_guests = data['brunch_guests'],
+            dinner = data['dinner'],
+            dinner_guests = data['dinner_guests']
+        )
+        if database.get_signin(data['netid']) is not None:
+            database.update_signin(data['netid'], new_signin)
+        else:
+            database.add_signin(new_signin)
+
 
     # get user info + redirect if needed
     netid = auth.authenticate()
@@ -738,8 +761,7 @@ def sign_in(coop):
     if status == False or status == "Nonexistent":
         return redirect
     user = database.get_user(netid)
-
-    # render Recipe page HTML
+    # render signin page HTML
     coop_upper = database.get_upper_coop(coop)
     html = flask.render_template('templates/sign_in.html',
                             coop=coop, coop_upper=coop_upper, user=user)

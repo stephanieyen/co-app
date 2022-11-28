@@ -27,27 +27,27 @@
           <div class="btn-group">
             <div class="col-sm-2">
               <label class="btn btn-secondary active" id="breakfast-toggle">
-                <input type="radio" class="btn-check" name="break-option" id="breakfast-btn" autocomplete="off"> Breakfast
+                <input type="radio" class="btn-check" name="break-option" id="breakfast" autocomplete="off"> Breakfast
               </label>
             </div>
             <div class="col-sm-2">
               <label class="btn btn-secondary" id="lunch-toggle">
-                <input type="radio" class="btn-check" name="lunch-option" id="lunch-btn" autocomplete="off"> Lunch
+                <input type="radio" class="btn-check" name="lunch-option" id="lunch" autocomplete="off"> Lunch
               </label>
             </div>
             <div class="col-sm-2">
               <label class="btn btn-secondary" id="din-toggle">
-                <input type="radio" class="btn-check" name="din-option" id="din-btn" autocomplete="off"> Dinner
+                <input type="radio" class="btn-check" name="din-option" id="dinner" autocomplete="off"> Dinner
               </label>
             </div>
             <div class="col-sm-2">
               <label class="btn btn-secondary" id="dessert-toggle">
-                <input type="radio" class="btn-check" name="dessert-option" id="dessert-btn" autocomplete="off"> Dessert
+                <input type="radio" class="btn-check" name="dessert-option" id="dessert" autocomplete="off"> Dessert
               </label>
             </div>
             <div class="col-sm-2">
               <label class="btn btn-secondary" id="other-toggle">
-                <input type="radio" class="btn-check" name="other-option" id="other-btn" autocomplete="off"> Other
+                <input type="radio" class="btn-check" name="other-option" id="other" autocomplete="off"> Other
               </label>
             </div>
           </div>
@@ -101,7 +101,7 @@
         <br>
         <div class="form-group">
           <label for="recipe_type">Recipe Type:</label>
-          <select class="form-select" id="food_type" aria-label="Select food type">
+          <select class="form-select" id="recipe_type" aria-label="Select food type">
             <option value="0" selected>Choose...</option>
             <option value="Breakfast">Breakfast</option>
             <option value="Lunch">Lunch</option>
@@ -153,11 +153,11 @@
 
   let request = null;
 
-  function refreshGallery() {
+  function refreshGallery(meal) {
     request = $.ajax(
       {
         type: 'GET',
-        url: '/{{coop}}/recipes/gallery',
+        url: '/{{coop}}/recipes/gallery?meal=' + meal,
         success: handleResponse,
         failure: function () {
           alert('There was an error while fetching recipes!');
@@ -173,6 +173,7 @@
     // extract input from modal
     let recipe_name = $('#recipe_name').val();
     let recipe_link = $('#recipe_link').val();
+    let recipe_type = $('#recipe_type').val();
     let recipe_ingredients = $('#recipe_ingredients').val();
     let recipe_instructions = $('#recipe_instructions').val();
     let recipe_img = $('#recipe_img').attr('src');
@@ -182,6 +183,7 @@
       "recipe_author": "{{user.user_netid}}",
       "recipe_name": recipe_name,
       "recipe_link": recipe_link,
+      "recipe_type": recipe_type,
       "recipe_ingredients": recipe_ingredients,
       "recipe_instructions": recipe_instructions,
       "recipe_img": recipe_img
@@ -208,6 +210,7 @@
     // reset all fields in modal
     $('#recipe_name').val('');
     $('#recipe_link').val('');
+    $('#recipe_type').val(0);
     $('#recipe_ingredients').val('');
     $('#recipe_instructions').val('');
     $('#recipe_img').attr('src', 'https://res.cloudinary.com/coapp/image/upload/v1669151022/prjhmx1wqmkxxzoypekd.png');
@@ -248,6 +251,22 @@
     }
   }
 
+  function changeView() {
+    // get active button
+    var activeId = '';
+    $('input[type=radio]').each(function(){
+    if($(this).is(':checked')){
+        activeId = $(this).attr('id'); 
+        console.log(activeId)
+        console.log('is clicked')
+        $(this).prop('checked', false);
+        return false;
+    }
+    });
+    refreshGallery(activeId)
+
+  }
+
   function setup() {
     // set up image uploading w/ cloudinary
     const myWidget = cloudinary.createUploadWidget(
@@ -281,9 +300,7 @@
     refreshGallery();
 
     $("#createRecipeModal").on("click", "#rec_submit", addRecipe);
-    $(".btn-check").on("click", function() {
-      console.log("detected button click")
-    })
+    $(".btn-check").on("click", changeView);
   }
 
   $('document').ready(setup);
