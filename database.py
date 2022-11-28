@@ -153,7 +153,10 @@ def get_shifts_for_week(coop, startDate, endDate) -> List[models.Shifts]:
                     models.Shifts.shift_time >= startOfWeek,
                     models.Shifts.shift_time <= endOfWeek
                 ),
-                models.Shifts.shift_recurring
+                sqlalchemy.and_(
+                    models.Shifts.shift_recurring,
+                    models.Shifts.coop_name==coop,
+                )
             )
         ).all()
     return coop_shifts
