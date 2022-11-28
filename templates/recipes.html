@@ -276,10 +276,12 @@
         multiple: false,  //restrict upload to a single file
         tags: ["{{coop}}"], //add the given tags to the uploaded files
         maxImageFileSize: 2000000,  //restrict file size to less than 2MB
-        maxImageWidth: 1080, //Scales the image down to a width of 1080 pixels before uploading
-        maxImageHeight: 1080,
-        cropping: true,
-        croppingValidateDimensions: true
+        // minImageWidth: 1080, // scales image up to height of 1080 pixels
+        // maxImageWidth: 1080, //Scales the image down to a width of 1080 pixels before uploading
+        // minImageHeight: 1080, // scales image up to height of 1080 pixels
+        // maxImageHeight: 1080, //Scales the image down to a width of 1080 pixels before uploading
+        cropping: false,
+        // croppingValidateDimensions: true
       },
       (error, result) => {
         if (!error && result && result.event === "success") {
