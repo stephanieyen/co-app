@@ -119,9 +119,9 @@ def gen_item_table_html(items, is_food, is_admin, netid):
     if is_food is True:
         html_code += ('<th scope="col">Food Type</th>')
     html_code += ('<th scope="col">Qty</th><th scope="col">Comments</th>'
-                '<th scope="col">Alt Item</th><th scope="col">For Shift?</th>'
-                '<th scope="col">Ordered?</th>'
-                '<th scope="col">Upvotes</th><th scope="col">Requester</th>'
+                '<th scope="col">Alt Item</th><th scope="col">Requester</th>'
+                '<th scope="col">For Shift?</th><th scope="col">Ordered?</th>'
+                '<th scope="col">Upvotes</th>'
                 '</tr>')
     html_code += ('</thead><tbody id="tbody">')
 
@@ -138,9 +138,11 @@ def gen_item_table_html(items, is_food, is_admin, netid):
             html_code += ('<td>{0}</td>').format(item.food_type)
         html_code += ('<td>{0}</td>'
                     '<td>{1}</td>'
-                    '<td>{2}</td>').format(item.item_quantity,
+                    '<td>{2}</td>'
+                    '<td>{3}</td>').format(item.item_quantity,
                                         item.item_reason,
-                                        item.alt_request)
+                                        item.alt_request,
+                                        item.requesting_user)
         if item.for_shift is True:
             for_shift = "Yes"
         else:
@@ -165,7 +167,7 @@ def gen_item_table_html(items, is_food, is_admin, netid):
             html_code += ('<td><button type="button" class="btn btn-secondary btn-sm" onclick="changeUpvote(this)">')
             html_code += ('<i class="bi bi-hand-thumbs-up"></i>')
             html_code += ' ' + upvote_count + ('</button></td>')
-        html_code += ('<td>{0}</td>').format(item.requesting_user)
+        
         if is_admin or (netid == item.requesting_user):
             html_code += ('<td><button type="button" class="btn btn-danger btn-sm" onclick="removeItem(this)">Remove</button></td>')
         html_code += ('<td hidden>{0}</td>').format(item.item_id)
