@@ -103,12 +103,6 @@
         background: black;
         opacity: .5;
     }
-    .container{
-        position:relative;
-        height: 300px;
-        width: 200px;
-        border:1px solid
-    }
     /* Safari */
     @-webkit-keyframes spin {
       0% { -webkit-transform: rotate(0deg); }
