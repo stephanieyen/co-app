@@ -767,3 +767,22 @@ def sign_in(coop):
                             coop=coop, coop_upper=coop_upper, user=user)
     response = flask.make_response(html)
     return response
+
+@app.route('/<coop>/signin/details', methods=['GET'])
+def sign_in_details(coop):
+    '''
+        Sends data to signin page
+    '''
+    # get user info + redirect if needed
+    netid = auth.authenticate()
+    status, redirect = check_coop(coop)
+    if status == False or status == "Nonexistent":
+        return redirect
+    signin = database.get_signin(netid)
+    data = {}
+    data['brunch'] = signin.brunch
+    data['brunch_guests'] = signin.brunch_guests
+    data['dinner'] = signin.dinner
+    data['dinner_guests'] = signin.dinner_guests
+    data['current_count_brunch'], data['current_count_dinner'] = database.get_total_guests(coop)
+    return jsonify(data)

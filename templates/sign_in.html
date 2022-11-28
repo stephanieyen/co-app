@@ -5,11 +5,13 @@
 
 {% extends "templates/base.html" %}
 {% block content %}
-<div class="container-fluid">
+<div id="overlay">
+    <div class="loader"></div>
+</div>
+<div id="signin-content" class="container-fluid">
     <div class="row">
         <div class="col-sm-1"></div>
         <div class="col-sm-10">
-
             <!-- Title Row - "Sign in" -->
             <div class="row">
                 <div class="text-left">
@@ -60,7 +62,8 @@
                 </div>
 
                 <div class="row text-left">
-                    <h5>Current Count:</h5>
+                    <h5 id="brunch-count"></h5>
+                    <button id="update-brunch" class="btn btn-primary">Update Info</button>
                 </div>
                 <!-- <div class="row">
                     <div class="text-left">
@@ -68,7 +71,6 @@
                         <h5>Allergies:</h5>
                     </div>
                 </div> -->
-
             </div>
 
             <!-- Title Row - "Dinner" -->
@@ -114,7 +116,8 @@
 
                 <div class="row text-left">
                     <br>
-                    <h5>Current Count:</h5>
+                    <h5 id="dinner-count"></h5>
+                    <button id="update-dinner" class="btn btn-primary">Update Info</button>
                 </div>
                 <!-- <div class="row">
                     <div class="text-left">
@@ -134,16 +137,17 @@
     'use strict';
 
     function sign_in() {
-        console.log("Reached")
         // extract input from modal
         let brunch = $("#brunch-check").prop('checked')
         let brunch_guests = 0
-        if ($("#brunch-guests").val() !== '') 
+        let brunch_val = parseInt($("#brunch-guests").val())
+        if (!isNaN(brunch_val) && brunch_val >= 0)
             brunch_guests = parseInt($("#brunch-guests").val())
         let dinner = $("#dinner-check").prop('checked')
         let dinner_guests = 0
-        if ($("#dinner-guests").val() !== '') 
-            dinner_guests = parseInt($("#brunch-guests").val())
+        let dinner_val = parseInt($("#dinner-guests").val())
+        if (!isNaN(dinner_val) && dinner_val >= 0)
+            dinner_guests = parseInt($("#dinner-guests").val())
 
         // AJAX update database
         var json_event = {
@@ -153,7 +157,6 @@
             "dinner": dinner,
             "dinner_guests": dinner_guests,
         };
-        console.log(json_event)
 
         request = $.post("/{{coop}}/signin", {
             dataType: 'json',
@@ -167,25 +170,35 @@
     }
 
     function handleResponse(response) {
-        $('#roster').html(response);
+        $("#overlay").hide();
+        $("#signin-content").show();
+        $("#brunch-check").prop('checked', response.brunch);
+        $("#brunch-guests").val(response.brunch_guests);
+        $("#dinner-check").prop('checked', response.dinner);
+        $("#dinner-guests").val(response.dinner_guests);
+        $("#brunch-count").html("Current Count: " + response.current_count_brunch)
+        $("#dinner-count").html("Current Count: " + response.current_count_dinner)
     }
 
     let request = null;
 
     // refresh page with get request 
     function refreshInfo() {
-        console.log("fetching refreshed sign-in info");
         request = $.ajax(
             {
                 type: 'GET',
-                url: '/{{coop}}/signin',
+                url: '/{{coop}}/signin/details',
                 success: handleResponse,
                 failure: function () {
                     alert('there was an error while fetching members!');
+                },
+                beforeSend: function(){
+                    // Show image container
+                    $("#overlay").show();
+                    $("#signin-content").hide();
                 }
             }
         );
-        console.log("made request")
     }
 
     function setup() {
@@ -204,12 +217,14 @@
         refreshInfo("");
 
         // checkbox changes
-        $("#brunch-check").change(function () {
-            sign_in()
-        });
-        $("#dinner-check").change(function () {
-            sign_in()
-        });
+        // $("#brunch-check").change(function () {
+        //     sign_in()
+        // });
+        // $("#dinner-check").change(function () {
+        //     sign_in()
+        // });
+        $("#update-brunch").on('click', sign_in)
+        $("#update-dinner").on('click', sign_in)
     }
 
     $('document').ready(setup);

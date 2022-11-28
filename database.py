@@ -399,6 +399,20 @@ def delete_signin(netid):
             models.SignIn.netid == netid).first().delete()
         session.commit()
 
+def get_total_guests(coop):
+    total_count_brunch = 0
+    total_count_dinner = 0
+    with sqlalchemy.orm.Session(engine) as session:
+        total_signin = session.query(models.SignIn).filter(
+            models.SignIn.coop_name == coop,
+        ).all()
+        for member in total_signin:
+            if member.brunch:
+                total_count_brunch += member.brunch_guests + 1
+            if member.dinner:
+                total_count_dinner += member.dinner_guests + 1
+        return (total_count_brunch, total_count_dinner)
+
 def get_total_brunch(coop):
     total_count = 0
     with sqlalchemy.orm.Session(engine) as session:
