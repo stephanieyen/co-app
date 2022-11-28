@@ -159,10 +159,12 @@
   function refreshList(item_type) {
     // console.log("fetching refreshed list");
     var curr = new Date; // get date for week
-    var start = getDate()
+    var start = getDate() - 1;
     var end = start + 6;
     var startDate = new Date(curr.setDate(start)).toISOString().substring(0, 10);
     var endDate = new Date(curr.setDate(end)).toISOString().substring(0, 10);
+    console.log(startDate)
+    console.log(endDate)
 
 
     if (item_type == "Equipment") {
