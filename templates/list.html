@@ -98,6 +98,7 @@
         </div>
         <!-- Only if food, show food type option -->
         <div class="form-group" id="food_type_visible" style="display: none">
+          <br>
           <label for="foodtype">Food Type:</label>
           <select class="form-select" id="food_type" aria-label="Select food type">
             <option value="0" selected>Choose...</option>
@@ -163,9 +164,6 @@
     var end = start + 6;
     var startDate = new Date(curr.setDate(start)).toISOString().substring(0, 10);
     var endDate = new Date(curr.setDate(end)).toISOString().substring(0, 10);
-    console.log(startDate)
-    console.log(endDate)
-
 
     if (item_type == "Equipment") {
       console.log("Getting Equip")
