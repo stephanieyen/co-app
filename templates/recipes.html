@@ -24,7 +24,25 @@
 
       <!-- Toggle Buttons (Meal Type) -->
       <div class="row text-left">
-          <div class="btn-group">
+        <div class="dropdown">
+          <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="false">
+            All
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
+            <li><a class="dropdown-item" href="#" data-value="breakfast">Breakfast</a></li>
+            <li><a class="dropdown-item" href="#" data-value="lunch">Lunch</a></li>
+            <li><a class="dropdown-item" href="#" data-value="dinner">Dinner</a></li>
+            <li><a class="dropdown-item" href="#" data-value="dessert">Dessert</a></li>
+            <li><a class="dropdown-item" href="#" data-value="other">Other</a></li>
+            <!-- <li><button class="dropdown-item" type="radio" id="breakfast">Breakfast</button></li>
+            <li><button class="dropdown-item" type="radio" id="lunch">Lunch</button></li>
+            <li><button class="dropdown-item" type="radio" id="dinner">Dinner</button></li>
+            <li><button class="dropdown-item" type="radio" id="dessert">Dessert</button></li>
+            <li><button class="dropdown-item" type="radio" id="other">Other</button></li> -->
+          </ul>
+        </div>
+          <!-- <div class="btn-group">
             <div class="col-sm-2">
               <label class="btn btn-secondary active" id="breakfast-toggle">
                 <input type="radio" class="btn-check" name="break-option" id="breakfast" autocomplete="off"> Breakfast
@@ -51,7 +69,7 @@
               </label>
             </div>
           </div>
-      </div>
+      </div> -->
 
       <br>      
 
@@ -199,7 +217,7 @@
       // success: refresh gallery
     }).done(function (data) {
       console.log("success")
-      refreshGallery();
+      refreshGallery("All");
     }).fail(function (jqXHR, textStatus, errorThrown) {
       alert("Error adding recipe. Try again!")
     });
@@ -243,7 +261,7 @@
           url: url,
         }
       ).done(function (data) {
-        refreshGallery();
+        refreshGallery("All");
       }).fail(function (jqXHR, textStatus, errorThrown) {
         alert("Error updating recipe gallery. Try again!")
       });
@@ -251,21 +269,21 @@
     }
   }
 
-  function changeView() {
-    // get active button
-    var activeId = '';
-    $('input[type=radio]').each(function(){
-    if($(this).is(':checked')){
-        activeId = $(this).attr('id'); 
-        console.log(activeId)
-        console.log('is clicked')
-        $(this).prop('checked', false);
-        return false;
-    }
-    });
-    refreshGallery(activeId)
+  // function changeView() {
+  //   // get active button
+  //   var activeId = '';
+  //   $('input[type=radio]').each(function(){
+  //   if($(this).is(':checked')){
+  //       activeId = $(this).attr('id'); 
+  //       console.log(activeId)
+  //       console.log('is clicked')
+  //       $(this).prop('checked', false);
+  //       return false;
+  //   }
+  //   });
+  //   refreshGallery(activeId)
 
-  }
+  // }
 
   function setup() {
     // set up image uploading w/ cloudinary
@@ -299,10 +317,16 @@
       false
     );
 
-    refreshGallery();
+    refreshGallery("All");
 
     $("#createRecipeModal").on("click", "#rec_submit", addRecipe);
-    $(".btn-check").on("click", changeView);
+    $(".dropdown-menu li a").click(function(){
+      var meal = $(this).text();
+      $(this).parents(".dropdown").find('.btn').html(meal + ' <span class="caret"></span>');
+      $(this).parents(".dropdown").find('.btn').val($(this).data('value'));
+      refreshGallery(meal)
+    });
+    // $(".btn-check").on("click", changeView);
   }
 
   $('document').ready(setup);
