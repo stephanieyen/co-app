@@ -162,12 +162,16 @@ def get_shifts_for_week(coop, startDate, endDate) -> List[models.Shifts]:
     return coop_shifts
 
 # Get the recipes for a co-op
-def get_recipes_for_coop(coop) -> List[models.Recipes]:
+def get_recipes_for_coop(coop, recipe_type) -> List[models.Recipes]:
     coop_recipes = []
     with sqlalchemy.orm.Session(engine) as session:
         coop_recipes = session.query(models.Recipes).filter(
-            models.Recipes.coop_name==coop).all()
+            models.Recipes.coop_name==coop,
+            models.Recipes.recipe_type==recipe_type).order_by(
+                models.Recipes.recipe_name
+        ).all()
     return coop_recipes
+
 #----------------------------------------------------------------------
 # User queries
 #----------------------------------------------------------------------

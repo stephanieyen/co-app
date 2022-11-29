@@ -713,12 +713,12 @@ def recipes_carousel(coop):
     user = database.get_user(netid)
 
     # get meal type to generate according recipes
-    meal = flask.request.args.get('meal')
-    meal.strip()
-    print("meal = ", meal)
+    meal_type = flask.request.args.get('meal')
+    meal_type.strip()
+    # print("meal = ", meal)
 
     # return recipe gallery HTML
-    recipes = database.get_recipes_for_coop(coop)
+    recipes = database.get_recipes_for_coop(coop, meal_type)
     html_code = helper.gen_recipe_gallery_html(recipes)
     response = flask.make_response(html_code)
     return response
