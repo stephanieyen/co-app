@@ -1,3 +1,5 @@
+import html
+
 # File of coop names by URL
 def get_coop_names():
     coops = {
@@ -44,9 +46,12 @@ def gen_roster_table_html(members):
                                         member.user_choreday,
                                         )
         html_code += '</tr>'
+        html_code = html_code.replace(member.user_name, html.escape(member.user_name))
+        html_code = html_code.replace(member.user_allergies, html.escape(member.user_allergies))
+        html_code = html_code.replace(member.user_cookday, html.escape(member.user_cookday))
+        html_code = html_code.replace(member.user_choreday, html.escape(member.user_choreday))
     
     html_code += ('</tbody></table>')
-
     return html_code
 
 #----------------------------------------------------------------------
@@ -91,6 +96,7 @@ def gen_roster_table_admin_html(members):
             html_code += ('<td><input type="button" class="btn btn-primary btn-sm" value="Make Admin" onclick="addAdmin(this)"></td>')
         html_code += ('<td hidden>{0}</td>').format(member.user_netid)
         html_code += '</tr>'
+        html_code = html_code.replace(member.user_name, html.escape(member.user_name))
     
     html_code += ('</tbody></table>')
 

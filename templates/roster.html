@@ -81,7 +81,6 @@
 
   // refresh page with get request 
   function refreshRoster() {
-    console.log("fetching refreshed roster");
     request = $.ajax(
         {
             type:'GET',
@@ -92,7 +91,6 @@
             }
         }
     );
-    console.log("made request")
   }
 
   function setup() 

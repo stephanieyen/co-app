@@ -78,7 +78,8 @@
             contentType: 'application/json',
             event_data: JSON.stringify(json_event)
         }).done(function (data) {
-            $('#name').html(JSON.parse(data))
+            // $('#name').html(JSON.parse(data))
+            location.reload()
         }).fail(function (jqXHR, textStatus, errorThrown) {
             alert("Error updating profile. Try again!")
         });;
@@ -105,8 +106,10 @@
     function setup() {
         // fill in info from database
         $('#name').html("{{user.user_name}}");
-        $('#profile_name').val("{{user.user_name}}");
-        $('#profile_allergies').val("{{user.user_allergies}}");
+        var decodedName = $("<p/>").html("{{user.user_name}}").text(); 
+        $('#profile_name').val(decodedName);
+        var decodedAllergies = $("<p/>").html("{{user.user_allergies}}").text(); 
+        $('#profile_allergies').val(decodedAllergies);
         if ("{{user.user_admin}}" === "False") {
             $('#member_status').html('Status: Member');
         } else {
