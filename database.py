@@ -167,7 +167,7 @@ def get_recipes_for_coop(coop, recipe_type) -> List[models.Recipes]:
     with sqlalchemy.orm.Session(engine) as session:
         coop_recipes = session.query(models.Recipes).filter(
             models.Recipes.coop_name==coop,
-            models.Recipes.recipe_type==recipe_type).order_by(
+            models.Recipes.recipe_type.like(recipe_type)).order_by(
                 models.Recipes.recipe_name
         ).all()
     return coop_recipes

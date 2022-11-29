@@ -716,6 +716,8 @@ def recipes_carousel(coop):
     meal_type = flask.request.args.get('meal')
     meal_type.strip()
     # print("meal = ", meal)
+    if meal_type == "All":
+        meal_type = "%"
 
     # return recipe gallery HTML
     recipes = database.get_recipes_for_coop(coop, meal_type)

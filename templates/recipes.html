@@ -218,7 +218,7 @@
       // success: refresh gallery
     }).done(function (data) {
       console.log("success")
-      refreshGallery("all");
+      refreshGallery("All");
     }).fail(function (jqXHR, textStatus, errorThrown) {
       alert("Error adding recipe. Try again!")
     });
@@ -262,7 +262,7 @@
           url: url,
         }
       ).done(function (data) {
-        refreshGallery("all");
+        refreshGallery("All");
       }).fail(function (jqXHR, textStatus, errorThrown) {
         alert("Error updating recipe gallery. Try again!")
       });
@@ -318,7 +318,7 @@
       false
     );
 
-    refreshGallery("all");
+    refreshGallery("All");
 
     $("#createRecipeModal").on("click", "#rec_submit", addRecipe);
     $(".dropdown-menu li a").click(function(){
