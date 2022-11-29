@@ -166,7 +166,7 @@
   'use strict';
 
   function handleResponse(response) {
-    console.log(response);
+    // console.log(response);
     $('#recipeCarousel').html(response);
   }
 
@@ -200,9 +200,9 @@
     // AJAX update database
     var json_event = {
       "recipe_author": "{{user.user_netid}}",
+      "recipe_type": recipe_type,
       "recipe_name": recipe_name,
       "recipe_link": recipe_link,
-      "recipe_type": recipe_type,
       "recipe_ingredients": recipe_ingredients,
       "recipe_instructions": recipe_instructions,
       "recipe_img": recipe_img

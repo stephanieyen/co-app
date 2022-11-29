@@ -199,19 +199,21 @@ def add_test_shifts(session):
 def add_test_recipes(session): 
     recipe = models.Recipes(recipe_author='sy7',
                             recipe_name='Cookie Pizza', 
+                            recipe_type='Dessert',
                             recipe_link='https://sallysbakingaddiction.com/chocolate-chip-cookie-pizza/',
                             recipe_ingredients='See link',
                             recipe_instructions='See link', 
                             recipe_img='https://res.cloudinary.com/coapp/image/upload/v1669245543/temy5m0ejvyfs2iydsqc.jpg',
                             coop_name='2d')
     session.add(recipe)
-    recipe = models.Recipes(recipe_author='amkumar',
+    recipe = models.Recipes(recipe_author='petrino',
                             recipe_name='the best pad thai you will ever have', 
+                            recipe_type='Dinner',
                             recipe_link='',
                             recipe_ingredients='See link',
                             recipe_instructions='See link', 
                             recipe_img='https://res.cloudinary.com/coapp/image/upload/v1669151022/prjhmx1wqmkxxzoypekd.png',
-                            coop_name='2d')
+                            coop_name='scully')
     session.add(recipe)    
 
 #----------------------------------------------------------------------

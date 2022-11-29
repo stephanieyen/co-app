@@ -673,8 +673,8 @@ def recipes(coop):
         new_recipe = models.Recipes(
             recipe_author=data['recipe_author'],
             recipe_name=data['recipe_name'],
+            recipe_type=data['recipe_type'],
             recipe_link=data['recipe_link'],
-            # recipe_type=data['recipe_type'],
             recipe_ingredients=data['recipe_ingredients'],
             recipe_instructions=data['recipe_instructions'],
             recipe_img=data['recipe_img'],

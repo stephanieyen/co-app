@@ -104,7 +104,7 @@ def gen_item_table_html(items, is_food, is_admin, netid):
         for the input item:
 
             Item, Type, Food Type (if food), Quantity, Comments,
-            Alternative Item, For Shift, Ordered,
+            Alternative Item, For Shift, Ordered
 
             as well as an Upvotes count and a Remove button next to each
             item
