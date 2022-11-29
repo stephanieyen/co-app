@@ -177,6 +177,10 @@ def gen_item_table_html(items, is_food, is_admin, netid):
         if is_admin or (netid == item.requesting_user):
             html_code += ('<td><button type="button" class="btn btn-danger btn-sm" onclick="removeItem(this)">Remove</button></td>')
         html_code += ('<td hidden>{0}</td>').format(item.item_id)
+        html_code = html_code.replace(item.item_name, html.escape(item.item_name))
+        html_code = html_code.replace(item.item_quantity, html.escape(item.item_quantity))
+        html_code = html_code.replace(item.item_reason, html.escape(item.item_reason))
+        html_code = html_code.replace(item.alt_request, html.escape(item.alt_request))
 
         
     
@@ -229,6 +233,10 @@ def gen_recipe_gallery_html(recipes):
         html_code += ('<h5>Ingredients:</h5><p>{0}</p><hr>').format(recipe.recipe_ingredients)
         html_code += ('<h5>Instructions:</h5><p>{0}</p>').format(recipe.recipe_instructions)
         html_code += ('</div></div></div></div>')
+        html_code = html_code.replace(recipe.recipe_name, html.escape(recipe.recipe_name))
+        html_code = html_code.replace(recipe.recipe_link, html.escape(recipe.recipe_link))
+        html_code = html_code.replace(recipe.recipe_ingredients, html.escape(recipe.recipe_ingredients))
+        html_code = html_code.replace(recipe.recipe_instructions, html.escape(recipe.recipe_instructions))
     
     html_code += ('</div></div></div>') # row
 
