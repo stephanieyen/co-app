@@ -30,6 +30,7 @@
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
+            <li><a class="dropdown-item" href="#" data-value="all">All</a></li>
             <li><a class="dropdown-item" href="#" data-value="breakfast">Breakfast</a></li>
             <li><a class="dropdown-item" href="#" data-value="lunch">Lunch</a></li>
             <li><a class="dropdown-item" href="#" data-value="dinner">Dinner</a></li>
@@ -217,7 +218,7 @@
       // success: refresh gallery
     }).done(function (data) {
       console.log("success")
-      refreshGallery("All");
+      refreshGallery("all");
     }).fail(function (jqXHR, textStatus, errorThrown) {
       alert("Error adding recipe. Try again!")
     });
@@ -261,7 +262,7 @@
           url: url,
         }
       ).done(function (data) {
-        refreshGallery("All");
+        refreshGallery("all");
       }).fail(function (jqXHR, textStatus, errorThrown) {
         alert("Error updating recipe gallery. Try again!")
       });
@@ -317,7 +318,7 @@
       false
     );
 
-    refreshGallery("All");
+    refreshGallery("all");
 
     $("#createRecipeModal").on("click", "#rec_submit", addRecipe);
     $(".dropdown-menu li a").click(function(){
