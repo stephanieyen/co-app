@@ -45,7 +45,8 @@
 
     .navbar-nav > .active > a {
       color: white !important;
-      background-color: #023226 !important;
+      background-color: #02322680 !important;
+      border-radius: 15px;
     }
 
     .navbar-brand

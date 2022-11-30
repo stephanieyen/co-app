@@ -71,15 +71,14 @@
 'use strict';
 
 function setup() {
-    // $('.nav-item').on('click', function() {
-    //   $('.nav-item.active').removeClass('active');
-    //   $(this).addClass('active');
-    // });
-
-    $('ul.navbar-nav > li').click(function () {
-    $('ul.navbar-nav > li').removeClass('active');
-    $(this).addClass('active');
-    })
+    // highlight current navbar page
+    $(function(){
+        $('a').each(function(){
+            if ($(this).prop('href') == window.location.href) {
+                $(this).addClass('active'); $(this).parents('li').addClass('active');
+            }
+        });
+    });
 }
 
 $('document').ready(setup);
