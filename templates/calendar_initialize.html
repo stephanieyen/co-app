@@ -272,7 +272,9 @@
     function addMember() {
       let name = $('#add_members').val();
       let newMember = "<button type='button' class='btn btn-primary' onclick='deleteMember(this)''>"
-      var decodedName = $("<p/>").html(name).text();
+      let textAreaDiv = document.createElement( 'textarea' );
+      textAreaDiv.textContent = name
+      let decodedName = textAreaDiv.innerHTML;
       newMember += decodedName
       newMember += "</button>"
       $('#members-btns')[0].innerHTML += newMember
@@ -282,7 +284,9 @@
     function addUpdateMember() {
       let name = $('#update_members').val();
       let newMember = "<button type='button' class='btn btn-primary' onclick='deleteMember(this)''>"
-      var decodedName = $("<p/>").html(name).text();
+      let textAreaDiv = document.createElement( 'textarea' );
+      textAreaDiv.textContent = name
+      let decodedName = textAreaDiv.innerHTML;
       newMember += decodedName
       newMember += "</button>"
       $('#update_members_btns')[0].innerHTML += newMember
