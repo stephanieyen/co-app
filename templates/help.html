@@ -1,0 +1,72 @@
+<head>
+    <title>Co-App About</title>
+    <!-- <script type='text/javascript' src="{{ url_for('static',filename='jquery-3.6.1.min.js') }}"></script> -->
+      <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" -->
+      <!-- integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" -->
+      <!-- crossorigin="anonymous"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script> -->
+  </head>
+  
+  {% extends "templates/base.html" %}
+  {% block content %}
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-1"></div>
+  
+      <div class="col-sm-11">
+        <!-- Title Row - "Help" -->
+        <div class="row">
+          <div class="text-left">
+            <br>
+            <h2>About</h2><br>
+          </div>
+        </div>
+  
+        <div class="row">
+          <!-- sign in & short description -->
+          <div class="col-md-11">
+            <div class="row text-left">
+                <p style="color:#023226; font-size:22px"> 
+                    <strong>Welcome!</strong>
+                </p>
+                <p style="color:#023226; font-size:18px"> 
+                    Before you get on your way with scheduling and shopping, let’s take a moment to familiarize yourself with Co-App.
+                </p>
+                <p style="color:#023226; font-size:18px"> 
+                    First and foremost, go to the Profile page and click “Edit Profile Info”. From there, you will be able to edit your name and allergies/dietary restrictions, indicate your weekly routines, and enable notifications so you never miss a shift!
+                </p>
+                <p style="color:#023226; font-size:18px"> 
+                    Once you have edited your profile information, you will be able to see yourself listed on your Co-Op’s Roster page. If you are an admin, you will be able to click “Edit Roster Info.” This page enables the admin to remove members, change the status of a user from “member” to “admin,” and invite new members to join your co-op’s platform.
+                </p>
+                <p style="color:#023226; font-size:18px"> 
+                    As shown below, when the user with NetID <i>watsjonj</i> is invited, they will be added to the roster, be able to log in to Co-App via CAS authentication, and once logged in, must edit their profile info. 
+                </p>
+                <p style="color:#023226; font-size:18px">
+                    Now that your profile is all set up, let’s schedule some shifts! The Calendar page will display a weekly schedule, filled with shifts indicating cooking (green), shopping (blue), and clean-up (pink). Via the Calendar page, you can click anywhere within the day of your choice to set up your one-time or recurring shift. 
+                </p>
+                <p style="color:#023226; font-size:18px"> 
+                    Now that you’ve set up some shifts, it’s time to request ingredients for what you’re cooking (click “Request Item”)! The Shopping List page. See an item you want already on the shopping list? Upvote it!
+                </p>
+                <p style="color:#023226; font-size:18px"> 
+                    Hmm…don’t have any ideas of what to cook? Let’s head over to the Recipes page, where all of your co-op's classic breakfast, lunch, dinner, dessert, etc. recipes are preserved! Feel free to browse through the recipes or add some of your own. 
+                </p>
+                <p style="color:#023226; font-size:18px"> 
+                    If you’re heading over to dinner today, please continue on to the Sign-In page, where you can sign into today’s dinner and indicate any guests you’ll have over. 
+                </p>
+            </div>
+        </div>
+  
+        <br>
+  
+      </div> <!-- col-sm-11 -->
+    </div> <!-- row -->
+  </div> <!-- container-fluid -->
+  
+  <script>
+    'use strict';
+  
+    $('document').ready(setup);
+  
+  </script>
+  
+  {% endblock %}
