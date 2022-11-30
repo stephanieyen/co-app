@@ -36,10 +36,13 @@ def send_shift_emails():
                 subject="Co-App Shift Reminder!",
                 recipients=[email])
             mail.send(msg)
-# Do it every day at 12:00 AM EST
 trigger = CronTrigger(
-    year="*", month="*", day="*", hour="5", minute="00", timezone="UTC"
+    year="*", month="*", day="*", hour="12", minute="40", timezone="UTC"
 )
+# # Do it every day at 12:00 AM EST
+# trigger = CronTrigger(
+#     year="*", month="*", day="*", hour="5", minute="00", timezone="UTC"
+# )
 sched = BackgroundScheduler(daemon=True)
 sched.start()
 sched.add_job(send_shift_emails, trigger=trigger)
