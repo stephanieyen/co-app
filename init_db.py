@@ -43,7 +43,7 @@ def add_test_roster(session):
                         user_cookday='T Th Sat Sun',
                         user_choreday='T',
                         notify_email = False,
-                        coop_name='scully')
+                        coop_name='2d')
     session.add(user)
     user = models.Roster(user_netid='sarahep',
                         user_name='Sarah Pedersen',
@@ -52,7 +52,7 @@ def add_test_roster(session):
                         user_cookday='M W F Sun',
                         user_choreday='M',
                         notify_email = False,
-                        coop_name='realfood')
+                        coop_name='2d')
     session.add(user)
     user = models.Roster(user_netid='thaldiya',
                         user_name='Tanvi Haldiya',
@@ -61,7 +61,7 @@ def add_test_roster(session):
                         user_cookday='M T Th F',
                         user_choreday='M',
                         notify_email = False,
-                        coop_name='ifc')
+                        coop_name='2d')
     session.add(user)
     user = models.Roster(user_netid='dpw',
                         user_name='David Walker',

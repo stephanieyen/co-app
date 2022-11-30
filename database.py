@@ -328,7 +328,7 @@ def get_shift_notifications():
                     notification_members.append(member)
         if shift.shift_creator not in notification_members:
             user = get_user(shift.shift_creator)
-            if shift.shift_creator.notify_email:
+            if user.notify_email:
                 notification_members.append(shift.shift_creator)
     return notification_members
 # Update a shift's information
