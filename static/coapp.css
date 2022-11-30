@@ -30,13 +30,22 @@
 
     .navbar
     {
-    background-color: #07a299 !important;
+      background-color: #07a299 !important;
     }
 
     .nav-link
     {
-      color: white!important;
+      color: white !important;
       font-weight: bold !important;
+    }
+
+    .nav-item > a:hover {
+      color: #F4A364 !important;
+    }
+
+    .navbar-nav > .active > a {
+      color: white !important;
+      background-color: #023226 !important;
     }
 
     .navbar-brand
