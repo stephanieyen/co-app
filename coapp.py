@@ -822,12 +822,20 @@ def about():
     return response
     
 
-@app.route('/help', methods=['GET'])
-def help():
+@app.route('/<coop>/help', methods=['GET'])
+def help(coop):
     '''
         Renders Help Page
     '''
-    _ = auth.authenticate()
-    html = flask.render_template('templates/help.html')
+    # get user info + redirect if needed
+    netid = auth.authenticate()
+    status, redirect = check_coop(coop)
+    if status == False or status == "Nonexistent":
+        return redirect
+    user = database.get_user(netid)
+    # render signin page HTML
+    coop_upper = database.get_upper_coop(coop)
+
+    html = flask.render_template('templates/help.html', coop=coop, coop_upper=coop_upper, user=user)
     response = flask.make_response(html)
     return response
