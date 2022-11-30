@@ -171,6 +171,7 @@
             refreshInfo("");
         }).fail(function (jqXHR, textStatus, errorThrown) {
             alert("Error updating sign-in information. Try again!")
+            // Show image container
             $("#overlay").hide();
             $("#signin-content").show();
         });

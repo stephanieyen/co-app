@@ -84,7 +84,8 @@
             $('#update_title').val(info.event.title);
             $('#update_date').val(info.event.startStr.substring(0, 10));
             $('#update_start_time').val(info.event.startStr.substring(11, 19));
-            $('#update_meal').val(info.event.extendedProps.meal);
+            var decodedMeal = $("<p/>").html(info.event.extendedProps.meal).text(); 
+            $('#update_meal').val(decodedMeal);
             // $('#update_members').val(info.event.extendedProps.members);
             if (info.event.extendedProps.type === "Cooking") {
               $('#update_type').val(1);
@@ -271,7 +272,8 @@
     function addMember() {
       let name = $('#add_members').val();
       let newMember = "<button type='button' class='btn btn-primary' onclick='deleteMember(this)''>"
-      newMember += name
+      var decodedName = $("<p/>").html(name).text();
+      newMember += decodedName
       newMember += "</button>"
       $('#members-btns')[0].innerHTML += newMember
       $('#add_members').val("");
@@ -280,7 +282,8 @@
     function addUpdateMember() {
       let name = $('#update_members').val();
       let newMember = "<button type='button' class='btn btn-primary' onclick='deleteMember(this)''>"
-      newMember += name
+      var decodedName = $("<p/>").html(name).text();
+      newMember += decodedName
       newMember += "</button>"
       $('#update_members_btns')[0].innerHTML += newMember
       $('#update_members').val("");
@@ -315,8 +318,13 @@
               /*create a DIV element for each matching element:*/
               b = document.createElement("DIV");
               /*make the matching letters bold:*/
-              b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
-              b.innerHTML += arr[i].substr(val.length);
+              let textAreaDiv = document.createElement( 'textarea' );
+              textAreaDiv.textContent = arr[i].substr(0, val.length);
+              let decodedBold = textAreaDiv.innerHTML;
+              b.innerHTML = "<strong>" + decodedBold + "</strong>";
+              textAreaDiv.textContent = arr[i].substr(val.length)
+              let decodedName = textAreaDiv.innerHTML;
+              b.innerHTML += decodedName;
               /*insert a input field that will hold the current array item's value:*/
               b.innerHTML += "<input type='hidden' value='" + members_json[arr[i]] + "'>";
               /*execute a function when someone clicks on the item value (DIV element):*/

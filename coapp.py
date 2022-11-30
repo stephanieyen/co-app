@@ -1,5 +1,6 @@
 import flask
 import database
+import html
 import json
 import models
 import helper
@@ -467,7 +468,7 @@ def events(coop):
         members_string = members_string[:-2]
         members_string.strip()
         extendedProps['members'] = members_string
-        extendedProps['meal'] = shift.shift_item
+        extendedProps['meal'] = html.escape(shift.shift_item)
         extendedProps['creator'] = shift.shift_creator
 
         data = {}

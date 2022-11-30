@@ -29,13 +29,6 @@
         // $('#update_profile').unbind('click');
     }
     function cancelEdit() {
-        $('#save_profile').addClass('d-none');
-        $('#cancel_save').addClass('d-none');
-        $("input[name='cook_days']").prop("disabled", true);
-        $("input[name='chore_days']").prop("disabled", true);
-        $("#profile_name").prop("disabled", true);
-        $("#profile_allergies").prop("disabled", true);
-        $("#profile_notif").prop("disabled", true)
         location.reload()
     }
     function updateProfile() {
@@ -76,11 +69,22 @@
         request = $.post("/{{coop}}/profile/update", {
             dataType: 'json',
             contentType: 'application/json',
-            event_data: JSON.stringify(json_event)
+            event_data: JSON.stringify(json_event),
+            beforeSend: function(){
+                // Show image container
+                $("#overlay").show();
+                $("#profile-content").hide();
+            }
         }).done(function (data) {
-            // $('#name').html(JSON.parse(data))
-            location.reload()
+            $("#overlay").hide();
+            $("#profile-content").show();
+            let textAreaDiv = document.createElement( 'textarea' );
+            textAreaDiv.textContent = $('#profile_name').val();
+            let decodedName = textAreaDiv.innerHTML;
+            $('#name').html(decodedName);
         }).fail(function (jqXHR, textStatus, errorThrown) {
+            $("#overlay").hide();
+            $("#profile-content").show();
             alert("Error updating profile. Try again!")
         });;
     }
@@ -104,6 +108,8 @@
         }
     }
     function setup() {
+        $("#overlay").hide();
+        $("#profile-content").show();
         // fill in info from database
         $('#name').html("{{user.user_name}}");
         var decodedName = $("<p/>").html("{{user.user_name}}").text(); 
@@ -164,7 +170,10 @@
 <body style="background-color: #D3F2E9;">
     {% include 'templates/navbar.html' %}
     <br>
-    <div class="container-fluid">
+    <div id="overlay">
+        <div class="loader"></div>
+    </div>
+    <div class="container-fluid" id="profile-content">
         <div class="row">
             <!-- left side -->
             <div class="col-sm-3">
