@@ -9,6 +9,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 from flask_mail import Mail, Message
 from datetime import datetime, timedelta
+import os
 
 #----------------------------------------------------------------------
 
@@ -16,7 +17,8 @@ app = flask.Flask(__name__, template_folder='.')
 app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USERNAME'] = 'coappemail@gmail.com'
-app.config['MAIL_PASSWORD'] = 'zdymxwgrisdsftkv'
+# app.config['MAIL_PASSWORD'] = 'zdymxwgrisdsftkv'
+app.config['MAIL_PASSWORD'] = os.getenv("APP_PASSWORD")
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)

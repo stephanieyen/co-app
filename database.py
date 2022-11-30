@@ -4,9 +4,11 @@ import sqlalchemy.orm
 import models
 import helper
 from datetime import datetime, timedelta
+import os
 
 # How to use env var for this???
-db_url = 'postgresql://qqoyksvp:4DE2MIUDdxlcY8L66A5aMLj5ze4zaNbF@peanut.db.elephantsql.com/qqoyksvp'
+db_url = os.getenv("DATABASE_URL")
+# db_url = 'postgresql://qqoyksvp:4DE2MIUDdxlcY8L66A5aMLj5ze4zaNbF@peanut.db.elephantsql.com/qqoyksvp'
 # Global engine to use
 engine =  sqlalchemy.create_engine(db_url, pool_pre_ping=True)
 #----------------------------------------------------------------------
