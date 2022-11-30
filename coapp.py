@@ -5,8 +5,8 @@ import json
 import models
 import helper
 from flask import jsonify
-from apscheduler.schedulers.background import BackgroundScheduler
-from apscheduler.triggers.cron import CronTrigger
+# from apscheduler.schedulers.background import BackgroundScheduler
+# from apscheduler.triggers.cron import CronTrigger
 from flask_mail import Mail, Message
 from datetime import datetime, timedelta
 import os
@@ -38,16 +38,16 @@ def send_shift_emails():
                 subject="Co-App Shift Reminder!",
                 recipients=[email])
             mail.send(msg)
-trigger = CronTrigger(
-    year="*", month="*", day="*", hour="12", minute="40", timezone="UTC"
-)
+# trigger = CronTrigger(
+#     year="*", month="*", day="*", hour="12", minute="40", timezone="UTC"
+# )
 # # Do it every day at 12:00 AM EST
 # trigger = CronTrigger(
 #     year="*", month="*", day="*", hour="5", minute="00", timezone="UTC"
 # )
-sched = BackgroundScheduler(daemon=True)
-sched.start()
-sched.add_job(send_shift_emails, trigger=trigger)
+# sched = BackgroundScheduler(daemon=True)
+# sched.start()
+# sched.add_job(send_shift_emails, trigger=trigger)
 
 # Import after making auth since auth uses app
 import auth
@@ -807,3 +807,27 @@ def sign_in_details(coop):
     data['dinner_guests'] = signin.dinner_guests
     data['current_count_brunch'], data['current_count_dinner'] = database.get_total_guests(coop)
     return jsonify(data)
+
+#----------------------------------------------------------------------
+# Co-Op About + Help Page
+#----------------------------------------------------------------------
+
+@app.route('/about', methods=['GET'])
+def about():
+    '''
+        Renders About Page
+    '''
+    html = flask.render_template('templates/about.html')
+    response = flask.make_response(html)
+    return response
+    
+
+@app.route('/help', methods=['GET'])
+def help():
+    '''
+        Renders Help Page
+    '''
+    _ = auth.authenticate()
+    html = flask.render_template('templates/help.html')
+    response = flask.make_response(html)
+    return response
