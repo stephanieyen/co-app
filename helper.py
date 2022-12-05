@@ -242,16 +242,5 @@ def gen_recipe_gallery_html(recipes):
 
     html_code += ('</div>') # inner
 
-    # controls
-    html_code += ('<div class="d-flex justify-content-center mb-4">')
-    html_code += ('<button class="carousel-control-prev position-relative" type="button" data-bs-target="#recipeCarousel" data-bs-slide="prev">')
-    html_code += ('<span class="carousel-control-prev-icon" aria-hidden="true"></span>')
-    html_code += ('<span class="visually-hidden">Previous</span>')
-    html_code += ('</button>')
-    html_code += ('<button class="carousel-control-next position-relative" type="button" data-bs-target="#recipeCarousel" data-bs-slide="next">')
-    html_code += ('<span class="carousel-control-next-icon" aria-hidden="true"></span>')
-    html_code += ('<span class="visually-hidden">Next</span>')
-    html_code += ('</button>')
-    html_code += ('</div>')
 
     return html_code

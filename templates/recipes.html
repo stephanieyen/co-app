@@ -25,75 +25,42 @@
       </div>
 
       <!-- Toggle Buttons (Meal Type) -->
-      <div class="row text-left">
-        <div class="dropdown">
-          <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="false">
-            All
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
-            <li><a class="dropdown-item" href="#" data-value="all">All</a></li>
-            <li><a class="dropdown-item" href="#" data-value="breakfast">Breakfast</a></li>
-            <li><a class="dropdown-item" href="#" data-value="lunch">Lunch</a></li>
-            <li><a class="dropdown-item" href="#" data-value="dinner">Dinner</a></li>
-            <li><a class="dropdown-item" href="#" data-value="dessert">Dessert</a></li>
-            <li><a class="dropdown-item" href="#" data-value="other">Other</a></li>
-            <!-- <li><button class="dropdown-item" type="radio" id="breakfast">Breakfast</button></li>
-            <li><button class="dropdown-item" type="radio" id="lunch">Lunch</button></li>
-            <li><button class="dropdown-item" type="radio" id="dinner">Dinner</button></li>
-            <li><button class="dropdown-item" type="radio" id="dessert">Dessert</button></li>
-            <li><button class="dropdown-item" type="radio" id="other">Other</button></li> -->
-          </ul>
-        </div>
-          <!-- <div class="btn-group">
-            <div class="col-sm-2">
-              <label class="btn btn-secondary active" id="breakfast-toggle">
-                <input type="radio" class="btn-check" name="break-option" id="breakfast" autocomplete="off"> Breakfast
-              </label>
-            </div>
-            <div class="col-sm-2">
-              <label class="btn btn-secondary" id="lunch-toggle">
-                <input type="radio" class="btn-check" name="lunch-option" id="lunch" autocomplete="off"> Lunch
-              </label>
-            </div>
-            <div class="col-sm-2">
-              <label class="btn btn-secondary" id="din-toggle">
-                <input type="radio" class="btn-check" name="din-option" id="dinner" autocomplete="off"> Dinner
-              </label>
-            </div>
-            <div class="col-sm-2">
-              <label class="btn btn-secondary" id="dessert-toggle">
-                <input type="radio" class="btn-check" name="dessert-option" id="dessert" autocomplete="off"> Dessert
-              </label>
-            </div>
-            <div class="col-sm-2">
-              <label class="btn btn-secondary" id="other-toggle">
-                <input type="radio" class="btn-check" name="other-option" id="other" autocomplete="off"> Other
-              </label>
-            </div>
+      <div class="row">
+        <div class="col-sm-9 float-start">
+          <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="false">
+              All
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
+              <li><a class="dropdown-item" href="#" data-value="all">All</a></li>
+              <li><a class="dropdown-item" href="#" data-value="breakfast">Breakfast</a></li>
+              <li><a class="dropdown-item" href="#" data-value="lunch">Lunch</a></li>
+              <li><a class="dropdown-item" href="#" data-value="dinner">Dinner</a></li>
+              <li><a class="dropdown-item" href="#" data-value="dessert">Dessert</a></li>
+              <li><a class="dropdown-item" href="#" data-value="other">Other</a></li>
+            </ul>
           </div>
-      </div> -->
+        </div> 
+        <!-- Add Recipe Button (triggers modal) -->
+        <div class="col-sm-2 text-right">
+          <button type="button" class="btn btn-primary float-end" id="add-rec-btn" data-bs-toggle="modal"
+            data-bs-target="#createRecipeModal">
+            Add Recipe
+          </button>
+        </div>
+      </div>
 
       <br>      
 
       <!-- Recipe Gallery Carousel -->
       <div class="row">
-        <div iclass="col-sm-11 text-center">
+        <div class="col-sm-11 text-center">
           <!-- Carousel wrapper -->
           <div id="recipeCarousel" class="carousel slide carousel-dark text-center" data-bs-ride="carousel">
             <!-- SERVER-SIDE GENERATES RECIPE GALLERY HERE -->
           </div>
           <!-- Carousel wrapper -->
-        </div>
-      </div>
-
-      <!-- Add Recipe Button (triggers modal) -->
-      <div class="row">
-        <div class="col-sm-11">
-          <button type="button" class="btn btn-primary float-end" id="add-rec-btn" data-bs-toggle="modal"
-            data-bs-target="#createRecipeModal">
-            Add Recipe
-          </button>
         </div>
       </div>
 
@@ -290,21 +257,6 @@
     }
   }
 
-  // function changeView() {
-  //   // get active button
-  //   var activeId = '';
-  //   $('input[type=radio]').each(function(){
-  //   if($(this).is(':checked')){
-  //       activeId = $(this).attr('id'); 
-  //       console.log(activeId)
-  //       console.log('is clicked')
-  //       $(this).prop('checked', false);
-  //       return false;
-  //   }
-  //   });
-  //   refreshGallery(activeId)
-
-  // }
 
   function setup() {
     // set up image uploading w/ cloudinary
@@ -347,7 +299,6 @@
       $(this).parents(".dropdown").find('.btn').val($(this).data('value'));
       refreshGallery(meal)
     });
-    // $(".btn-check").on("click", changeView);
   }
 
   $('document').ready(setup);
