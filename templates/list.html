@@ -1,6 +1,6 @@
 <head>
   <title>Co-App Shopping List</title>
-  <link rel=”stylesheet” href=”https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css”/>
+  <link rel=”stylesheet” href=”https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css” />
 </head>
 
 {% extends "templates/base.html" %}
@@ -31,7 +31,7 @@
             </label>
           </div>
         </div>
-      <!-- Toggle Buttons (Last Week vs This Week) -->
+        <!-- Toggle Buttons (Last Week vs This Week) -->
         <div class="col-sm-3 float-end">
           <div class="btn-group">
             <label class="btn btn-secondary" id="last-week-toggle">
@@ -158,13 +158,22 @@
 
   // refresh page with another get request 
   function refreshList(item_type) {
-    // console.log("fetching refreshed list");
-    var firstDate = new Date; // get date for week
-    var secondDate = new Date; // get date for week
-    var start = getDate() - 1;
-    var end = start + 6;
-    var startDate = new Date(firstDate.setDate(firstDate.getDate() + start)).toISOString().substring(0, 10);
-    var endDate = new Date(secondDate.setDate(secondDate.getDate() + end)).toISOString().substring(0, 10);
+    const dateStart = new Date();
+    const dateEnd = new Date();
+    const today = dateStart.getDate();
+    const currentDay = dateStart.getDay();
+
+    var start = dateStart.setDate(today - (currentDay || 7));
+    var end = dateEnd.setDate(today - (currentDay || 7) + 6);
+
+    if ($('#last-week-toggle').hasClass('active')) {
+      start = dateStart.setDate(today - (currentDay || 7) - 7);
+      end = dateEnd.setDate(today - (currentDay || 7) - 1);
+    } 
+
+    console.log("fetching refreshed list");
+    var startDate = new Date(start).toISOString().substring(0, 10);
+    var endDate = new Date(end).toISOString().substring(0, 10);
 
     if (item_type == "Equipment") {
       console.log("Getting Equip")
@@ -203,16 +212,6 @@
       $('#food-toggle').addClass('active');
     }
     refreshList("Food");
-  }
-
-  function getDate() {
-    var curr = new Date; // get current date
-    if ($('#last-week-toggle').hasClass('active')) {
-      var first = curr.getDate() - curr.getDay() - 7; // First day is the day of the month - the day of the week
-    } else {
-      var first = curr.getDate() - curr.getDay(); // First day is the day of the month - the day of the week
-    }
-    return first;
   }
 
   function toggleCurr() {
