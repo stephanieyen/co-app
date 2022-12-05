@@ -4,7 +4,10 @@
 
 {% extends "templates/base.html" %}
 {% block content %}
-<div class="container-fluid">
+<div id="overlay">
+    <div class="loader"></div>
+</div>
+<div id="edit-roster-content" class="container-fluid">
     <div class="row">
         <div class="col-sm-1"></div>
         <div class="col-sm-11">
@@ -72,6 +75,11 @@
                 {
                     type: 'POST',
                     url: url,
+                    beforeSend: function(){
+                        // Show image container
+                        $("#overlay").show();
+                        $("#edit-roster-content").hide();
+                    },
                 }
             ).done(function (data) {
                 refreshRoster()
@@ -83,6 +91,8 @@
 
 
     function handleResponse(response) {
+        $("#overlay").hide();
+        $("#edit-roster-content").show();
         $('#roster').html(response);
     }
 
@@ -95,6 +105,11 @@
             {
                 type: 'GET',
                 url: '/{{coop}}/members/admin_view',
+                beforeSend: function(){
+                    // Show image container
+                    $("#overlay").show();
+                    $("#edit-roster-content").hide();
+                },
                 success: handleResponse,
                 failure: function () {
                     alert('there was an error while fetching members!');
@@ -121,6 +136,11 @@
             dataType: 'json',
             contentType: 'application/json',
             event_data: JSON.stringify(newMembers),
+            beforeSend: function(){
+                // Show image container
+                $("#overlay").show();
+                $("#edit-roster-content").hide();
+            },
         }).done(function (data) {
             // $('#add-members-group').html("Success!");
             refreshRoster();
@@ -141,7 +161,12 @@
                 {
                     type: 'POST',
                     url: url,
-                }
+                    beforeSend: function(){
+                        // Show image container
+                        $("#overlay").show();
+                        $("#edit-roster-content").hide();
+                    },
+                },
             ).done(function (data) {
                 refreshRoster()
             }).fail(function (jqXHR, textStatus, errorThrown) {
