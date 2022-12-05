@@ -25,6 +25,9 @@
 
     // CALENDAR GENERATION FUNCTION
     function generate_calendar() {
+      // Show image container
+      $("#overlay").hide();
+      $("#calendar").show();
       var calendarEl = document.getElementById('calendar');
       var calendar = new FullCalendar.Calendar(calendarEl,
         // calendar API properties
@@ -127,8 +130,17 @@
               $('#updateEventModal').modal('hide');
 
               // ajax post request by event id
-              $.post("/{{coop}}/calendar/delete?id=" + info.event.id, {}).done(function () {
+              $.post("/{{coop}}/calendar/delete?id=" + info.event.id, {
+                beforeSend: function(){
+                  // Show image container
+                  $("#overlay").show();
+                  $("#calendar").hide();
+                },
+              }).done(function () {
                 // refresh events after deleting from db
+                // Show image container
+                $("#overlay").hide();
+                $("#calendar").show();
                 calendar.refetchEvents()
               })
             });
@@ -182,8 +194,16 @@
               $.post("/{{coop}}/calendar/update?id=" + info.event.id, {
                 event_data: json_event,
                 async: false,
+                beforeSend: function(){
+                    // Show image container
+                    $("#overlay").show();
+                    $("#calendar").hide();
+                },
               }).done(function () {
                 // refresh events after deleting from db
+                // Show image container
+                $("#overlay").hide();
+                $("#calendar").show();
                 calendar.refetchEvents()
               });
             })
@@ -256,8 +276,16 @@
               $.post("/{{coop}}", {
                 event_data: json_event,
                 async: false,
+                beforeSend: function(){
+                  // Show image container
+                  $("#overlay").show();
+                  $("#calendar").hide();
+                },
               }).done(function () {
                 // refresh events after deleting from db
+                // Show image container
+                $("#overlay").hide();
+                $("#calendar").show();
                 calendar.refetchEvents()
               })
 
@@ -470,6 +498,9 @@
 {% block content %}
 
   <br>
+  <div id="overlay">
+    <div class="loader"></div>
+  </div>
   <div id='calendar'></div>
 
   <!--------------------------CURRENT EVENT MODAL------------------------------->

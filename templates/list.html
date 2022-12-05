@@ -5,8 +5,10 @@
 
 {% extends "templates/base.html" %}
 {% block content %}
-
-<div class="container-fluid">
+<div id="overlay">
+  <div class="loader"></div>
+</div>
+<div id="list-content" class="container-fluid">
   <div class="row">
     <div class="col-sm-1"></div>
 
@@ -151,6 +153,9 @@
   'use strict';
 
   function handleResponse(response) {
+    // Show image container
+    $("#overlay").hide();
+    $("#list-content").show();
     $('#shoppingList').html(response);
   }
 
@@ -305,6 +310,11 @@
       dataType: 'json',
       contentType: 'application/json',
       event_data: JSON.stringify(json_event),
+      beforeSend: function(){
+        // Show image container
+        $("#overlay").show();
+        $("#list-content").hide();
+      },
     }).done(function (data) {
       if ($('#equip-toggle').hasClass('active')) {
         refreshList("Equipment");
@@ -345,6 +355,11 @@
         {
           type: 'POST',
           url: url,
+          beforeSend: function(){
+              // Show image container
+              $("#overlay").show();
+              $("#list-content").hide();
+          },
         }
       ).done(function (data) {
         if ($('#equip-toggle').hasClass('active')) {
@@ -368,7 +383,7 @@
     request = $.ajax(
       {
         type: 'POST',
-        url: url,
+        url: url
       }
     ).done(function (data) {
       if ($('#equip-toggle').hasClass('active')) {
@@ -389,7 +404,7 @@
     request = $.ajax(
       {
         type: 'POST',
-        url: url,
+        url: url
       }
     ).done(function (data) {
       if ($('#equip-toggle').hasClass('active')) {
