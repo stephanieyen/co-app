@@ -31,22 +31,24 @@ def gen_roster_table_html(members):
     html_code += ('</thead><tbody id="tbody">')
 
     for member in members:
-        # don't display members that do not have names
+        # if member has not filled out profile show netid as name
         if member.user_name == '':
-            continue
+            display_name = member.user_netid
+        else:  
+            display_name = member.user_name
 
         html_code += '<tr>'
 
         html_code += ('<th scope="row">{0}</th>'
                     '<td>{1}</td>'
                     '<td>{2}</td>'
-                    '<td>{3}</td>').format(member.user_name,
+                    '<td>{3}</td>').format(display_name,
                                         member.user_allergies,
                                         member.user_cookday,
                                         member.user_choreday,
                                         )
         html_code += '</tr>'
-        html_code = html_code.replace(member.user_name, html.escape(member.user_name))
+        html_code = html_code.replace(display_name, html.escape(display_name))
         html_code = html_code.replace(member.user_allergies, html.escape(member.user_allergies))
         html_code = html_code.replace(member.user_cookday, html.escape(member.user_cookday))
         html_code = html_code.replace(member.user_choreday, html.escape(member.user_choreday))
