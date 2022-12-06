@@ -1,6 +1,7 @@
 from typing import List
 import sqlalchemy
 import sqlalchemy.orm
+from sqlalchemy.exc import SQLAlchemyError
 import models
 import helper
 from datetime import datetime, timedelta
@@ -185,9 +186,14 @@ def get_recipes_for_coop(coop, recipe_type) -> List[models.Recipes]:
 #----------------------------------------------------------------------
 # Add user to database
 def add_user(user:models.Roster):
-    with sqlalchemy.orm.Session(engine) as session:
-        session.add(user)
-        session.commit()
+    try:
+        with sqlalchemy.orm.Session(engine) as session:
+            session.add(user)
+            session.commit()
+        return True, ""
+    except SQLAlchemyError as e:
+        error = str(e.orig)
+        return False, error
 # Get user from netid
 def get_user(netid) -> models.Roster:
     # Make sure to only get one user

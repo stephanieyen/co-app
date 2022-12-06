@@ -270,8 +270,15 @@ def add_user(coop):
                             user_cookday='',
                             user_choreday='',
                             coop_name=coop)
-        database.add_user(user)
-        
+        status, message = database.add_user(user)
+        if status == False:
+            if 'duplicate key' in message:
+                error_msg = "User is already in a co-op!"
+                error_msg += " If you think this is a mistake, "
+                error_msg += "ask them to delete their profile and then try adding them again!"
+                return error_msg, 400
+            else:
+                return message, 400
         # send email notification
         email = netid + "@princeton.edu"
         msg = Message(
