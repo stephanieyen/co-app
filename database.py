@@ -91,6 +91,10 @@ def get_shopping_for_week(coop, startDate, endDate) -> List[models.ShoppingList]
             models.ShoppingList.coop_name==coop,
             models.ShoppingList.date_added >= startOfWeek,
             models.ShoppingList.date_added <= endOfWeek
+        ).order_by(
+            models.ShoppingList.for_shift.desc(),
+            models.ShoppingList.food_type.desc(),
+            models.ShoppingList.item_name
         ).all()
     return coop_shopping
 
@@ -108,6 +112,7 @@ def get_food_list_for_week(coop, startDate, endDate) -> List[models.ShoppingList
             models.ShoppingList.date_added >= startOfWeek,
             models.ShoppingList.date_added <= endOfWeek
         ).order_by(
+            models.ShoppingList.for_shift.desc(),
             models.ShoppingList.food_type.desc(),
             models.ShoppingList.item_name
         ).all()
@@ -127,6 +132,7 @@ def get_equipment_list_for_week(coop, startDate, endDate) -> List[models.Shoppin
             models.ShoppingList.date_added >= startOfWeek,
             models.ShoppingList.date_added <= endOfWeek
         ).order_by(
+            models.ShoppingList.for_shift.desc(),
             models.ShoppingList.item_name
         ).all()
     return coop_shopping

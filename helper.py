@@ -133,11 +133,11 @@ def gen_item_table_html(items, is_food, is_admin, netid):
                 '</tr>')
     html_code += ('</thead><tbody id="tbody">')
 
-    # sort items by food type
-    if is_food is True:
-        items.sort(key=lambda x: x.food_type)
-    else:
-        items.sort(key= lambda x: x.item_name)
+    # # sort items by food type
+    # if is_food is True:
+    #     items.sort(key=lambda x: x.food_type)
+    # else:
+    #     items.sort(key= lambda x: x.item_name)
 
     for item in items:
         html_code += '<tr>'
