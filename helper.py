@@ -231,7 +231,7 @@ def gen_recipe_gallery_html(recipes):
         html_code += ('<div class="modal-content">')
         html_code += ('<div class="modal-header"><h4>How To Make {0}!</h4>').format(recipe.recipe_name)
         html_code += ('<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>')
-        html_code += ('<div class="modal-body">')
+        html_code += ('<div class="modal-body">')        
         html_code += ('<h5>Ingredients:</h5><p>{0}</p><hr>').format(recipe.recipe_ingredients)
         html_code += ('<h5>Instructions:</h5><p>{0}</p>').format(recipe.recipe_instructions)
         html_code += ('</div></div></div></div>')
@@ -239,6 +239,7 @@ def gen_recipe_gallery_html(recipes):
         html_code = html_code.replace(recipe.recipe_link, html.escape(recipe.recipe_link))
         html_code = html_code.replace(recipe.recipe_ingredients, html.escape(recipe.recipe_ingredients))
         html_code = html_code.replace(recipe.recipe_instructions, html.escape(recipe.recipe_instructions))
+        html_code = html_code.replace('\n', '<br>')
     
     html_code += ('</div></div></div>') # row
 
