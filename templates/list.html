@@ -117,7 +117,7 @@
         </div>
         <br>
         <div class="form-group">
-          <label for="item" class="required">Requested Item:</label>
+          <label for="item_name" class="required">Requested Item:</label>
           <input type="text" class="form-control" id="item_name" autocapitalize="words">
         </div>
         <br>
@@ -127,7 +127,7 @@
         </div>
         <br>
         <div class="form-group">
-          <label for="comments" class="required">Reason</label>
+          <label for="comments">Reason</label>
           <input type="text" class="form-control" id="item_reason" autocapitalize="sentences">
         </div>
         <br>
@@ -282,16 +282,12 @@
     console.log("validating")
     let missingFields = [];
     let missing = false;
-    if ($('#item_type').val() === "") {
+    if ($('#item_type').val() == 0) {
       missingFields.push("Item Type");
       missing = true;
     }
-    if ($('#item').val() === "") {
+    if ($('#item_name').val() === "") {
       missingFields.push("Item Name");
-      missing = true;
-    }
-    if ($('#comments').val() === "") {
-      missingFields.push("Reason");
       missing = true;
     }
     if (missing) {
