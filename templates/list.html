@@ -93,7 +93,7 @@
       <div class="modal-body">
 
         <div class="form-group">
-          <label for="item_type">Item Type:</label>
+          <label for="item_type" class="required">Item Type:</label>
           <select class="form-select" id="item_type" aria-label="Select item type">
             <option value="0" selected>Choose...</option>
             <option value="Food">Food</option>
@@ -117,7 +117,7 @@
         </div>
         <br>
         <div class="form-group">
-          <label for="item">Requested Item:</label>
+          <label for="item" class="required">Requested Item:</label>
           <input type="text" class="form-control" id="item_name" autocapitalize="words">
         </div>
         <br>
@@ -127,7 +127,7 @@
         </div>
         <br>
         <div class="form-group">
-          <label for="comments">Reason</label>
+          <label for="comments" class="required">Reason</label>
           <input type="text" class="form-control" id="item_reason" autocapitalize="sentences">
         </div>
         <br>
@@ -277,8 +277,37 @@
     }
   }
 
+  // validate that required modal fields are not empty
+  function validateNewItem() {
+    console.log("validating")
+    let missingFields = [];
+    let missing = false;
+    if ($('#item_type').val() === "") {
+      missingFields.push("Item Type");
+      missing = true;
+    }
+    if ($('#item').val() === "") {
+      missingFields.push("Item Name");
+      missing = true;
+    }
+    if ($('#comments').val() === "") {
+      missingFields.push("Reason");
+      missing = true;
+    }
+    if (missing) {
+      alert("The following fields are required: " + missingFields.join(', '))
+    }
+    return missing
+  }
+
   // add item to shopping list if submitted 
   function addItem() {
+    // // validate that required fields are not empty
+    // if (validateNewItem()) {
+    //   console.log('not validated');
+    //   return false;
+    // }
+
     $('#add_submit').unbind('click');
     $('#add-item-btn').unbind('click');
 
@@ -441,7 +470,14 @@
 
     // MODAL event handling
     $('#item_type').on('change', showFoodType)
-    $("#createItemModal").on("click", "#add_submit", addItem);
+    // $("#createItemModal").on("click", "#add_submit", addItem);
+    $("#createItemModal").on("click", "#add_submit", function() {
+      console.log("clicked submit")
+      if (validateNewItem()) {
+        return false;
+      }
+      addItem();
+    });
   }
 
   $('document').ready(setup);
