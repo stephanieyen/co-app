@@ -38,22 +38,11 @@ def send_shift_emails():
                 subject="Co-App Shift Reminder!",
                 recipients=[email])
             mail.send(msg)
-# trigger = CronTrigger(
-#     year="*", month="*", day="*", hour="12", minute="40", timezone="UTC"
-# )
-# # Do it every day at 12:00 AM EST
-# trigger = CronTrigger(
-#     year="*", month="*", day="*", hour="5", minute="00", timezone="UTC"
-# )
-# sched = BackgroundScheduler(daemon=True)
-# sched.start()
-# sched.add_job(send_shift_emails, trigger=trigger)
 
 # Import after making auth since auth uses app
 import auth
 
-# Fake secret key ???
-app.secret_key = b'\xbc>\xe0\xf8\xdf\x84\xe9aS\x02`i\x8e\xa1\xee\x92'
+app.secret_key = os.getenv('SECRET_KEY')
 
 #----------------------------------------------------------------------
 # Co-App

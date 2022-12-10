@@ -331,6 +331,15 @@
     }
     
     function addMember() {
+      var x = document.getElementById("add_members" + "autocomplete-list");
+      if (x) {
+        x = x.getElementsByTagName("div");
+        for (let value of x) {
+          if (value.classList.contains("autocomplete-active")) {
+            return;
+          }
+        }
+      } 
       let name = $('#add_members').val();
       let newMember = "<button type='button' class='btn btn-primary' onclick='deleteMember(this)''>"
       let textAreaDiv = document.createElement('textarea');
@@ -340,6 +349,7 @@
       newMember += "</button>"
       $('#members-btns')[0].innerHTML += newMember
       $('#add_members').val("");
+      
     }
 
     function addUpdateMember() {

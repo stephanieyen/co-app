@@ -336,10 +336,14 @@ def get_shift_notifications():
         for member in shift.shift_members:
             if member not in notification_members:
                 user = get_user(member)
+                if user is None:
+                    continue
                 if user.notify_email:
                     notification_members.append(member)
         if shift.shift_creator not in notification_members:
             user = get_user(shift.shift_creator)
+            if user is None:
+                    continue
             if user.notify_email:
                 notification_members.append(shift.shift_creator)
     return notification_members
