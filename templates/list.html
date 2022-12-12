@@ -86,7 +86,7 @@
       <!-- header and close button -->
       <div class="modal-header">
         <h4>Request an Item!</h4>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close" id="close-btn" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
       <!-- SHOPPING LIST FORM -->
@@ -367,7 +367,14 @@
     $('#createItemModal').modal('hide');
 
     // reset all fields in modal
-    $('#item_type').val(0);
+    resetModal()
+
+
+  }
+
+  function resetModal() {
+     // reset all fields in modal
+     $('#item_type').val(0);
     $('#food_type').val(0);
     $('#food_type_visible').hide();
     $('#item_name').val('');
@@ -376,8 +383,6 @@
     $('#alt_request').val('');
     // FOR SHIFT CHECKBOX - make sure it's unchecked
     $('#for_shift').prop("checked", false);
-
-
   }
 
   // handle event when Remove button clicked
@@ -467,6 +472,8 @@
     // MODAL event handling
     $('#item_type').on('change', showFoodType)
     // $("#createItemModal").on("click", "#add_submit", addItem);
+    $("#createItemModal").on("click", "#close-btn", resetModal)
+
     $("#createItemModal").on("click", "#add_submit", function() {
       console.log("clicked submit")
       if (validateNewItem()) {
@@ -474,6 +481,7 @@
       }
       addItem();
     });
+  
   }
 
   $('document').ready(setup);
