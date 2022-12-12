@@ -388,6 +388,15 @@
     }
 
     function addUpdateMember() {
+      var x = document.getElementById("update_members" + "autocomplete-list");
+      if (x) {
+        x = x.getElementsByTagName("div");
+        for (let value of x) {
+          if (value.classList.contains("autocomplete-active")) {
+            return;
+          }
+        }
+      } 
       let name = $('#update_members').val();
       let newMember = "<button type='button' class='btn btn-primary' onclick='deleteMember(this)''>"
       let textAreaDiv = document.createElement('textarea');
