@@ -88,6 +88,17 @@
             $('#updateEventModal').modal('show');
             $('#update_title').val(info.event.title);
             $('#update_date').val(info.event.startStr.substring(0, 10));
+            // If recurring, don't let people change date
+            if (info.event._def.recurringDef !== null) {
+              $('#update_date').attr('disabled', 'disabled');
+              $('#update_submit').text("Update Recurring Shifts");
+              $('#update_delete').text("Delete Recurring Shifts");
+            }
+            else {
+              $('#update_date').removeAttr('disabled');
+              $('#update_submit').text("Update Shift");
+              $('#update_delete').text("Delete Shift");
+            }
             $('#update_start_time').val(info.event.startStr.substring(11, 19));
             var decodedMeal = $("<p/>").html(info.event.extendedProps.meal).text();
             $('#update_meal').val(decodedMeal);
@@ -190,8 +201,6 @@
                 "shift_creator": "{{user.user_netid}}",
                 "shift_members": shift_members_input
               };
-
-              console.log(json_event)
 
               $.post("/{{coop}}/calendar/update?id=" + info.event.id, {
                 event_data: json_event,
@@ -312,12 +321,17 @@
         missingFields.push("Shift Description");
         missing = true;
       }
-      if ($('#add_type').val() === 0) {
+      if ($('#add_type').val() == 0) {
         missingFields.push("Shift Type");
         missing = true;
       }
+      const regex = /^\d{4}-\d{2}-\d{2}$/;
       if (missing) {
         alert("The following fields are required: " + missingFields.join(', '))
+      }
+      else if (!isValidDate($('#add_date').val())) {
+        alert("Please enter a valid date (yyyy-mm-dd)")
+        missing = true;
       }
       return missing
     }
@@ -328,14 +342,27 @@
         missingFields.push("Shift Description");
         missing = true;
       }
-      if ($('#update_type').val() === 0) {
+      if ($('#update_type').val() == 0) {
         missingFields.push("Shift Type");
         missing = true;
       }
       if (missing) {
         alert("The following fields are required: " + missingFields.join(', '))
       }
+      else if ($('#recurring').off() && !isValidDate($('#update_date').val())) {
+        alert("Please enter a valid date (yyyy-mm-dd)")
+        missing = true;
+      }
       return missing
+    }
+
+    function isValidDate(dateString) {
+      var regEx = /^\d{4}-\d{2}-\d{2}$/;
+      if(!dateString.match(regEx)) return false;  // Invalid format
+      var d = new Date(dateString);
+      var dNum = d.getTime();
+      if(!dNum && dNum !== 0) return false; // NaN value, Invalid date
+      return d.toISOString().slice(0,10) === dateString;
     }
     
     function addMember() {
@@ -594,8 +621,8 @@
         <!-- shift date (autofilled from select) -->
         <div class="form-group form-inline">
           <br>
-          <label for="update_date" class="form-label">Shift Date:</label>
-          <input type="text" class="form-control" id="update_date" placeholder="Date yyyy/mm/dd">
+          <label for="update_date" class="form-label required">Shift Date:</label>
+          <input type="text" class="form-control" id="update_date" placeholder="Date yyyy-mm-dd">
         </div>
 
         <!-- shift start time -->
@@ -619,8 +646,8 @@
 
       <!-- submit button -->
       <div class="modal-footer">
-        <button type="submit" class="btn btn-secondary" id="update_submit">Update Shift</button>
-        <button type="submit" class="btn btn-secondary" id="update_delete">Delete Shift</button>
+        <button type="submit" class="btn btn-success" id="update_submit">Update Shift</button>
+        <button type="submit" class="btn btn-danger" id="update_delete">Delete Shift</button>
       </div>
     </div>
 
@@ -680,8 +707,8 @@
         <div id="add_date_group" class="collapse">
           <div class="form-group form-inline">
             <div class="mb-3">
-              <label for="add_date" class="form-label"><br>Shift Date:</label>
-              <input type="email" class="form-control" id="add_date" placeholder="Date yyyy/mm/dd">
+              <label for="add_date" class="form-label required"><br>Shift Date:</label>
+              <input type="email" class="form-control" id="add_date" placeholder="Date yyyy-mm-dd">
             </div>
           </div>
         </div>
@@ -740,7 +767,7 @@
 
       <!-- submit button -->
       <div class="modal-footer">
-        <button type="submit" class="btn btn-secondary" id="add_submit">Add Shift</button>
+        <button type="submit" class="btn btn-success" id="add_submit">Add Shift</button>
       </div>
     </div>
 
