@@ -81,7 +81,7 @@ def check_coop(current_coop):
 # Error page
 @app.route('/error', methods=['GET'])
 def error_page():
-    _ = auth.authenticate()
+    #_ = auth.authenticate()
     status, redirect = check_coop('')
     if status == False:
         return redirect
