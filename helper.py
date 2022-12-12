@@ -80,7 +80,7 @@ def gen_roster_table_admin_html(members):
         html_code += '<tr>'
         
         user_name = member.user_name
-        if member.user_name == '':
+        if member.user_name == '' or member.user_name == member.user_netid:
             user_name = "User needs to add their profile information"
 
         user_admin = 'Member'
