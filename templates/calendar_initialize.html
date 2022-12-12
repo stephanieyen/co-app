@@ -18,6 +18,8 @@
   <script type='text/javascript' src="{{ url_for('static',filename='calendar.js') }}"></script>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='coapp.css') }}" />
 
+  <script type="text/javascript" src="{{ url_for('static',filename='calendar_coapp.js') }}"></script>
+
   <!------------------------CALENDAR SCRIPT ------------------------------------>
   <script>
     // Global variable for members but in JSON
@@ -160,7 +162,10 @@
               let shift_members_input = ""
               let shift_title_input = $('#update_title').val();
               let shift_type_input = $('#update_type option:selected').text();
-              let shift_time_input = "T" + $("#update_start_time").val();
+              let shift_time_input = $('#update_date').val();
+              if ($("#update_start_time").val() != "") {
+                shift_time_input = shift_time_input + "T" + $("#update_start_time").val();
+              }
               if ($('#update_meal') != null) {
                 shift_meal_input = $('#update_meal').val();
               }
@@ -185,6 +190,9 @@
                 "shift_creator": "{{user.user_netid}}",
                 "shift_members": shift_members_input
               };
+
+              console.log(json_event)
+
               $.post("/{{coop}}/calendar/update?id=" + info.event.id, {
                 event_data: json_event,
                 async: false,

@@ -419,16 +419,12 @@ def calendar_update(coop):
     members = data['event_data[shift_members]'].split(",")
     members = [m.strip() for m in members]
     members.pop()
-    # Update time
-    shift_time = old_shift.shift_time[0:10]
-    if data['event_data[shift_time]'] != "": 
-        shift_time = shift_time + data['event_data[shift_time]']
     
     new_shift_vals = [
         data['event_data[shift_name]'],
         data['event_data[shift_type]'],
         data['event_data[shift_item]'],
-        shift_time,
+        data['event_data[shift_time]'],
         old_shift.shift_day,
         old_shift.shift_recurring,
         old_shift.shift_creator,
