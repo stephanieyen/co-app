@@ -253,7 +253,7 @@ def add_user(coop):
     for netid in new_members:
         # create empty user model 
         user = models.Roster(user_netid=netid,
-                            user_name='',
+                            user_name=netid,
                             user_allergies='',
                             user_admin=False,
                             user_cookday='',

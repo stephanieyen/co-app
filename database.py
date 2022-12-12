@@ -29,7 +29,7 @@ def get_roster_for_coop(coop) -> List[models.Roster]:
     with sqlalchemy.orm.Session(engine) as session:
         coop_roster = session.query(models.Roster).filter(
             models.Roster.coop_name==coop).order_by(
-                models.Roster.user_name.desc()
+                models.Roster.user_name
             ).all()
     return coop_roster
 
