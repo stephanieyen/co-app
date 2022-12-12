@@ -1,0 +1,242 @@
+<head>
+    <title>Co-App Check-In</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css" />
+</head>
+
+{% extends "templates/base.html" %}
+{% block content %}
+<div id="overlay">
+    <div class="loader"></div>
+</div>
+<div id="signin-content" class="container-fluid">
+    <div class="row">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-10">
+            <!-- Title Row - "Sign in" -->
+            <div class="row">
+                <div class="text-left">
+                    <br>
+                    <h2 id="today-date"></h2>
+                </div>
+            </div>
+
+            <!-- Title Row - "Brunch" -->
+            <div id="brunch-group" class="text-left d-none">
+                <hr>
+                <div class="row">
+                    <div class="text-left">
+                        <h3>Brunch</h3>
+                    </div>
+                </div>
+
+                <!-- brunch check box  -->
+                <div class="row">
+                    <div class="col-md-1">
+                        <div class="pretty p-image p-plain p-bigger p-tada">
+                            <input name="cook_days" type="checkbox" class="sign-in-input" id="brunch-check">
+                            <div class="state">
+                                <img class="image" src="{{ url_for('static',filename='cutlery.png') }}">
+                                <label class="sign-in-label" for="brunch-check">I'm Coming!</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+
+                <!-- brunch guests  -->
+                <h5>Brunch Guests?</h5>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control" id="brunch-guests">
+                            <label for="brunch-guests">Number of Guests</label>
+                        </div>
+                    </div>
+                    <!-- if guests: allergies?  -->
+                    <!-- <div class="col-md-4">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="brunch-guest-allergies">
+                            <label for="brunch-guest-allergies">Guest Allergies/Dietary Restrictions</label>
+                        </div>
+                    </div> -->
+                </div>
+
+                <div class="row text-left">
+                    <h5 id="brunch-count"></h5>
+                    <button id="update-brunch" class="btn btn-primary">Update Info</button>
+                </div>
+                <!-- <div class="row">
+                    <div class="text-left">
+                        <br>
+                        <h5>Allergies:</h5>
+                    </div>
+                </div> -->
+            </div>
+
+            <!-- Title Row - "Dinner" -->
+            <div id="dinner-group" class="text-left">
+                <hr>
+                <div class="row">
+                    <div class="text-left">
+                        <h3>Dinner</h3>
+                    </div>
+                </div>
+
+                <!-- dinner check box  -->
+                <div class="row">
+                    <div class="col-md-1">
+                        <div class="pretty p-image p-plain p-bigger p-tada">
+                            <input type="checkbox" class="sign-in-input" id="dinner-check">
+                            <div class="state">
+                                <img class="image" src="{{ url_for('static',filename='cutlery.png') }}">
+                                <label class="sign-in-label" for="dinner-check">I'm Coming!</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+
+                <!-- dinner guests  -->
+                <h5>Dinner Guests?</h5>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control" id="dinner-guests">
+                            <label for="dinner-guests">Number of Guests</label>
+                        </div>
+                    </div>
+                    <!-- if guests: allergies?  -->
+                    <!-- <div class="col-md-4">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="dinner-guest-allergies">
+                            <label for="dinner-guest-allergies">Guest Allergies/Dietary Restrictions</label>
+                        </div>
+                    </div> -->
+                </div>
+
+                <div class="row text-left">
+                    <br>
+                    <h5 id="dinner-count"></h5>
+                    <button id="update-dinner" class="btn btn-primary">Update Info</button>
+                </div>
+                <!-- <div class="row">
+                    <div class="text-left">
+                        <br>
+                        <h5>Allergies:</h5>
+                    </div>
+                </div> -->
+            </div>
+
+
+        </div>
+        <div class="col-sm-1"></div>
+    </div>
+</div>
+
+<script>
+    'use strict';
+
+    function sign_in() {
+        // extract input from modal
+        let brunch = $("#brunch-check").prop('checked')
+        let brunch_guests = 0
+        let brunch_val = parseInt($("#brunch-guests").val())
+        if (!isNaN(brunch_val) && brunch_val >= 0)
+            brunch_guests = parseInt($("#brunch-guests").val())
+        let dinner = $("#dinner-check").prop('checked')
+        let dinner_guests = 0
+        let dinner_val = parseInt($("#dinner-guests").val())
+        if (!isNaN(dinner_val) && dinner_val >= 0)
+            dinner_guests = parseInt($("#dinner-guests").val())
+
+        // AJAX update database
+        var json_event = {
+            "netid": "{{user.user_netid}}",
+            "brunch": brunch,
+            "brunch_guests": brunch_guests,
+            "dinner": dinner,
+            "dinner_guests": dinner_guests,
+        };
+
+        request = $.post("/{{coop}}/checkin", {
+            dataType: 'json',
+            contentType: 'application/json',
+            event_data: JSON.stringify(json_event),
+            beforeSend: function(){
+                // Show image container
+                $("#overlay").show();
+                $("#signin-content").hide();
+            }
+        }).done(function (data) {
+            refreshInfo("");
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            alert("Error updating check in information. Try again!")
+            // Show image container
+            $("#overlay").hide();
+            $("#signin-content").show();
+        });
+    }
+
+    function handleResponse(response) {
+        $("#overlay").hide();
+        $("#signin-content").show();
+        $("#brunch-check").prop('checked', response.brunch);
+        $("#brunch-guests").val(response.brunch_guests);
+        $("#dinner-check").prop('checked', response.dinner);
+        $("#dinner-guests").val(response.dinner_guests);
+        $("#brunch-count").html("Current Count: " + response.current_count_brunch)
+        $("#dinner-count").html("Current Count: " + response.current_count_dinner)
+    }
+
+    let request = null;
+
+    // refresh page with get request 
+    function refreshInfo() {
+        request = $.ajax(
+            {
+                type: 'GET',
+                url: '/{{coop}}/checkin/details',
+                success: handleResponse,
+                failure: function () {
+                    alert('there was an error while fetching members!');
+                },
+                beforeSend: function(){
+                    // Show image container
+                    $("#overlay").show();
+                    $("#signin-content").hide();
+                }
+            }
+        );
+    }
+
+    function setup() {
+        // set current date in header
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+        var dayString = mm + '/' + dd + '/' + yyyy;
+        $('#today-date').html("Check In for Today's Meals: " + dayString);
+        // show brunch if weekend (sat/sun)
+        if (today.getDay() == 0 || today.getDay() == 6) {
+            $('#brunch-group').removeClass('d-none');
+        }
+
+        refreshInfo("");
+
+        // checkbox changes
+        // $("#brunch-check").change(function () {
+        //     sign_in()
+        // });
+        // $("#dinner-check").change(function () {
+        //     sign_in()
+        // });
+        $("#update-brunch").on('click', sign_in)
+        $("#update-dinner").on('click', sign_in)
+    }
+
+    $('document').ready(setup);
+
+</script>
+
+{% endblock %}

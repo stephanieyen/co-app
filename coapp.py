@@ -742,10 +742,10 @@ def recipes_delete(coop):
 # Co-Op Sign-in
 #----------------------------------------------------------------------
 
-@app.route('/<coop>/signin', methods=['GET','POST'])
+@app.route('/<coop>/checkin', methods=['GET','POST'])
 def sign_in(coop):
     '''
-        Renders the Sign-in page of the co-op in the specified route.
+        Renders the Check In page of the co-op in the specified route.
     '''
     # if POST request, add new recipe to database
     if flask.request.method == 'POST':
@@ -772,12 +772,12 @@ def sign_in(coop):
     user = database.get_user(netid)
     # render signin page HTML
     coop_upper = database.get_upper_coop(coop)
-    html = flask.render_template('templates/sign_in.html',
+    html = flask.render_template('templates/check_in.html',
                             coop=coop, coop_upper=coop_upper, user=user)
     response = flask.make_response(html)
     return response
 
-@app.route('/<coop>/signin/details', methods=['GET'])
+@app.route('/<coop>/checkin/details', methods=['GET'])
 def sign_in_details(coop):
     '''
         Sends data to signin page
