@@ -212,6 +212,8 @@ def gen_recipe_gallery_html(recipes):
 
         if recipe.recipe_link: 
             html_code += ('<p class="card-text"><a href="{0}" target="_blank">Link to Recipe</a></p>').format(recipe.recipe_link)
+        else:
+            html_code += "<p><br></p>"
 
         # html_code += ('<a href="#!" class="btn btn-primary">Instructions</a>')
         html_code += ('<button type="button" class="btn btn-primary" id="view_instr-btn" data-bs-toggle="modal" data-bs-target="#viewInstructionsModal{0}">').format(recipe.recipe_id)
