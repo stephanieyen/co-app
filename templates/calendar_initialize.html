@@ -61,8 +61,8 @@
         <!-- shift date (autofilled from select) -->
         <div class="form-group form-inline">
           <br>
-          <label for="update_date" class="form-label">Shift Date:</label>
-          <input type="text" class="form-control" id="update_date" placeholder="Date yyyy/mm/dd">
+          <label for="update_date" class="form-label required">Shift Date:</label>
+          <input type="text" class="form-control" id="update_date" placeholder="Date yyyy-mm-dd">
         </div>
 
         <!-- shift start time -->
@@ -86,8 +86,8 @@
 
       <!-- submit button -->
       <div class="modal-footer">
-        <button type="submit" class="btn btn-secondary" id="update_submit">Update Shift</button>
-        <button type="submit" class="btn btn-secondary" id="update_delete">Delete Shift</button>
+        <button type="submit" class="btn btn-success" id="update_submit">Update Shift</button>
+        <button type="submit" class="btn btn-danger" id="update_delete">Delete Shift</button>
       </div>
     </div>
 
@@ -147,8 +147,8 @@
         <div id="add_date_group" class="collapse">
           <div class="form-group form-inline">
             <div class="mb-3">
-              <label for="add_date" class="form-label"><br>Shift Date:</label>
-              <input type="email" class="form-control" id="add_date" placeholder="Date yyyy/mm/dd">
+              <label for="add_date" class="form-label required"><br>Shift Date:</label>
+              <input type="email" class="form-control" id="add_date" placeholder="Date yyyy-mm-dd">
             </div>
           </div>
         </div>
@@ -207,7 +207,7 @@
 
       <!-- submit button -->
       <div class="modal-footer">
-        <button type="submit" class="btn btn-secondary" id="add_submit">Add Shift</button>
+        <button type="submit" class="btn btn-success" id="add_submit">Add Shift</button>
       </div>
     </div>
 

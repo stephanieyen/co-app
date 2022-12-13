@@ -81,7 +81,7 @@ def check_coop(current_coop):
 # Error page
 @app.route('/error', methods=['GET'])
 def error_page():
-    _ = auth.authenticate()
+    #_ = auth.authenticate()
     status, redirect = check_coop('')
     if status == False:
         return redirect
@@ -253,7 +253,7 @@ def add_user(coop):
     for netid in new_members:
         # create empty user model 
         user = models.Roster(user_netid=netid,
-                            user_name='',
+                            user_name=netid,
                             user_allergies='',
                             user_admin=False,
                             user_cookday='',
