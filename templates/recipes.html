@@ -191,7 +191,7 @@
 	  return !!urlPattern.test(urlString);
 	  }
 
-    if(!isValidUrl($('#recipe_link').val())) {
+    if($('#recipe_link').val() != "" && !isValidUrl($('#recipe_link').val())) {
       alert("Please enter a valid https URL for the recipe link.")
       missing = true;
     }
