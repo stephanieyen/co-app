@@ -137,11 +137,15 @@
                 $('#update_members_btns')[0].innerHTML += newMember
               })
             }
+            else {
+              $('#update_members_btns')[0].innerHTML = ""
+            }
 
             // DELETE event from calendar/db if button clicked
             $('#update_delete').on('click', function () {
               $('#update_delete').unbind('click');
               $('#updateEventModal').modal('hide');
+              console.log(info.event.id)
 
               // ajax post request by event id
               $.post("/{{coop}}/calendar/delete?id=" + info.event.id, {
