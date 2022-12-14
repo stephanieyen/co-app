@@ -85,7 +85,7 @@
 
         <div class="form-group">
           <label for="recipe_name" class="required">Name of recipe:</label>
-          <input type="text" class="form-control" id="recipe_name" autocapitalize="words" required>
+          <input type="text" class="form-control" id="recipe_name" autocapitalize="words" maxlength="30" required>
         </div>
         <br>
         <div class="form-group">
@@ -171,9 +171,10 @@
       missingFields.push("Recipe Name");
       missing = true;
     }
-    if ($('#recipe_type').val() === 0) {
+    if ($('#recipe_type').val() === "0") {
       missingFields.push("Recipe Type");
       missing = true;
+      console.log("hi")
     }
     if (missing) {
       alert("The following fields are required: " + missingFields.join(', '))
