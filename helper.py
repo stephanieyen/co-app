@@ -203,7 +203,7 @@ def gen_recipe_gallery_html(recipes):
 
     # single item
     for recipe in recipes:
-        html_code += ('<div class="col-lg-4 d-lg-block">')
+        html_code += ('<div class="col-lg-4 d-lg-block pb-3">')
         html_code += ('<div class="card">')
 
         html_code += ('<img src="{0}" class="card-img-top"/>').format(recipe.recipe_img)
