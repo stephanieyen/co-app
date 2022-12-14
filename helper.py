@@ -26,7 +26,7 @@ def gen_roster_table_html(members):
         )
     
     html_code += ('<thead id="theader">')
-    html_code += ('<tr><th scope="col">Member Name</th><th scope="col">Dietary Restrictions</th>'
+    html_code += ('<tr><th scope="col">Member Name</th><th scope="col">Allergies/Dietary Restrictions</th>'
                 '<th scope="col">Cook Shift</th><th scope="col">Chore Shift</th></tr>')
     html_code += ('</thead><tbody id="tbody">')
 

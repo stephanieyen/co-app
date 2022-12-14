@@ -103,7 +103,7 @@
         <br>
         <div class="form-group">
           <label for="recipe_link">Link:</label>
-          <input type="text" class="form-control" id="recipe_link">
+          <input type="url" class="form-control" id="recipe_link">
         </div>
         <br>
         <div class="form-group">
@@ -180,6 +180,22 @@
     if (missing) {
       alert("The following fields are required: " + missingFields.join(', '))
     }
+
+    const isValidUrl = urlString=> {
+	  	var urlPattern = new RegExp('^(https?:\\/\\/)?'+ // validate protocol
+	    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // validate domain name
+	    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // validate OR ip (v4) address
+	    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // validate port and path
+	    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // validate query string
+	    '(\\#[-a-z\\d_]*)?$','i'); // validate fragment locator
+	  return !!urlPattern.test(urlString);
+	  }
+
+    if(!isValidUrl($('#recipe_link').val())) {
+      alert("Please enter a valid https URL for the recipe link.")
+      missing = true;
+    }
+
     return missing
   }
 
