@@ -106,12 +106,13 @@
           <label for="foodtype" class="required">Food Type:</label>
           <select class="form-select" id="food_type" aria-label="Select food type">
             <option value="0" selected>Choose...</option>
+            <option value="Canned">Canned Good</option>
+            <option value="Dairy">Dairy</option>
+            <option value="Dry">Dry Good</option>
             <option value="Produce">Fresh Produce</option>
+            <option value="Frozen">Frozen</option>
             <option value="Meat">Meat</option>
             <option value="Seasoning">Seasoning/Spice</option>
-            <option value="Dry">Dry Good</option>
-            <option value="Canned">Canned Good</option>
-            <option value="Frozen">Frozen</option>
             <option value="Other">Other</option>
           </select>
         </div>
@@ -315,6 +316,7 @@
     let food_type = ""
     if ($('#food_type') != null) {
       food_type = $('#food_type').val();
+      console.log(food_type)
     }
     let item_name = $('#item_name').val();
     item_name = item_name.charAt(0).toUpperCase() + item_name.slice(1);
