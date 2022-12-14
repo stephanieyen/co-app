@@ -1,15 +1,19 @@
 import html
 
-# File of coop names by URL
+#----------------------------------------------------------------------
+
 def get_coop_names():
-    coops = {
+    '''
+        Returns a data structure which maps each co-op to its correctly
+        uppercased name.
+    '''
+    return {
         'brown': 'Brown',
         'scully': 'Scully',
         'ifc': 'IFC',
         '2d': '2D',
         'realfood': 'Real Food'
     }
-    return coops
 
 #----------------------------------------------------------------------
 
@@ -21,24 +25,26 @@ def gen_roster_table_html(members):
             Member Name, Dietary Restrictions, Cook Shift, Chore Shift
     '''
 
+    # table
     html_code = (
         '<table class="table" id="myTable" style="margin: 0;">'
         )
-    
+
+    # column headers
     html_code += ('<thead id="theader">')
     html_code += ('<tr><th scope="col">Member Name</th><th scope="col">Allergies/Dietary Restrictions</th>'
                 '<th scope="col">Cook Shift</th><th scope="col">Chore Shift</th></tr>')
     html_code += ('</thead><tbody id="tbody">')
 
     for member in members:
-        # if member has not filled out profile show netid as name
+        # if member has not filled out profile, show netid as name
         if member.user_name == '':
             display_name = member.user_netid
         else:  
             display_name = member.user_name
 
+        # row
         html_code += '<tr>'
-
         html_code += ('<th scope="row">{0}</th>'
                     '<td>{1}</td>'
                     '<td>{2}</td>'
@@ -48,6 +54,8 @@ def gen_roster_table_html(members):
                                         member.user_choreday,
                                         )
         html_code += '</tr>'
+        
+        # HTML escaping
         html_code = html_code.replace(display_name, html.escape(display_name))
         html_code = html_code.replace(member.user_allergies, html.escape(member.user_allergies))
         html_code = html_code.replace(member.user_cookday, html.escape(member.user_cookday))
@@ -61,47 +69,54 @@ def gen_roster_table_html(members):
 def gen_roster_table_admin_html(members):
     '''
         Generates HTML for a roster table that displays this data for 
-        the input members:
+        each of the input members:
 
-            Member NetID, Member Name, Admin Status
-
-            and a Remove button next to each member
+            Member NetID, Member Name, Admin Status;
+            Remove button
     '''
 
+    # table
     html_code = (
         '<table class="table" id="myTable" style="margin: 0;">'
         )
     
+    # column headers
     html_code += ('<thead id="theader">')
     html_code += ('<tr><th scope="col">Member NetID</th><th scope="col">Member Name</th><th scope="col">Admin Status</th>')
     html_code += ('</thead><tbody id="tbody">')
 
     for member in members:
-        html_code += '<tr>'
-        
+        # if member has not filled out profile, show message in place of name
         user_name = member.user_name
         if member.user_name == '' or member.user_name == member.user_netid:
             user_name = "User needs to add their profile information"
 
+        # fetch member status
         user_admin = 'Member'
         if member.user_admin:
             user_admin = 'Admin'
 
+        # row
+        html_code += '<tr>'
         html_code += ('<th scope="row">{0}</th>'
                     '<th scope="row">{1}</th>'
                     '<td>{2}</td>').format(member.user_netid,
                                         user_name,
                                         user_admin,
                                         )
+        # Remove button
         html_code += ('<td><input type="button" class="btn btn-danger btn-sm" value="Remove" onclick="deleteRow(this)"></td>')
+        # Make Admin button
         if member.user_admin == False:
             html_code += ('<td><input type="button" class="btn btn-primary btn-sm" value="Make Admin" onclick="addAdmin(this)"></td>')
+        # netid identifier
         html_code += ('<td hidden>{0}</td>').format(member.user_netid)
         html_code += '</tr>'
+        
+        # HTML escaping
         html_code = html_code.replace(member.user_name, html.escape(member.user_name))
     
     html_code += ('</tbody></table>')
-
     return html_code
 
 #----------------------------------------------------------------------
@@ -109,19 +124,19 @@ def gen_roster_table_admin_html(members):
 def gen_item_table_html(items, is_food, is_admin, netid):
     '''
         Generates HTML for a shopping list table that displays this data
-        for the input item:
+        for each of the input items:
 
-            Item, Type, Food Type (if food), Quantity, Comments,
-            Alternative Item, For Shift, Ordered
-
-            as well as an Upvotes count and a Remove button next to each
-            item
+            Item, Food Type (if food), Quantity, Comments,
+            Alternative Item, Requester, For Shift;
+            Ordered checkbox, Upvotes count, Remove button
     '''
 
+    # table
     html_code = (
         '<table class="table" id="myTable" style="margin: 0;">'
         )
     
+    # column headers
     html_code += ('<thead id="theader">')
     html_code += ('<tr><th scope="col">Item</th>')
     if is_food is True:
@@ -133,13 +148,8 @@ def gen_item_table_html(items, is_food, is_admin, netid):
                 '</tr>')
     html_code += ('</thead><tbody id="tbody">')
 
-    # # sort items by food type
-    # if is_food is True:
-    #     items.sort(key=lambda x: x.food_type)
-    # else:
-    #     items.sort(key= lambda x: x.item_name)
-
     for item in items:
+        # row
         html_code += '<tr>'
         html_code += ('<th scope="row">{0}</th>').format(item.item_name)
         if is_food is True:
@@ -184,15 +194,21 @@ def gen_item_table_html(items, is_food, is_admin, netid):
         html_code = html_code.replace(item.item_reason, html.escape(item.item_reason))
         html_code = html_code.replace(item.alt_request, html.escape(item.alt_request))
 
-        
-    
-    html_code += ('</tbody></table>')
 
+    html_code += ('</tbody></table>')
     return html_code
 
 #----------------------------------------------------------------------
 
 def gen_recipe_gallery_html(recipes):
+    '''
+        Generates HTML for a recipe gallery that displays a card with 
+        for each of the input recipes:
+
+            recipe name, recipe link (if available);
+            recipe image, Instructions button, Remove button
+    '''
+
     # inner
     html_code = ('<div class="carousel-inner py-4">')
 
@@ -244,8 +260,5 @@ def gen_recipe_gallery_html(recipes):
         html_code = html_code.replace('\n', '<br>')
     
     html_code += ('</div></div></div>') # row
-
     html_code += ('</div>') # inner
-
-
     return html_code
