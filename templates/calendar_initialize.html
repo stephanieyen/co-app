@@ -1,13 +1,584 @@
+<!DOCTYPE html>
+<html lang='en'>
+
 <head>
+  <meta charset='utf-8' />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Co-App Calendar</title>
+  <!------------------------Bootstrap src for header ---------------------------->
+  <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css' rel='stylesheet'>
+  <link href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css' rel='stylesheet'>
   <!------------------------JS/CSS/JQuery/Bootstrap src for calendar ------------>
   <script type='text/javascript' src="{{ url_for('static',filename='jquery-3.6.1.min.js') }}"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     crossorigin="anonymous"></script>
+
   <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='calendar.css') }}" />
   <script type='text/javascript' src="{{ url_for('static',filename='calendar.js') }}"></script>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='coapp.css') }}" />
 
+  <script type="text/javascript" src="{{ url_for('static',filename='calendar_coapp.js') }}"></script>
+
+  <!------------------------CALENDAR SCRIPT ------------------------------------>
+  <script>
+    // Global variable for members but in JSON
+    var members_json = {{ members | tojson }};
+
+    // CALENDAR GENERATION FUNCTION
+    function generate_calendar() {
+      // Show image container
+      $("#overlay").hide();
+      $("#calendar").show();
+      var calendarEl = document.getElementById('calendar');
+      var calendar = new FullCalendar.Calendar(calendarEl,
+        // calendar API properties
+        {
+          themeSystem: 'bootstrap5',
+          headerToolbar: {
+            left: 'title',
+            right: 'prev,next today'
+          },
+          eventDisplay: 'block',
+          eventTextColor: 'black',
+          titleFormat: { year: 'numeric', month: 'short', day: 'numeric' },
+          eventTimeFormat: { hour: 'numeric', minute: '2-digit', meridiem: 'short' },
+          initialView: 'dayGridWeek',
+          initialDate: new Date().toISOString().slice(0, 10), // today's date
+          selectable: true,
+          editable: false,
+          nowIndicator: true,
+          dayMaxEvents: true,
+          // generate/refresh events through JSON stream "GET" event source
+          events:
+          {
+            url: '/{{coop}}/events',
+            method: 'GET',
+            failure: function () {
+              alert('there was an error while fetching events!');
+            }
+          }
+          ,
+
+          // hovering over event provides more information 
+          eventDidMount: function (info) {
+            titleStr = "<b>Shift Type: " + info.event.extendedProps.type + "</b><br>" +
+              "Creator: " + info.event.extendedProps.creator + "<br>" +
+              "Members: " + info.event.extendedProps.members + "<br>"
+            if (info.event.extendedProps.type === 'Cooking') {
+              if (info.event.extendedProps.meal === null || info.event.extendedProps.meal === "") {
+                titleStr = titleStr + "Planned meal: N/A"
+              } else {
+                titleStr = titleStr + "Planned meal: " +
+                  info.event.extendedProps.meal
+              }
+            };
+            $(info.el).tooltip({
+              title: titleStr,
+              html: true,
+              container: 'body',
+              delay: { "show": 50, "hide": 50 }
+            });
+          },
+
+          // when user clicks on an event --> modal with options to delete or edit event
+          eventClick: function (info) {
+            $("#update_submit").unbind('click');
+            $("#update_delete").unbind('click');
+
+            // autofill event information
+            $('#updateEventModal').modal('show');
+            $('#update_title').val(info.event.title);
+            $('#update_date').val(info.event.startStr.substring(0, 10));
+            // If recurring, don't let people change date
+            if (info.event._def.recurringDef !== null) {
+              $('#update_date').attr('disabled', 'disabled');
+              $('#update_submit').text("Update Recurring Shifts");
+              $('#update_delete').text("Delete Recurring Shifts");
+            }
+            else {
+              $('#update_date').removeAttr('disabled');
+              $('#update_submit').text("Update Shift");
+              $('#update_delete').text("Delete Shift");
+            }
+            $('#update_start_time').val(info.event.startStr.substring(11, 19));
+            var decodedMeal = $("<p/>").html(info.event.extendedProps.meal).text();
+            $('#update_meal').val(decodedMeal);
+            // $('#update_members').val(info.event.extendedProps.members);
+            if (info.event.extendedProps.type === "Cooking") {
+              $('#update_type').val(1);
+              $('#update_meal_visible').show();
+            } else if (info.event.extendedProps.type === "Shopping") {
+              $('#update_type').val(2);
+              $('#update_meal_visible').hide();
+            } else if (info.event.extendedProps.type === "Clean-up") {
+              $('#update_type').val(3);
+              $('#update_meal_visible').hide();
+            } else {
+              $('#update_type').val(4);
+              $('#update_meal_visible').hide();
+            }
+
+            // when "cooking" selected, show meal option
+            $('#update_type').on('change', function () {
+              if ($('#update_type').val() == 1) {
+                $('#update_meal_visible').show();
+              } else {
+                $('#update_meal_visible').hide();
+              }
+            });
+
+            // add in buttons for each member
+            if (info.event.extendedProps.members != "") {
+              $('#update_members_btns')[0].innerHTML = ""
+              info.event.extendedProps.members.split(",").forEach(function (member) {
+                let newMember = "<button type='button' class='btn btn-primary' onclick='deleteMember(this)''>"
+                newMember += member.trim()
+                newMember += "</button>"
+                $('#update_members_btns')[0].innerHTML += newMember
+              })
+            }
+
+            // DELETE event from calendar/db if button clicked
+            $('#update_delete').on('click', function () {
+              $('#update_delete').unbind('click');
+              $('#updateEventModal').modal('hide');
+
+              // ajax post request by event id
+              $.post("/{{coop}}/calendar/delete?id=" + info.event.id, {
+                beforeSend: function () {
+                  // Show image container
+                  $("#overlay").show();
+                  $("#calendar").hide();
+                },
+              }).done(function () {
+                // refresh events after deleting from db
+                // Show image container
+                $("#overlay").hide();
+                $("#calendar").show();
+                calendar.refetchEvents()
+              })
+            });
+
+            // UPDATE event on calendar/db if button clicked 
+            $('#update_submit').on('click', function () {
+              // validate that required fields are not empty
+              if (validateUpdate()) {
+                return false
+              }
+
+              $('#update_submit').unbind('click');
+              $('#updateEventModal').modal('hide');
+
+              // extract input from modal
+              let shift_meal_input = ""
+              let shift_members_input = ""
+              let shift_title_input = $('#update_title').val();
+              let shift_type_input = $('#update_type option:selected').text();
+              let shift_time_input = $('#update_date').val();
+              if ($("#update_start_time").val() != "") {
+                shift_time_input = shift_time_input + "T" + $("#update_start_time").val();
+              }
+              if ($('#update_meal') != null) {
+                shift_meal_input = $('#update_meal').val();
+              }
+              if ($('#update_members') != null) {
+                // shift_members_input = $('#add_members').val();
+                children = $('#update_members_btns')[0].children
+                for (const member_button of children) {
+                  shift_members_input += member_button.innerText + ", "
+                }
+              }
+
+              // update recurring events
+              var days = [];
+              // AJAX update database
+              var json_event = {
+                "shift_name": shift_title_input,
+                "shift_type": shift_type_input,
+                "shift_item": shift_meal_input,
+                "shift_time": shift_time_input,
+                "shift_recurring": "",
+                "shift_day": days.toString(),
+                "shift_creator": "{{user.user_netid}}",
+                "shift_members": shift_members_input
+              };
+
+              $.post("/{{coop}}/calendar/update?id=" + info.event.id, {
+                event_data: json_event,
+                async: false,
+                beforeSend: function () {
+                  // Show image container
+                  $("#overlay").show();
+                  $("#calendar").hide();
+                },
+              }).done(function () {
+                // refresh events after deleting from db
+                // Show image container
+                $("#overlay").hide();
+                $("#calendar").show();
+                calendar.refetchEvents()
+              });
+            })
+          },
+
+          // selecting area on the calendar that does NOT already have an event
+          select: function (info) {
+            $("#add_submit").unbind('click');
+
+            // show event modal (autofill with selected time)
+            $('#createEventModal').modal('show');
+            $('#add_date').val(info.startStr);
+
+            $('#add_type').on('change', function () {
+              if ($('#add_type').val() == 1) {
+                $('#add_meal_visible').show();
+              } else {
+                $('#add_meal_visible').hide();
+              }
+            });
+
+            // add event to calendar if submitted & hide modal
+            $('#add_submit').on('click', function () {
+              // validate that required fields are not empty
+              if (validateNewEvent()) {
+                return false
+              }
+
+              var isRecur = $("#add_recurring_group").is(":visible")
+              var days = [];
+              // if event is recurring
+              if (isRecur) {
+                // get all checked days
+                $.each($("input[name='dayofweek']:checked"), function () {
+                  days.push($(this).val());
+                });
+              }
+
+              // calendar.addEvent(event);
+              $('#add_submit').unbind('click');
+
+              // extract input from modal
+              let shift_meal_input = ""
+              let shift_members_input = ""
+              let shift_title_input = $('#add_title').val();
+              let shift_type_input = $('#add_type option:selected').text();
+              let shift_time_input = $('#add_date').val();
+              if ($("#add_start_time").val() != "") {
+                shift_time_input = shift_time_input + "T" + $("#add_start_time").val();
+              }
+              if ($('#add_meal') != null) {
+                shift_meal_input = $('#add_meal').val();
+              }
+              if ($('#add_members') != null) {
+                // shift_members_input = $('#add_members').val();
+                children = $('#members-btns')[0].children
+                for (const member_button of children) {
+                  shift_members_input += member_button.innerText + ", "
+                }
+              }
+
+              // AJAX update database
+              var json_event = {
+                "shift_name": shift_title_input,
+                "shift_type": shift_type_input,
+                "shift_item": shift_meal_input,
+                "shift_time": shift_time_input,
+                "shift_recurring": isRecur,
+                "shift_day": days.toString(),
+                "shift_creator": "{{user.user_netid}}", // REPLACE W FLASK CURRENT USER NETID
+                "shift_members": shift_members_input
+              };
+
+              // AJAX post request
+              $.post("/{{coop}}", {
+                event_data: json_event,
+                async: false,
+                beforeSend: function () {
+                  // Show image container
+                  $("#overlay").show();
+                  $("#calendar").hide();
+                },
+              }).done(function () {
+                // refresh events after deleting from db
+                // Show image container
+                $("#overlay").hide();
+                $("#calendar").show();
+                calendar.refetchEvents()
+              })
+
+              $('#createEventModal').modal('hide');
+            });
+
+          },
+        });
+      calendar.render();
+    };
+
+    // validate that required modal fields are not empty
+    function validateNewEvent() {
+      let missingFields = [];
+      let missing = false;
+      if ($('#add_title').val() === "") {
+        missingFields.push("Shift Description");
+        missing = true;
+      }
+      if ($('#add_type').val() == 0) {
+        missingFields.push("Shift Type");
+        missing = true;
+      }
+      const regex = /^\d{4}-\d{2}-\d{2}$/;
+      if (missing) {
+        alert("The following fields are required: " + missingFields.join(', '))
+      }
+      else if (!isValidDate($('#add_date').val())) {
+        alert("Please enter a valid date (yyyy-mm-dd)")
+        missing = true;
+      }
+      return missing
+    }
+    function validateUpdate() {
+      let missingFields = [];
+      let missing = false;
+      if ($('#update_title').val() === "") {
+        missingFields.push("Shift Description");
+        missing = true;
+      }
+      if ($('#update_type').val() == 0) {
+        missingFields.push("Shift Type");
+        missing = true;
+      }
+      if (missing) {
+        alert("The following fields are required: " + missingFields.join(', '))
+      }
+      else if ($('#recurring').off() && !isValidDate($('#update_date').val())) {
+        alert("Please enter a valid date (yyyy-mm-dd)")
+        missing = true;
+      }
+      return missing
+    }
+
+    function isValidDate(dateString) {
+      var regEx = /^\d{4}-\d{2}-\d{2}$/;
+      if(!dateString.match(regEx)) return false;  // Invalid format
+      var d = new Date(dateString);
+      var dNum = d.getTime();
+      if(!dNum && dNum !== 0) return false; // NaN value, Invalid date
+      return d.toISOString().slice(0,10) === dateString;
+    }
+    
+    function addMember() {
+      var x = document.getElementById("add_members" + "autocomplete-list");
+      if (x) {
+        x = x.getElementsByTagName("div");
+        for (let value of x) {
+          if (value.classList.contains("autocomplete-active")) {
+            return;
+          }
+        }
+      } 
+      let name = $('#add_members').val();
+      let newMember = "<button type='button' class='btn btn-primary' onclick='deleteMember(this)''>"
+      let textAreaDiv = document.createElement('textarea');
+      textAreaDiv.textContent = name
+      let decodedName = textAreaDiv.innerHTML;
+      newMember += decodedName
+      newMember += "</button>"
+      $('#members-btns')[0].innerHTML += newMember
+      $('#add_members').val("");
+      
+    }
+
+    function addUpdateMember() {
+      var x = document.getElementById("update_members" + "autocomplete-list");
+      if (x) {
+        x = x.getElementsByTagName("div");
+        for (let value of x) {
+          if (value.classList.contains("autocomplete-active")) {
+            return;
+          }
+        }
+      } 
+      let name = $('#update_members').val();
+      let newMember = "<button type='button' class='btn btn-primary' onclick='deleteMember(this)''>"
+      let textAreaDiv = document.createElement('textarea');
+      textAreaDiv.textContent = name
+      let decodedName = textAreaDiv.innerHTML;
+      newMember += decodedName
+      newMember += "</button>"
+      $('#update_members_btns')[0].innerHTML += newMember
+      $('#update_members').val("");
+    }
+
+    function deleteMember(m) {
+      m.remove()
+    }
+
+    // Autocomplete from https://www.w3schools.com/howto/howto_js_autocomplete.asp
+    function autocomplete(inp, arr, update) {
+      /*the autocomplete function takes two arguments,
+      the text field element and an array of possible autocompleted values:*/
+      var currentFocus;
+      /*execute a function when someone writes in the text field:*/
+      inp.addEventListener("input", function (e) {
+        var a, b, i, val = this.value;
+        /*close any already open lists of autocompleted values*/
+        closeAllLists();
+        if (!val) { return false; }
+        currentFocus = -1;
+        /*create a DIV element that will contain the items (values):*/
+        a = document.createElement("DIV");
+        a.setAttribute("id", this.id + "autocomplete-list");
+        a.setAttribute("class", "autocomplete-items");
+        /*append the DIV element as a child of the autocomplete container:*/
+        this.parentNode.appendChild(a);
+        /*for each item in the array...*/
+        for (i = 0; i < arr.length; i++) {
+          /*check if the item starts with the same letters as the text field value:*/
+          if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+            /*create a DIV element for each matching element:*/
+            b = document.createElement("DIV");
+            /*make the matching letters bold:*/
+            let textAreaDiv = document.createElement('textarea');
+            textAreaDiv.textContent = arr[i].substr(0, val.length);
+            let decodedBold = textAreaDiv.innerHTML;
+            b.innerHTML = "<strong>" + decodedBold + "</strong>";
+            textAreaDiv.textContent = arr[i].substr(val.length)
+            let decodedName = textAreaDiv.innerHTML;
+            b.innerHTML += decodedName;
+            /*insert a input field that will hold the current array item's value:*/
+            b.innerHTML += "<input type='hidden' value='" + members_json[arr[i]] + "'>";
+            /*execute a function when someone clicks on the item value (DIV element):*/
+            b.addEventListener("click", function (e) {
+              /*insert the value for the autocomplete text field:*/
+              inp.value = this.getElementsByTagName("input")[0].value;
+              if (update == 0)
+                addMember()
+              else
+                addUpdateMember()
+              /*close the list of autocompleted values,
+              (or any other open lists of autocompleted values:*/
+              closeAllLists();
+            });
+            a.appendChild(b);
+          }
+        }
+      });
+      /*execute a function presses a key on the keyboard:*/
+      inp.addEventListener("keydown", function (e) {
+        var x = document.getElementById(this.id + "autocomplete-list");
+        if (x) x = x.getElementsByTagName("div");
+        if (e.keyCode == 40) {
+          /*If the arrow DOWN key is pressed,
+          increase the currentFocus variable:*/
+          currentFocus++;
+          /*and and make the current item more visible:*/
+          addActive(x);
+        } else if (e.keyCode == 38) { //up
+          /*If the arrow UP key is pressed,
+          decrease the currentFocus variable:*/
+          currentFocus--;
+          /*and and make the current item more visible:*/
+          addActive(x);
+        } else if (e.keyCode == 13) {
+          /*If the ENTER key is pressed, prevent the form from being submitted,*/
+          e.preventDefault();
+          if (currentFocus > -1) {
+            /*and simulate a click on the "active" item:*/
+            if (x) x[currentFocus].click();
+          }
+        }
+      });
+      function addActive(x) {
+        /*a function to classify an item as "active":*/
+        if (!x) return false;
+        /*start by removing the "active" class on all items:*/
+        removeActive(x);
+        if (currentFocus >= x.length) currentFocus = 0;
+        if (currentFocus < 0) currentFocus = (x.length - 1);
+        /*add class "autocomplete-active":*/
+        x[currentFocus].classList.add("autocomplete-active");
+      }
+      function removeActive(x) {
+        /*a function to remove the "active" class from all autocomplete items:*/
+        for (var i = 0; i < x.length; i++) {
+          x[i].classList.remove("autocomplete-active");
+        }
+      }
+      function closeAllLists(elmnt) {
+        /*close all autocomplete lists in the document,
+        except the one passed as an argument:*/
+        var x = document.getElementsByClassName("autocomplete-items");
+        for (var i = 0; i < x.length; i++) {
+          if (elmnt != x[i] && elmnt != inp) {
+            x[i].parentNode.removeChild(x[i]);
+          }
+          const end = inp.value.length;
+          inp.setSelectionRange(end, end);
+          inp.focus();
+        }
+      }
+      /*execute a function when someone clicks in the document:*/
+      document.addEventListener("click", function (e) {
+        closeAllLists(e.target);
+      });
+    }
+
+    function setup() {
+      generate_calendar()
+
+      // hide recurring in add event when one-time clicked
+      $('#one-time').on('click', function () {
+        $('#add_recurring_group').collapse('hide')
+      });
+
+      // hide one-time in add event when recurring clicked
+      $('#recurring').on('click', function () {
+        $('#add_date_group').collapse('hide')
+      });
+
+      $('#add_members').on('keydown', function (e) {
+        if (e.which == 13) {
+          addMember()
+        }
+      });
+
+      $('#update_members').on('keydown', function (e) {
+        if (e.which == 13) {
+          addUpdateMember()
+        }
+      });
+
+      // Add autocomplete to input
+      let names = []
+      for (let name in members_json) {
+        names.push(name)
+      }
+      autocomplete($('#add_members')[0], names, 0);
+      autocomplete($('#update_members')[0], names, 1);
+
+      // reset modal data upon close
+      $("#createEventModal").on("hidden.bs.modal", function () {
+        $('#add_recurring_group').collapse('hide');
+        $('#add_date_group').collapse('hide');
+        $('#add_time_group').collapse('hide');
+        $('#add_meal_visible').hide();
+
+        $('#add_title').val("");
+        $('#add_type').val(0);
+        $('#add_start_time').val("");
+        $('#add_meal').val("");
+        $('#add_members').val("");
+        $('#add_members').val("");
+        $('#members-btns')[0].innerHTML = ""
+        $("input[name='dayofweek']").prop('checked', false);
+      });
+
+    }
+
+    $('document').ready(setup);
+
+  </script>
 </head>
 
 <!------------------------------HTML BODY------------------------------------->
@@ -147,7 +718,7 @@
         <div id="add_date_group" class="collapse">
           <div class="form-group form-inline">
             <div class="mb-3">
-              <label for="add_date" class="form-label required"><br>Shift Date:</label>
+              <br><label for="add_date" class="form-label required">Shift Date:</label>
               <input type="email" class="form-control" id="add_date" placeholder="Date yyyy-mm-dd">
             </div>
           </div>
@@ -214,526 +785,6 @@
   </div>
 </div>
 
-<!------------------------CALENDAR SCRIPT ------------------------------------>
-<script>
-  // Global variable for members but in JSON
-  var members_json = {{ members | tojson }};
-
-  // CALENDAR GENERATION FUNCTION
-  function generate_calendar() {
-    // Show image container
-    $("#overlay").hide();
-    $("#calendar").show();
-    var calendarEl = document.getElementById('calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl,
-      // calendar API properties
-      {
-        themeSystem: 'bootstrap5',
-        headerToolbar: {
-          left: 'title',
-          right: 'prev,next today'
-        },
-        eventDisplay: 'block',
-        eventTextColor: 'black',
-        titleFormat: { year: 'numeric', month: 'short', day: 'numeric' },
-        eventTimeFormat: { hour: 'numeric', minute: '2-digit', meridiem: 'short' },
-        initialView: 'dayGridWeek',
-        initialDate: new Date().toISOString().slice(0, 10), // today's date
-        selectable: true,
-        editable: false,
-        nowIndicator: true,
-        dayMaxEvents: true,
-        // generate/refresh events through JSON stream "GET" event source
-        events:
-        {
-          url: '/{{coop}}/events',
-          method: 'GET',
-          failure: function () {
-            alert('there was an error while fetching events!');
-          }
-        }
-        ,
-
-        // hovering over event provides more information 
-        eventDidMount: function (info) {
-          titleStr = "<b>Shift Type: " + info.event.extendedProps.type + "</b><br>" +
-            "Creator: " + info.event.extendedProps.creator + "<br>" +
-            "Members: " + info.event.extendedProps.members + "<br>"
-          if (info.event.extendedProps.type === 'Cooking') {
-            if (info.event.extendedProps.meal === null || info.event.extendedProps.meal === "") {
-              titleStr = titleStr + "Planned meal: N/A"
-            } else {
-              titleStr = titleStr + "Planned meal: " +
-                info.event.extendedProps.meal
-            }
-          };
-          $(info.el).tooltip({
-            title: titleStr,
-            html: true,
-            container: 'body',
-            delay: { "show": 50, "hide": 50 }
-          });
-        },
-
-        // when user clicks on an event --> modal with options to delete or edit event
-        eventClick: function (info) {
-          $("#update_submit").unbind('click');
-          // autofill event information
-          $('#updateEventModal').modal('show');
-          $('#update_title').val(info.event.title);
-          $('#update_date').val(info.event.startStr.substring(0, 10));
-          $('#update_start_time').val(info.event.startStr.substring(11, 19));
-          var decodedMeal = $("<p/>").html(info.event.extendedProps.meal).text();
-          $('#update_meal').val(decodedMeal);
-          // $('#update_members').val(info.event.extendedProps.members);
-          if (info.event.extendedProps.type === "Cooking") {
-            $('#update_type').val(1);
-            $('#update_meal_visible').show();
-          } else if (info.event.extendedProps.type === "Shopping") {
-            $('#update_type').val(2);
-            $('#update_meal_visible').hide();
-          } else if (info.event.extendedProps.type === "Clean-up") {
-            $('#update_type').val(3);
-            $('#update_meal_visible').hide();
-          } else {
-            $('#update_type').val(4);
-            $('#update_meal_visible').hide();
-          }
-
-          // when "cooking" selected, show meal option
-          $('#update_type').on('change', function () {
-            if ($('#update_type').val() == 1) {
-              $('#update_meal_visible').show();
-            } else {
-              $('#update_meal_visible').hide();
-            }
-          });
-
-          // add in buttons for each member
-          if (info.event.extendedProps.members != "") {
-            $('#update_members_btns')[0].innerHTML = ""
-            info.event.extendedProps.members.split(",").forEach(function (member) {
-              let newMember = "<button type='button' class='btn btn-primary' onclick='deleteMember(this)''>"
-              newMember += member.trim()
-              newMember += "</button>"
-              $('#update_members_btns')[0].innerHTML += newMember
-            })
-          }
-
-          // DELETE event from calendar/db if button clicked
-          $('#update_delete').on('click', function () {
-            $('#update_delete').unbind('click');
-            $('#updateEventModal').modal('hide');
-
-            // ajax post request by event id
-            $.post("/{{coop}}/calendar/delete?id=" + info.event.id, {
-              beforeSend: function () {
-                // Show image container
-                $("#overlay").show();
-                $("#calendar").hide();
-              },
-            }).done(function () {
-              // refresh events after deleting from db
-              // Show image container
-              $("#overlay").hide();
-              $("#calendar").show();
-              calendar.refetchEvents()
-            })
-          });
-
-          // UPDATE event on calendar/db if button clicked 
-          $('#update_submit').on('click', function () {
-            // validate that required fields are not empty
-            if (validateUpdate()) {
-              return false
-            }
-
-            $('#update_submit').unbind('click');
-            $('#updateEventModal').modal('hide');
-
-            // extract input from modal
-            let shift_meal_input = ""
-            let shift_members_input = ""
-            let shift_title_input = $('#update_title').val();
-            let shift_type_input = $('#update_type option:selected').text();
-            let shift_time_input = $('#update_date').val();
-            if ($("#update_start_time").val() != "") {
-              shift_time_input = shift_time_input + "T" + $("#update_start_time").val();
-            }
-            if ($('#update_meal') != null) {
-              shift_meal_input = $('#update_meal').val();
-            }
-            if ($('#update_members') != null) {
-              // shift_members_input = $('#add_members').val();
-              children = $('#update_members_btns')[0].children
-              for (const member_button of children) {
-                shift_members_input += member_button.innerText + ", "
-              }
-            }
-
-            // update recurring events
-            var days = [];
-            // AJAX update database
-            var json_event = {
-              "shift_name": shift_title_input,
-              "shift_type": shift_type_input,
-              "shift_item": shift_meal_input,
-              "shift_time": shift_time_input,
-              "shift_recurring": "",
-              "shift_day": days.toString(),
-              "shift_creator": "{{user.user_netid}}",
-              "shift_members": shift_members_input
-            };
-
-            console.log(json_event)
-
-            $.post("/{{coop}}/calendar/update?id=" + info.event.id, {
-              event_data: json_event,
-              async: false,
-              beforeSend: function () {
-                // Show image container
-                $("#overlay").show();
-                $("#calendar").hide();
-              },
-            }).done(function () {
-              // refresh events after deleting from db
-              // Show image container
-              $("#overlay").hide();
-              $("#calendar").show();
-              calendar.refetchEvents()
-            });
-          })
-        },
-
-        // selecting area on the calendar that does NOT already have an event
-        select: function (info) {
-          $("#add_submit").unbind('click');
-
-          // show event modal (autofill with selected time)
-          $('#createEventModal').modal('show');
-          $('#add_date').val(info.startStr);
-
-          $('#add_type').on('change', function () {
-            if ($('#add_type').val() == 1) {
-              $('#add_meal_visible').show();
-            } else {
-              $('#add_meal_visible').hide();
-            }
-          });
-
-          // add event to calendar if submitted & hide modal
-          $('#add_submit').on('click', function () {
-            // validate that required fields are not empty
-            if (validateNewEvent()) {
-              return false
-            }
-
-            var isRecur = $("#add_recurring_group").is(":visible")
-            var days = [];
-            // if event is recurring
-            if (isRecur) {
-              // get all checked days
-              $.each($("input[name='dayofweek']:checked"), function () {
-                days.push($(this).val());
-              });
-            }
-
-            // calendar.addEvent(event);
-            $('#add_submit').unbind('click');
-
-            // extract input from modal
-            let shift_meal_input = ""
-            let shift_members_input = ""
-            let shift_title_input = $('#add_title').val();
-            let shift_type_input = $('#add_type option:selected').text();
-            let shift_time_input = $('#add_date').val();
-            if ($("#add_start_time").val() != "") {
-              shift_time_input = shift_time_input + "T" + $("#add_start_time").val();
-            }
-            if ($('#add_meal') != null) {
-              shift_meal_input = $('#add_meal').val();
-            }
-            if ($('#add_members') != null) {
-              // shift_members_input = $('#add_members').val();
-              children = $('#members-btns')[0].children
-              for (const member_button of children) {
-                shift_members_input += member_button.innerText + ", "
-              }
-            }
-
-            // AJAX update database
-            var json_event = {
-              "shift_name": shift_title_input,
-              "shift_type": shift_type_input,
-              "shift_item": shift_meal_input,
-              "shift_time": shift_time_input,
-              "shift_recurring": isRecur,
-              "shift_day": days.toString(),
-              "shift_creator": "{{user.user_netid}}", // REPLACE W FLASK CURRENT USER NETID
-              "shift_members": shift_members_input
-            };
-
-            // AJAX post request
-            $.post("/{{coop}}", {
-              event_data: json_event,
-              async: false,
-              beforeSend: function () {
-                // Show image container
-                $("#overlay").show();
-                $("#calendar").hide();
-              },
-            }).done(function () {
-              // refresh events after deleting from db
-              // Show image container
-              $("#overlay").hide();
-              $("#calendar").show();
-              calendar.refetchEvents()
-            })
-
-            $('#createEventModal').modal('hide');
-          });
-
-        },
-      });
-    calendar.render();
-  };
-
-  // validate that required modal fields are not empty
-  function validateNewEvent() {
-    let missingFields = [];
-    let missing = false;
-    if ($('#add_title').val() === "") {
-      missingFields.push("Shift Description");
-      missing = true;
-    }
-    if ($('#add_type').val() === 0) {
-      missingFields.push("Shift Type");
-      missing = true;
-    }
-    if (missing) {
-      alert("The following fields are required: " + missingFields.join(', '))
-    }
-    return missing
-  }
-  function validateUpdate() {
-    let missingFields = [];
-    let missing = false;
-    if ($('#update_title').val() === "") {
-      missingFields.push("Shift Description");
-      missing = true;
-    }
-    if ($('#update_type').val() === 0) {
-      missingFields.push("Shift Type");
-      missing = true;
-    }
-    if (missing) {
-      alert("The following fields are required: " + missingFields.join(', '))
-    }
-    return missing
-  }
-
-  function addMember() {
-    var x = document.getElementById("add_members" + "autocomplete-list");
-    if (x) {
-      x = x.getElementsByTagName("div");
-      for (let value of x) {
-        if (value.classList.contains("autocomplete-active")) {
-          return;
-        }
-      }
-    }
-    let name = $('#add_members').val();
-    let newMember = "<button type='button' class='btn btn-primary' onclick='deleteMember(this)''>"
-    let textAreaDiv = document.createElement('textarea');
-    textAreaDiv.textContent = name
-    let decodedName = textAreaDiv.innerHTML;
-    newMember += decodedName
-    newMember += "</button>"
-    $('#members-btns')[0].innerHTML += newMember
-    $('#add_members').val("");
-
-  }
-
-  function addUpdateMember() {
-    let name = $('#update_members').val();
-    let newMember = "<button type='button' class='btn btn-primary' onclick='deleteMember(this)''>"
-    let textAreaDiv = document.createElement('textarea');
-    textAreaDiv.textContent = name
-    let decodedName = textAreaDiv.innerHTML;
-    newMember += decodedName
-    newMember += "</button>"
-    $('#update_members_btns')[0].innerHTML += newMember
-    $('#update_members').val("");
-  }
-
-  function deleteMember(m) {
-    m.remove()
-  }
-
-  // Autocomplete from https://www.w3schools.com/howto/howto_js_autocomplete.asp
-  function autocomplete(inp, arr, update) {
-    /*the autocomplete function takes two arguments,
-    the text field element and an array of possible autocompleted values:*/
-    var currentFocus;
-    /*execute a function when someone writes in the text field:*/
-    inp.addEventListener("input", function (e) {
-      var a, b, i, val = this.value;
-      /*close any already open lists of autocompleted values*/
-      closeAllLists();
-      if (!val) { return false; }
-      currentFocus = -1;
-      /*create a DIV element that will contain the items (values):*/
-      a = document.createElement("DIV");
-      a.setAttribute("id", this.id + "autocomplete-list");
-      a.setAttribute("class", "autocomplete-items");
-      /*append the DIV element as a child of the autocomplete container:*/
-      this.parentNode.appendChild(a);
-      /*for each item in the array...*/
-      for (i = 0; i < arr.length; i++) {
-        /*check if the item starts with the same letters as the text field value:*/
-        if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
-          /*create a DIV element for each matching element:*/
-          b = document.createElement("DIV");
-          /*make the matching letters bold:*/
-          let textAreaDiv = document.createElement('textarea');
-          textAreaDiv.textContent = arr[i].substr(0, val.length);
-          let decodedBold = textAreaDiv.innerHTML;
-          b.innerHTML = "<strong>" + decodedBold + "</strong>";
-          textAreaDiv.textContent = arr[i].substr(val.length)
-          let decodedName = textAreaDiv.innerHTML;
-          b.innerHTML += decodedName;
-          /*insert a input field that will hold the current array item's value:*/
-          b.innerHTML += "<input type='hidden' value='" + members_json[arr[i]] + "'>";
-          /*execute a function when someone clicks on the item value (DIV element):*/
-          b.addEventListener("click", function (e) {
-            /*insert the value for the autocomplete text field:*/
-            inp.value = this.getElementsByTagName("input")[0].value;
-            if (update == 0)
-              addMember()
-            else
-              addUpdateMember()
-            /*close the list of autocompleted values,
-            (or any other open lists of autocompleted values:*/
-            closeAllLists();
-          });
-          a.appendChild(b);
-        }
-      }
-    });
-    /*execute a function presses a key on the keyboard:*/
-    inp.addEventListener("keydown", function (e) {
-      var x = document.getElementById(this.id + "autocomplete-list");
-      if (x) x = x.getElementsByTagName("div");
-      if (e.keyCode == 40) {
-        /*If the arrow DOWN key is pressed,
-        increase the currentFocus variable:*/
-        currentFocus++;
-        /*and and make the current item more visible:*/
-        addActive(x);
-      } else if (e.keyCode == 38) { //up
-        /*If the arrow UP key is pressed,
-        decrease the currentFocus variable:*/
-        currentFocus--;
-        /*and and make the current item more visible:*/
-        addActive(x);
-      } else if (e.keyCode == 13) {
-        /*If the ENTER key is pressed, prevent the form from being submitted,*/
-        e.preventDefault();
-        if (currentFocus > -1) {
-          /*and simulate a click on the "active" item:*/
-          if (x) x[currentFocus].click();
-        }
-      }
-    });
-    function addActive(x) {
-      /*a function to classify an item as "active":*/
-      if (!x) return false;
-      /*start by removing the "active" class on all items:*/
-      removeActive(x);
-      if (currentFocus >= x.length) currentFocus = 0;
-      if (currentFocus < 0) currentFocus = (x.length - 1);
-      /*add class "autocomplete-active":*/
-      x[currentFocus].classList.add("autocomplete-active");
-    }
-    function removeActive(x) {
-      /*a function to remove the "active" class from all autocomplete items:*/
-      for (var i = 0; i < x.length; i++) {
-        x[i].classList.remove("autocomplete-active");
-      }
-    }
-    function closeAllLists(elmnt) {
-      /*close all autocomplete lists in the document,
-      except the one passed as an argument:*/
-      var x = document.getElementsByClassName("autocomplete-items");
-      for (var i = 0; i < x.length; i++) {
-        if (elmnt != x[i] && elmnt != inp) {
-          x[i].parentNode.removeChild(x[i]);
-        }
-        const end = inp.value.length;
-        inp.setSelectionRange(end, end);
-        inp.focus();
-      }
-    }
-    /*execute a function when someone clicks in the document:*/
-    document.addEventListener("click", function (e) {
-      closeAllLists(e.target);
-    });
-  }
-
-  function setup() {
-    generate_calendar()
-
-    // hide recurring in add event when one-time clicked
-    $('#one-time').on('click', function () {
-      $('#add_recurring_group').collapse('hide')
-    });
-
-    // hide one-time in add event when recurring clicked
-    $('#recurring').on('click', function () {
-      $('#add_date_group').collapse('hide')
-    });
-
-    $('#add_members').on('keydown', function (e) {
-      if (e.which == 13) {
-        addMember()
-      }
-    });
-
-    $('#update_members').on('keydown', function (e) {
-      if (e.which == 13) {
-        addUpdateMember()
-      }
-    });
-
-    // Add autocomplete to input
-    let names = []
-    for (let name in members_json) {
-      names.push(name)
-    }
-    autocomplete($('#add_members')[0], names, 0);
-    autocomplete($('#update_members')[0], names, 1);
-
-    // reset modal data upon close
-    $("#createEventModal").on("hidden.bs.modal", function () {
-      $('#add_recurring_group').collapse('hide');
-      $('#add_date_group').collapse('hide');
-      $('#add_time_group').collapse('hide');
-      $('#add_meal_visible').hide();
-
-      $('#add_title').val("");
-      $('#add_type').val(0);
-      $('#add_start_time').val("");
-      $('#add_meal').val("");
-      $('#add_members').val("");
-      $('#add_members').val("");
-      $('#members-btns')[0].innerHTML = ""
-      $("input[name='dayofweek']").prop('checked', false);
-    });
-
-  }
-
-  $('document').ready(setup);
-
-</script>
+</html>
 
 {% endblock %}
