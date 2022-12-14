@@ -420,11 +420,17 @@ def calendar_update(coop):
     members = [m.strip() for m in members]
     members.pop()
     
+    # Only update shift date if not recurring
+    if old_shift.shift_recurring:
+        shift_time = old_shift.shift_time[0:10] + data['event_data[shift_time]'][10:]
+    else:
+        shift_time = data['event_data[shift_time]']
+
     new_shift_vals = [
         data['event_data[shift_name]'],
         data['event_data[shift_type]'],
         data['event_data[shift_item]'],
-        data['event_data[shift_time]'],
+        shift_time,
         old_shift.shift_day,
         old_shift.shift_recurring,
         old_shift.shift_creator,
