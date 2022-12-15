@@ -77,6 +77,7 @@ def authenticate():
             return None
         coop = user.coop_name
         session['coop'] = coop
+        session['admin'] = user.user_admin
         return username
     # If the request does not contain a login ticket, then redirect
     # the browser to the login page to get one.
@@ -96,11 +97,13 @@ def authenticate():
     if user is None:
         return None
     coop = user.coop_name
+    admin = user.user_admin
 
     # The user is authenticated, so store the username in
     # the session.
     session['username'] = username
     session['coop'] = coop
+    session['admin'] = admin
     return username
 
 
@@ -114,6 +117,7 @@ def logout():
     # Delete the user's username from the session.
     session.pop('username')
     session.pop('coop')
+    session.pop('admin')
 
     # Logout, and redirect the browser to the index page.
     logout_url = (_CAS_URL + 'logout?service='

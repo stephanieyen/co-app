@@ -1,21 +1,10 @@
 import sqlalchemy
 import sqlalchemy.orm
 import models
-
-'''
-Tutorial for Env Variables - 
-https://phoenixnap.com/kb/set-environment-variable-mac
-
-Tutorial for PostgreSQL + Flask - 
-https://www.digitalocean.com/community/tutorials/how-to-use-a-postgresql-database-in-a-flask-application
-
-Run this first in terminal (NOT ANYMORE)
-export DB_URL={Database URL from ElephantSQL}
-'''
+import os
 
 # How to use env var for this???
-db_url = 'postgresql://qqoyksvp:4DE2MIUDdxlcY8L66A5aMLj5ze4zaNbF@peanut.db.elephantsql.com/qqoyksvp'
-
+db_url = os.getenv("DATABASE_URL")
 # Add test users
 def add_test_roster(session):
     user = models.Roster(user_netid='amkumar',
@@ -244,17 +233,27 @@ def add_test_signin(session):
 def main():
     # Create engine and drop and recreate all tables
     engine = sqlalchemy.create_engine(db_url)
-    models.Base.metadata.drop_all(engine)
-    models.Base.metadata.create_all(engine)
+    # models.Base.metadata.drop_all(engine)
+    # models.Base.metadata.create_all(engine)
 
     with sqlalchemy.orm.Session(engine) as session:
         # Add fake test data
-        add_test_roster(session)
-        add_test_shopping(session)
-        add_test_shifts(session)
-        add_test_recipes(session)
-        add_test_signin(session)
+        # add_test_roster(session)
+        # add_test_shopping(session)
+        # add_test_shifts(session)
+        # add_test_recipes(session)
+        # add_test_signin(session)
+        user = models.Roster(user_netid='amkumar',
+                        user_name='Arnav Kumar',
+                        user_allergies='N/A',
+                        user_admin=False,
+                        user_cookday='M W F',
+                        user_choreday='M',
+                        notify_email = True,
+                        coop_name='2d')
+        session.add(user)
         session.commit()
+        
    
     engine.dispose()
 
