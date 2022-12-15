@@ -233,25 +233,16 @@ def add_test_signin(session):
 def main():
     # Create engine and drop and recreate all tables
     engine = sqlalchemy.create_engine(db_url)
-    # models.Base.metadata.drop_all(engine)
-    # models.Base.metadata.create_all(engine)
+    models.Base.metadata.drop_all(engine)
+    models.Base.metadata.create_all(engine)
 
     with sqlalchemy.orm.Session(engine) as session:
         # Add fake test data
-        # add_test_roster(session)
-        # add_test_shopping(session)
-        # add_test_shifts(session)
-        # add_test_recipes(session)
-        # add_test_signin(session)
-        user = models.Roster(user_netid='amkumar',
-                        user_name='Arnav Kumar',
-                        user_allergies='N/A',
-                        user_admin=False,
-                        user_cookday='M W F',
-                        user_choreday='M',
-                        notify_email = True,
-                        coop_name='2d')
-        session.add(user)
+        add_test_roster(session)
+        add_test_shopping(session)
+        add_test_shifts(session)
+        add_test_recipes(session)
+        add_test_signin(session)
         session.commit()
         
    
