@@ -65,6 +65,13 @@
       font-weight: bold !important;
     }
 
+    /* For profile name text wrapping */
+    .profile_name {
+      word-wrap: break-word;
+      white-space: normal;
+    }
+
+
     /* THINGS FOR AUTOCOMPLETE CALENDAR */
 
     .autocomplete {
