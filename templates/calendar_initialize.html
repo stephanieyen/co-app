@@ -132,7 +132,10 @@
               $('#update_members_btns')[0].innerHTML = ""
               info.event.extendedProps.members.split(",").forEach(function (member) {
                 let newMember = "<button type='button' class='btn btn-primary' onclick='deleteMember(this)''>"
-                newMember += member.trim()
+                let textAreaDiv = document.createElement('textarea');
+                textAreaDiv.textContent = member.trim()
+                let decodedName = textAreaDiv.innerHTML;
+                newMember += decodedName;
                 newMember += "</button>"
                 $('#update_members_btns')[0].innerHTML += newMember
               })
