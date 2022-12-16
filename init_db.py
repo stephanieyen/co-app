@@ -66,44 +66,99 @@ def add_test_roster(session):
 
 # Add test shopping list
 def add_test_shopping(session):
+    # need Cinnamon and Broccoli for weeks of 2022-12-19, 2022-12-26, 2022-01-02
     item = models.ShoppingList(item_type="Food",
-                            item_name="Avocadoes",
-                            item_quantity='N/A',
-                            item_ordered=True,
-                            for_shift = True,
-                            item_reason='For breakfast',
-                            requesting_user='amkumar',
-                            food_type="Fruit",
-                            alt_request="N/A",
-                            upvoted_members=['amkumar'],
-                            date_added="2022-11-19",
-                            coop_name='2d')
-    session.add(item)
-    item = models.ShoppingList(item_type="Food",
-                            item_name="Sriracha",
-                            item_quantity='1',
-                            item_ordered=True,
-                            for_shift = True,
-                            item_reason='One large bottle',
-                            requesting_user='sy7',
-                            food_type="Condiment",
-                            alt_request="Tabasco",
-                            upvoted_members=['sy7'],
-                            date_added="2022-11-21",
-                            coop_name='2d')
-    session.add(item)
-    item = models.ShoppingList(item_type="Food",
-                            item_name="Coffee syrups",
-                            item_quantity='3',
+                            item_name="Cinnamon",
+                            item_quantity="1 jar",
                             item_ordered=False,
                             for_shift = False,
-                            item_reason='Lavender, pumpkin spice',
-                            requesting_user='petrino',
-                            food_type="Special",
-                            alt_request="Creamer",
-                            upvoted_members=['petrino'],
-                            date_added="2022-11-24",
-                            coop_name='scully')
+                            item_reason='Cinnamon rolls',
+                            requesting_user='sarahep',
+                            food_type="Seasoning",
+                            alt_request="",
+                            upvoted_members=['amkumar'],
+                            date_added="2022-12-19",
+                            coop_name='2d')
+    session.add(item)
+    item = models.ShoppingList(item_type="Food",
+                        item_name="Cinnamon",
+                        item_quantity="1 jar",
+                        item_ordered=False,
+                        for_shift = True,
+                        item_reason='Cinnamon rolls',
+                        requesting_user='sarahep',
+                        food_type="Seasoning",
+                        alt_request="",
+                        upvoted_members=['sarahep'],
+                        date_added="2022-12-26",
+                        coop_name='2d')
+    session.add(item)
+    item = models.ShoppingList(item_type="Food",
+                        item_name="Cinnamon",
+                        item_quantity="1 jar",
+                        item_ordered=False,
+                        for_shift = False,
+                        item_reason='Cinnamon rolls',
+                        requesting_user='sarahep',
+                        food_type="Seasoning",
+                        alt_request="",
+                        upvoted_members=['sy7'],
+                        date_added="2023-01-02",
+                        coop_name='2d')
+    session.add(item)
+    item = models.ShoppingList(item_type="Food",
+                        item_name="Broccoli",
+                        item_quantity="2 bags",
+                        item_ordered=True,
+                        for_shift = False,
+                        item_reason='Ran out last week',
+                        requesting_user='amkumar',
+                        food_type="Produce",
+                        alt_request="",
+                        upvoted_members=['amkumar'],
+                        date_added="2022-12-19",
+                        coop_name='2d')
+    session.add(item)
+    item = models.ShoppingList(item_type="Food",
+                        item_name="Broccoli",
+                        item_quantity="2 bags",
+                        item_ordered=True,
+                        for_shift = False,
+                        item_reason='Ran out last week',
+                        requesting_user='amkumar',
+                        food_type="Produce",
+                        alt_request="",
+                        upvoted_members=['sy7'],
+                        date_added="2022-12-26",
+                        coop_name='2d')
+    session.add(item)
+    item = models.ShoppingList(item_type="Food",
+                    item_name="Broccoli",
+                    item_quantity="2 bags",
+                    item_ordered=True,
+                    for_shift = True,
+                    item_reason='Ran out last week',
+                    requesting_user='amkumar',
+                    food_type="Produce",
+                    alt_request="",
+                    upvoted_members=['petrino'],
+                    date_added="2023-01-02",
+                    coop_name='2d')
+    session.add(item)
+
+    # items for week of 2022-12-19
+    item = models.ShoppingList(item_type="Food",
+                        item_name="Coffee syrups",
+                        item_quantity='3',
+                        item_ordered=False,
+                        for_shift = False,
+                        item_reason='Lavender, pumpkin spice',
+                        requesting_user='petrino',
+                        food_type="Special",
+                        alt_request="Creamer",
+                        upvoted_members=['petrino'],
+                        date_added="2022-12-19",
+                        coop_name='2d')
     session.add(item)
     item = models.ShoppingList(item_type="Equipment",
                             item_name="Nonstick Frying Pan",
@@ -115,8 +170,23 @@ def add_test_shopping(session):
                             food_type="Item",
                             alt_request="Stick Frying Pan",
                             upvoted_members=['sarahep'],
-                            date_added="2022-11-03",
-                            coop_name='realfood')
+                            date_added="2022-12-19",
+                            coop_name='2d')
+    session.add(item)
+
+    # items for week of 2022-12-26
+    item = models.ShoppingList(item_type="Food",
+                            item_name="Sriracha",
+                            item_quantity='1',
+                            item_ordered=True,
+                            for_shift = True,
+                            item_reason='One large bottle',
+                            requesting_user='sy7',
+                            food_type="Condiment",
+                            alt_request="Tabasco",
+                            upvoted_members=['sy7'],
+                            date_added="2022-12-26",
+                            coop_name='2d')
     session.add(item)
     item = models.ShoppingList(item_type="Equipment",
                             item_name="Bread Roller",
@@ -128,8 +198,23 @@ def add_test_shopping(session):
                             food_type="Item",
                             alt_request="Hammer",
                             upvoted_members=['thaldiya'],
-                            date_added="2022-11-19",
-                            coop_name='ifc')
+                            date_added="2022-12-26",
+                            coop_name='2d')
+    session.add(item)
+    
+    # items for week of 2022-01-02
+    item = models.ShoppingList(item_type="Food",
+                            item_name="Half and Half",
+                            item_quantity='1 pint',
+                            item_ordered=False,
+                            for_shift = False,
+                            item_reason='For any coffee :)',
+                            requesting_user='petrino',
+                            food_type="Dairy",
+                            alt_request="Creamer",
+                            upvoted_members=['sarahep'],
+                            date_added="2023-01-02",
+                            coop_name='2d')
     session.add(item)
     item = models.ShoppingList(item_type="Equipment",
                             item_name="Computer",
@@ -137,24 +222,12 @@ def add_test_shopping(session):
                             item_ordered=False,
                             for_shift = False,
                             item_reason='Turn Brown into computer hub',
-                            requesting_user='dpw',
+                            requesting_user='sy7',
                             food_type="Special",
                             alt_request="Laptops",
-                            upvoted_members=['dpw'],
-                            date_added="2022-11-07",
-                            coop_name='brown')
-    item = models.ShoppingList(item_type="Equipment",
-                            item_name="Computer",
-                            item_quantity='10',
-                            item_ordered=False,
-                            for_shift = False,
-                            item_reason='Turn Brown into computer hub',
-                            requesting_user='dpw',
-                            food_type="Special",
-                            alt_request="Laptops",
-                            upvoted_members=['dpw'],
-                            date_added="2022-10-28",
-                            coop_name='brown')
+                            upvoted_members=['petrino'],
+                            date_added="2023-01-02",
+                            coop_name='2d')
     session.add(item)
 
 #----------------------------------------------------------------------
@@ -233,16 +306,16 @@ def add_test_signin(session):
 def main():
     # Create engine and drop and recreate all tables
     engine = sqlalchemy.create_engine(db_url)
-    models.Base.metadata.drop_all(engine)
-    models.Base.metadata.create_all(engine)
+    # models.Base.metadata.drop_all(engine)
+    # models.Base.metadata.create_all(engine)
 
     with sqlalchemy.orm.Session(engine) as session:
-        # Add fake test data
-        add_test_roster(session)
-        add_test_shopping(session)
-        add_test_shifts(session)
-        add_test_recipes(session)
-        add_test_signin(session)
+        # Add fake test data if needed
+        # add_test_roster(session)
+        # add_test_shopping(session)
+        # add_test_shifts(session)
+        # add_test_recipes(session)
+        # add_test_signin(session)
         session.commit()
         
     engine.dispose()

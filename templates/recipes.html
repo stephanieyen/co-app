@@ -137,7 +137,6 @@
   'use strict';
 
   function handleResponse(response) {
-    // console.log(response);
     // Show image container
     $("#overlay").hide();
     $("#recipe-content").show();
@@ -225,8 +224,6 @@
       "recipe_img": recipe_img
     };
 
-    console.log(json_event)
-
     // AJAX POST request
     $.post("/{{coop}}/recipes", {
       dataType: 'json',
@@ -239,7 +236,6 @@
       },
       // success: refresh gallery
     }).done(function (data) {
-      console.log("success")
       refreshGallery("All");
     }).fail(function (jqXHR, textStatus, errorThrown) {
       alert("Error adding recipe. Try again!")

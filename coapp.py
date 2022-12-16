@@ -5,8 +5,6 @@ import json
 import models
 import helper
 from flask import jsonify
-# from apscheduler.schedulers.background import BackgroundScheduler
-# from apscheduler.triggers.cron import CronTrigger
 from flask_mail import Mail, Message
 from datetime import datetime, timedelta
 import os
@@ -17,7 +15,6 @@ app = flask.Flask(__name__, template_folder='.')
 app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USERNAME'] = 'coappemail@gmail.com'
-# app.config['MAIL_PASSWORD'] = 'zdymxwgrisdsftkv'
 app.config['MAIL_PASSWORD'] = os.getenv("APP_PASSWORD")
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
@@ -39,7 +36,7 @@ def send_shift_emails():
                 recipients=[email])
             mail.send(msg)
 
-# Import after making auth since auth uses app
+# Import here b/c auth uses app
 import auth
 
 app.secret_key = os.getenv('SECRET_KEY')
@@ -154,22 +151,6 @@ def profile_update(coop):
     )
     database.update_user(netid, new_user)
     return json.dumps(new_user.user_name)
-
-#----------------------------------------------------------------------
-
-# @app.route('/<coop>/profile/shifts', methods=['GET'])
-# def profile_shifts(coop):
-#     '''
-#         Get all the shifts for an authenticated user.
-#     '''
-#     # get user info + redirect if needed
-#     netid = auth.authenticate()
-#     status, redirect = check_coop(coop)
-#     if status == False or status == "Nonexistent":
-#         return redirect
-    
-#     shifts = database.get_user_shifts(netid)
-#     return ""
 
 #----------------------------------------------------------------------
 # Co-Op Roster
@@ -461,8 +442,6 @@ def calendar_update(coop):
         members,
         old_shift.coop_name
     ]
-    # jsdata = request.form['event_data']
-    # print(json.loads(jsdata[0]))
     new_shift = models.Shifts(
         shift_name=new_shift_vals[0],
         shift_type=new_shift_vals[1],
@@ -624,28 +603,6 @@ def list_delete(coop):
 
 #----------------------------------------------------------------------
 
-# TRIED TO MAKE A HELPER FUNCTION BUT IT DID NOT WORK
-# def list_items(coop, is_food):
-#     # get user info + redirect if needed
-#     netid = auth.authenticate()
-#     status, redirect = check_coop(coop)
-#     if status == False or status == "Nonexistent":
-#         return redirect
-#     user = database.get_user(netid)
-
-#     start_date = flask.request.args.get('startDate')
-#     end_date = flask.request.args.get('endDate')
-
-#     items = database.get_food_list_for_week(coop, start_date, end_date)
-#     html_code = helper.gen_item_table_html(items, is_food, user.user_admin, 
-#                                                         user.user_netid)
-    
-#     response = flask.make_response(html_code)
-#     return response
-
-#----------------------------------------------------------------------
-
-
 @app.route('/<coop>/items/food', methods=['GET'])
 def list_food_items(coop):
     # return list_items(coop, True)
@@ -714,7 +671,6 @@ def recipes(coop):
             coop_name=coop
         )
         database.add_recipe(new_recipe)
-        print(new_recipe)
 
      # get user info + redirect if needed
     netid = auth.authenticate()
@@ -748,7 +704,6 @@ def recipes_carousel(coop):
     # get meal type to generate according recipes
     meal_type = flask.request.args.get('meal')
     meal_type.strip()
-    # print("meal = ", meal)
     if meal_type == "All":
         meal_type = "%"
 
@@ -849,7 +804,6 @@ def about():
     html = flask.render_template('templates/about.html')
     response = flask.make_response(html)
     return response
-    
 
 @app.route('/<coop>/help', methods=['GET'])
 def help(coop):

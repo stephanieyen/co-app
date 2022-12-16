@@ -126,7 +126,6 @@
         let newMembers = $('#add-members-txt').val()
         newMembers = newMembers.split(",").map((member) => member.trim());
         for (let member in newMembers) {
-            console.log(newMembers[member]);
             if (!isAlphaNumeric(newMembers[member])) {
                 alert(newMembers[member] + " is not a possible netID. Please only use numbers and letters!");
                 return;
@@ -146,7 +145,6 @@
                 $("#edit-roster-content").hide();
             },
         }).done(function (data) {
-            console.log(data)
             refreshRoster();
         }).fail(function (data) {
             alert(data.responseText)
