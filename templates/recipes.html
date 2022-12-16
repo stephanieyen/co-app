@@ -175,7 +175,6 @@
     if ($('#recipe_type').val() === "0") {
       missingFields.push("Recipe Type");
       missing = true;
-      console.log("hi")
     }
     if (missing) {
       alert("The following fields are required: " + missingFields.join(', '))
@@ -304,6 +303,7 @@
         // minImageHeight: 1080, // scales image up to height of 1080 pixels
         // maxImageHeight: 1080, //Scales the image down to a width of 1080 pixels before uploading
         cropping: false,
+        clientAllowedFormats: ['png', 'jpeg', 'jpg']
         // croppingValidateDimensions: true
       },
       (error, result) => {
