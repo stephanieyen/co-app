@@ -280,6 +280,7 @@
   function validateNewItem() {
     let missingFields = [];
     let missing = false;
+
     if ($('#item_type').val() == 0) {
       missingFields.push("Item Type");
       missing = true;
@@ -295,16 +296,15 @@
     if (missing) {
       alert("The following fields are required: " + missingFields.join(', '))
     }
+    else if ($.trim($('#item_quantity').val()).charAt(0) === '-'){
+      missing = true;
+      alert("Invalid Quanitity: quantity cannot be negative")
+    }
     return missing
   }
 
   // add item to shopping list if submitted 
   function addItem() {
-    // // validate that required fields are not empty
-    // if (validateNewItem()) {
-    //   console.log('not validated');
-    //   return false;
-    // }
 
     $('#add_submit').unbind('click');
     $('#add-item-btn').unbind('click');

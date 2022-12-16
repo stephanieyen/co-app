@@ -255,6 +255,11 @@ def add_user(coop):
     if not check_admin():
         return ''
     new_members = json.loads(flask.request.form.to_dict()['event_data'])
+    print("New members!", new_members)
+    if new_members == ['']:
+        print("got no new members")
+        error_msg = "Please enter a netID to add a new member."
+        return error_msg, 400
     for netid in new_members:
         # create empty user model 
         user = models.Roster(user_netid=netid,

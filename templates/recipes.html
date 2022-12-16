@@ -211,8 +211,8 @@
     let recipe_name = $('#recipe_name').val();
     let recipe_link = $('#recipe_link').val();
     let recipe_type = $('#recipe_type').val();
-    let recipe_ingredients = $('#recipe_ingredients').val();
-    let recipe_instructions = $('#recipe_instructions').val();
+    let recipe_ingredients = $.trim($('#recipe_ingredients').val());
+    let recipe_instructions = $.trim($('#recipe_instructions').val());
     let recipe_img = $('#recipe_img').attr('src');
 
     // AJAX update database
