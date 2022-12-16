@@ -145,7 +145,6 @@
             $('#update_delete').on('click', function () {
               $('#update_delete').unbind('click');
               $('#updateEventModal').modal('hide');
-              console.log(info.event.id)
 
               // ajax post request by event id
               $.post("/{{coop}}/calendar/delete?id=" + info.event.id, {
@@ -160,6 +159,8 @@
                 $("#overlay").hide();
                 $("#calendar").show();
                 calendar.refetchEvents()
+              }).fail(function (jqXHR, textStatus, errorThrown) {
+                alert("Error deleting shift. Try again!")
               })
             });
 
@@ -221,6 +222,8 @@
                 $("#overlay").hide();
                 $("#calendar").show();
                 calendar.refetchEvents()
+              }).fail(function (jqXHR, textStatus, errorThrown) {
+                alert("Error updating selected shift. Try again!")
               });
             })
           },
@@ -308,6 +311,8 @@
                 $("#overlay").hide();
                 $("#calendar").show();
                 calendar.refetchEvents()
+              }).fail(function (jqXHR, textStatus, errorThrown) {
+                alert("Error adding new shift. Try again!")
               })
 
               $('#createEventModal').modal('hide');
@@ -363,13 +368,13 @@
 
     function isValidDate(dateString) {
       var regEx = /^\d{4}-\d{2}-\d{2}$/;
-      if(!dateString.match(regEx)) return false;  // Invalid format
+      if (!dateString.match(regEx)) return false;  // Invalid format
       var d = new Date(dateString);
       var dNum = d.getTime();
-      if(!dNum && dNum !== 0) return false; // NaN value, Invalid date
-      return d.toISOString().slice(0,10) === dateString;
+      if (!dNum && dNum !== 0) return false; // NaN value, Invalid date
+      return d.toISOString().slice(0, 10) === dateString;
     }
-    
+
     function addMember() {
       var x = document.getElementById("add_members" + "autocomplete-list");
       if (x) {
@@ -379,7 +384,7 @@
             return;
           }
         }
-      } 
+      }
       let name = $('#add_members').val();
       let newMember = "<button type='button' class='btn btn-primary' onclick='deleteMember(this)''>"
       let textAreaDiv = document.createElement('textarea');
@@ -389,7 +394,7 @@
       newMember += "</button>"
       $('#members-btns')[0].innerHTML += newMember
       $('#add_members').val("");
-      
+
     }
 
     function addUpdateMember() {
@@ -401,7 +406,7 @@
             return;
           }
         }
-      } 
+      }
       let name = $('#update_members').val();
       let newMember = "<button type='button' class='btn btn-primary' onclick='deleteMember(this)''>"
       let textAreaDiv = document.createElement('textarea');
