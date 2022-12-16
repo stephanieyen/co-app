@@ -2,8 +2,8 @@ import sqlalchemy
 import sqlalchemy.orm
 import models
 import os
+import database
 
-# How to use env var for this???
 db_url = os.getenv("DATABASE_URL")
 # Add test users
 def add_test_roster(session):
@@ -245,7 +245,6 @@ def main():
         add_test_signin(session)
         session.commit()
         
-   
     engine.dispose()
 
 if __name__ == '__main__':

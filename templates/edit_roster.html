@@ -121,11 +121,17 @@
 
     function addMembers() {
         // TODO: error handling if input val is empty
-        
-
+        const isAlphaNumeric = str => /^[a-z0-9]+$/gi.test(str);
         // parse string of new member netids separated by commas
         let newMembers = $('#add-members-txt').val()
         newMembers = newMembers.split(",").map((member) => member.trim());
+        for (let member in newMembers) {
+            console.log(newMembers[member]);
+            if (!isAlphaNumeric(newMembers[member])) {
+                alert(newMembers[member] + " is not a possible netID. Please only use numbers and letters!");
+                return;
+            }
+        }
 
         $('#add-members-txt').val('')
 
@@ -146,6 +152,7 @@
             alert(data.responseText)
             $("#overlay").hide();
             $("#edit-roster-content").show();
+            refreshRoster();
         });
     }
 

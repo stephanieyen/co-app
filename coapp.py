@@ -253,12 +253,16 @@ def add_user(coop):
     _ = auth.authenticate()
     # do not do it if not admin
     if not check_admin():
-        return ''
+        bad_msg = "You must be an admin to add a new member!"
+        return bad_msg, 400
     new_members = json.loads(flask.request.form.to_dict()['event_data'])
     if new_members == ['']:
         error_msg = "Please enter a netID to add a new member."
         return error_msg, 400
     for netid in new_members:
+        if not netid.isalnum():
+            error_msg = str(netid) + " is not a valid netID! Any members listed before were added."
+            return error_msg, 400
         # create empty user model 
         user = models.Roster(user_netid=netid,
                             user_name=netid,
@@ -270,7 +274,7 @@ def add_user(coop):
         status, message = database.add_user(user)
         if status == False:
             if 'duplicate key' in message:
-                error_msg = "User is already in a co-op!"
+                error_msg = str(netid) + " is already in a co-op!"
                 error_msg += " If you think this is a mistake, "
                 error_msg += "ask them to delete their profile and then try adding them again!"
                 return error_msg, 400
