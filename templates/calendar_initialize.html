@@ -617,7 +617,7 @@
         <!-- shift description -->
         <div class="form-group form-inline">
           <label for="update_title" class="form-label required">Shift Description:</label>
-          <input type="text" class="form-control" id="update_title" placeholder="Brunch? Going to Wegmans?">
+          <input type="text" class="form-control" id="update_title" maxlength="30" placeholder="Brunch? Going to Wegmans?">
         </div>
 
         <!-- shift type -->
@@ -634,7 +634,7 @@
         <div class="form-group" id="update_meal_visible" style="display: none">
           <br>
           <p>Planned Meal:</p><textarea class="form-control" type="text" rows="2" placeholder="Planned meal:"
-            id="update_meal"></textarea>
+            id="update_meal" maxlength="280"></textarea>
         </div>
 
         <!-- shift date (autofilled from select) -->
@@ -656,7 +656,7 @@
         <div class="form-group form-inline autocomplete">
           <br>
           <label for="update_members" class="form-label">Shift Members:</label>
-          <input type="text" class="form-control" id="update_members" placeholder="NetID:">
+          <input type="text" class="form-control" id="update_members" maxlength="50" placeholder="Names:">
         </div>
         <div id="update_members_btns">
         </div>
@@ -688,7 +688,7 @@
         <!-- shift description -->
         <div class="form-group form-inline">
           <label for="add_title" class="form-label required">Shift Description:</label>
-          <input type="text" class="form-control" id="add_title" placeholder="Brunch? Going to Wegmans?">
+          <input type="text" class="form-control" id="add_title" maxlength="30" placeholder="Brunch? Going to Wegmans?">
         </div>
 
         <!-- shift type dropdown -->
@@ -706,7 +706,7 @@
         <!-- planned meal only shown if "cooking" shift -->
         <div class="form-group" id="add_meal_visible" style="display: none">
           <br>
-          <p>Planned Meal:</p><textarea class="form-control" type="text" rows="2" placeholder="Planned meal:"
+          <p>Planned Meal:</p><textarea class="form-control" type="text" rows="2" maxlength="280" placeholder="Planned meal:"
             id="add_meal"></textarea>
         </div>
 
@@ -777,7 +777,7 @@
         <div class="form-group form-inline autocomplete">
           <div class="mb-3">
             <label for="add_members" class="form-label">Shift Members:</label>
-            <input type="text" class="form-control " id="add_members" placeholder="Names:">
+            <input type="text" class="form-control " id="add_members" maxlength="50" placeholder="Names:">
           </div>
         </div>
         <div id="members-btns">
